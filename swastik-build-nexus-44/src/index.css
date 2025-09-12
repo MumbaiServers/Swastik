@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 216 25% 25%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 216 25% 25%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 216 25% 25%;
+
+    --primary: 217 52% 50%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 201 100% 87%;
+    --secondary-foreground: 216 25% 25%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 201 100% 87%;
+    --accent-foreground: 216 25% 25%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 52% 50%;
+
+    /* Swastik Group Brand Colors */
+    --brand-blue: 217 52% 50%;
+    --brand-light-blue: 201 100% 87%;
+    --brand-navy: 216 45% 25%;
+    --brand-gray: 0 0% 40%;
+    --brand-light-gray: 0 0% 95%;
+    
+    /* Values, Vision & Mission Card Colors */
+    --values-bg: 205 100% 80%;  /* #9ad6ff */
+    --vision-bg: 208 100% 87%;  /* #bce1ff */
+    --mission-bg: 213 100% 94%; /* #e2f2ff */
+    
+    /* Gradients */
+    --gradient-blue: linear-gradient(135deg, hsl(217, 52%, 50%), hsl(201, 100%, 70%));
+    --gradient-light: linear-gradient(180deg, hsl(201, 100%, 95%), hsl(0, 0%, 100%));
+    
+    /* Shadows */
+    --shadow-brand: 0 10px 30px -10px hsl(217, 52%, 50%, 0.2);
+    --shadow-card: 0 4px 20px -2px hsl(0, 0%, 0%, 0.1);
+    
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 216 45% 8%;
+    --foreground: 0 0% 98%;
+
+    --card: 216 45% 10%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 216 45% 10%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 201 100% 70%;
+    --primary-foreground: 216 45% 8%;
+
+    --secondary: 217 32% 18%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 217 32% 18%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 32% 18%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 217 32% 18%;
+    --input: 217 32% 18%;
+    --ring: 201 100% 70%;
+
+    /* Dark mode brand colors */
+    --brand-blue: 201 100% 70%;
+    --brand-light-blue: 217 52% 30%;
+    --brand-navy: 0 0% 95%;
+    --shadow-brand: 0 10px 30px -10px hsl(201, 100%, 70%, 0.3);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/80;
+  }
+
+  /* Custom image border radius - curved top-left and bottom-right, pointed top-right and bottom-left */
+  .custom-image-radius {
+    border-top-left-radius: 2.5rem;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 2.5rem;
+  }
+
+  /* Projects horizontal scroll styling */
+  .projects-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .projects-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Smooth scrolling with momentum on mobile */
+  .projects-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+}
