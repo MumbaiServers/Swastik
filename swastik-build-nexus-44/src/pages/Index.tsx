@@ -22,9 +22,18 @@ const Index = () => {
       id: 'values',
       colors: ['hsl(var(--values-bg))', 'hsl(var(--values-bg))'] as [string, string],
       borderColor: 'rgba(255, 255, 255, 0.2)',
+      customStyles: {
+        maxWidth: '1297px',
+        width: '100%',
+        minHeight: '476px',
+        height: '476px',
+        borderTopLeftRadius: '220px',
+        borderBottomRightRadius: '220px',
+        border: 'none',
+      },
       content: (
-        <div className="w-full">
-          <div className="hidden md:flex">
+        <div className="w-full h-full">
+          <div className="hidden md:flex h-full">
             <div className="flex-1 bg-values-bg p-8 lg:p-12 flex flex-col justify-center">
               <div className="space-y-6">
                 <div>
@@ -40,7 +49,7 @@ const Index = () => {
             </div>
             <div className="flex-1">
               <div className="relative h-full min-h-[300px]">
-                <img 
+                <img
                   src={lifestyleInterior}
                   alt="Our Values"
                   className="w-full h-full object-cover"
@@ -51,7 +60,7 @@ const Index = () => {
           </div>
           <div className="md:hidden">
             <div className="relative h-48">
-              <img 
+              <img
                 src={lifestyleInterior}
                 alt="Our Values"
                 className="w-full h-full object-cover"
@@ -79,9 +88,18 @@ const Index = () => {
       id: 'vision',
       colors: ['hsl(var(--vision-bg))', 'hsl(var(--vision-bg))'] as [string, string],
       borderColor: 'rgba(255, 255, 255, 0.2)',
+      customStyles: {
+        maxWidth: '1297px',
+        width: '100%',
+        minHeight: '476px',
+        height: '476px',
+        borderTopLeftRadius: '220px',
+        borderBottomRightRadius: '220px',
+        border: 'none',
+      },
       content: (
-        <div className="w-full">
-          <div className="hidden md:flex">
+        <div className="w-full h-full">
+          <div className="hidden md:flex h-full">
             <div className="flex-1 bg-vision-bg p-8 lg:p-12 flex flex-col justify-center">
               <div className="space-y-6">
                 <div>
@@ -97,7 +115,7 @@ const Index = () => {
             </div>
             <div className="flex-1">
               <div className="relative h-full min-h-[300px]">
-                <img 
+                <img
                   src={lifestyleInterior}
                   alt="Our Vision"
                   className="w-full h-full object-cover"
@@ -108,7 +126,7 @@ const Index = () => {
           </div>
           <div className="md:hidden">
             <div className="relative h-48">
-              <img 
+              <img
                 src={lifestyleInterior}
                 alt="Our Vision"
                 className="w-full h-full object-cover"
@@ -136,9 +154,20 @@ const Index = () => {
       id: 'mission',
       colors: ['hsl(var(--mission-bg))', 'hsl(var(--mission-bg))'] as [string, string],
       borderColor: 'rgba(255, 255, 255, 0.2)',
+      customStyles: {
+        maxWidth: '1297px',
+        width: '100%',
+        minHeight: '476px', // Overriding the default 80vh
+        height: '476px',
+        borderTopLeftRadius: '220px',
+        borderBottomRightRadius: '220px',
+        border: 'none',
+        // Preserving other corners from default or setting to a reasonable value if needed, 
+        // but strictly following user request for these two.
+      },
       content: (
-        <div className="w-full">
-          <div className="hidden md:flex">
+        <div className="w-full h-full">
+          <div className="hidden md:flex h-full">
             <div className="flex-1 bg-mission-bg p-8 lg:p-12 flex flex-col justify-center">
               <div className="space-y-6">
                 <div>
@@ -154,7 +183,7 @@ const Index = () => {
             </div>
             <div className="flex-1">
               <div className="relative h-full min-h-[300px]">
-                <img 
+                <img
                   src={lifestyleInterior}
                   alt="Our Mission"
                   className="w-full h-full object-cover"
@@ -165,7 +194,7 @@ const Index = () => {
           </div>
           <div className="md:hidden">
             <div className="relative h-48">
-              <img 
+              <img
                 src={lifestyleInterior}
                 alt="Our Mission"
                 className="w-full h-full object-cover"
@@ -193,7 +222,33 @@ const Index = () => {
 
   const [isContactOpen, setIsContactOpen] = useState(false);
 
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const videoSectionRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVideoPlaying(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    if (videoSectionRef.current) {
+      observer.observe(videoSectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    // Automatic popup temporarily disabled
+    return;
+    /*
     let cancelled = false;
     const startTimer = () => {
       if (cancelled) return;
@@ -217,6 +272,7 @@ const Index = () => {
       cancelled = true;
       if (cleanup) cleanup();
     };
+    */
   }, []);
 
   return (
@@ -224,13 +280,10 @@ const Index = () => {
       <Header />
       <HeroSection />
       <ContactFormModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
-      
+
       {/* Who We Are Section */}
-      <section className="pt-10 pb-6 lg:pt-12 lg:pb-6">
-        <div className="container mx-auto px-4 lg:px-8">
-          <AboutUsSection />
-        </div>
-      </section>
+      {/* Who We Are Section */}
+      <AboutUsSection />
       {/* Values, Vision & Mission Section */}
       <section className="pt-6 pb-4 lg:pt-8 lg:pb-4 bg-muted/50">
         <div className="container mx-auto px-4 lg:px-8">
@@ -246,13 +299,13 @@ const Index = () => {
           <StackedCards cards={cardData} />
         </div>
       </section>
-      
+
       {/* Stats section */}
       <section className="pt-4 pb-10 lg:pt-4 lg:pb-12">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="bg-gradient-brand p-8 lg:p-12 shadow-brand overflow-hidden" style={{ borderRadius: '20px 60px 20px 60px' }}>
             {/* Unified Marquee Layout for All Screen Sizes */}
-            <div 
+            <div
               className="flex items-center w-full overflow-hidden [--duration:30s] [--gap:1.5rem]"
               data-gap="1.5rem"
             >
@@ -302,24 +355,12 @@ const Index = () => {
       </section>
 
       {/* Our Projects Section */}
-      <section className="py-10 lg:py-12 bg-muted/50">
-        <div className="container mx-auto px-4 lg:px-8">
-          <ProjectsSection />
-        </div>
-      </section>
+      <ProjectsSection />
       {/* Why Choose Us Section */}
-      <section className="py-10 lg:py-12">
-        <div className="container mx-auto px-4 lg:px-8">
-          <WhyChooseUsSection />
-        </div>
-      </section>
+      <WhyChooseUsSection />
 
       {/* Our Presence Section */}
-      <section className="py-10 lg:py-12 bg-muted/50">
-        <div className="container mx-auto px-4 lg:px-8">
-          <PresencesSection />
-        </div>
-      </section>
+      <PresencesSection />
 
       {/* YouTube Video Section */}
       <section className="py-10 lg:py-12">
@@ -333,52 +374,36 @@ const Index = () => {
               Discover our journey in creating exceptional real estate experiences
             </p>
           </div>
-          
-          <div className="max-w-4xl mx-auto">
-            <div className="relative bg-gradient-to-r from-brand-blue to-brand-light-blue rounded-2xl p-8 shadow-brand">
-              <div className="aspect-video bg-white/10 rounded-xl border-2 border-white/20 flex items-center justify-center">
-                <div className="text-center text-white">
-                  <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z"/>
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">Company Overview Video</h3>
-                  <p className="text-white/80">Click to watch our story</p>
-                </div>
-              </div>
+
+          <div className="max-w-5xl mx-auto" ref={videoSectionRef}>
+            <div className="aspect-video bg-black rounded-xl border-2 border-gray-200 overflow-hidden shadow-2xl">
+              <iframe
+                className="w-full h-full"
+                src={isVideoPlaying
+                  ? "https://www.youtube.com/embed/WUq4bKwC-nM?si=sBQAjI_kCXg4-Qwb&autoplay=1&mute=1"
+                  : "https://www.youtube.com/embed/WUq4bKwC-nM?si=sBQAjI_kCXg4-Qwb"
+                }
+                title="Company Overview Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
             </div>
           </div>
         </div>
       </section>
 
       {/* Social Media Section */}
-      <section className="py-10 lg:py-12 bg-muted/50">
-        <div className="container mx-auto px-4 lg:px-8">
-          <SocialMediaSection />
-        </div>
-      </section>
+      <SocialMediaSection />
 
       {/* Blogs Section */}
-      <section className="py-10 lg:py-12">
-        <div className="container mx-auto px-4 lg:px-8">
-          <BlogsSection />
-        </div>
-      </section>
+      <BlogsSection />
 
       {/* EMI Calculator Section */}
-      <section className="py-10 lg:py-12 bg-muted/50">
-        <div className="container mx-auto px-4 lg:px-8">
-          <EMICalculator />
-        </div>
-      </section>
+      <EMICalculator />
 
       {/* FAQ Section */}
-      <section className="py-10 lg:py-12">
-        <div className="container mx-auto px-4 lg:px-8">
-          <FAQSection />
-        </div>
-      </section>
+      <FAQSection />
 
 
       <Footer />

@@ -11,7 +11,7 @@ const HeroSection = () => {
     <>
       <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `url(${heroImage})`,
@@ -20,7 +20,10 @@ const HeroSection = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-black/20" />
         </div>
         {/* Ribbon at the bottom */}
-        <div className="absolute left-0 right-0 bottom-0 z-20 w-full bg-brand-blue flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 px-4 py-3 md:py-4">
+        <div
+          className="absolute left-0 right-0 bottom-0 z-20 w-full flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 px-4 py-3 md:py-4"
+          style={{ backgroundColor: '#1953B4' }}
+        >
           <button className="flex items-center gap-2 text-white font-medium px-4 py-2 focus:outline-none w-full md:w-auto justify-center">
             Location <span className="ml-1">&#9662;</span>
           </button>
@@ -38,13 +41,23 @@ const HeroSection = () => {
         </div>
 
         {/* Fixed Enquiry Button */}
-        <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40">
-          <Button 
-            variant="enquiry" 
+        <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40">
+          <Button
+            variant="enquiry"
             size="lg"
             onClick={() => setIsContactModalOpen(true)}
-            className="rounded-xl py-12 px-6 writing-mode-vertical-rl text-orientation-mixed shadow-brand min-h-[120px] relative overflow-hidden"
-            style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+            className="rounded-l-[10px] rounded-r-none relative overflow-hidden text-white hover:opacity-90 transition-opacity"
+            style={{
+              writingMode: 'vertical-rl',
+              textOrientation: 'mixed',
+              width: '60px',
+              height: '160px',
+              backgroundColor: '#1953B4',
+              boxShadow: '0px 10px 20px 0px #00008026',
+              borderTopLeftRadius: '10px',
+              borderBottomLeftRadius: '10px',
+              padding: 0
+            }}
           >
             Enquiry Now
           </Button>
@@ -71,9 +84,9 @@ const HeroSection = () => {
       </section>
 
       {/* Contact Form Modal */}
-      <ContactFormModal 
-        isOpen={isContactModalOpen} 
-        onClose={() => setIsContactModalOpen(false)} 
+      <ContactFormModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
       />
     </>
   );

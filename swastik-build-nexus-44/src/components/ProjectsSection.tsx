@@ -73,9 +73,9 @@ const ProjectsSection = () => {
           </h2>
           <div className="w-20 h-1 bg-brand-blue rounded-full mx-auto mb-8"></div>
         </div>
-        
+
         <div className="text-center mb-12 animate-fade-in">
-          
+
           {/* Tab Navigation */}
           <div className="flex justify-center space-x-2 bg-brand-light-gray rounded-lg p-2 inline-flex">
             <Button
@@ -98,69 +98,60 @@ const ProjectsSection = () => {
         </div>
 
         {/* Projects Grid/Scroll */}
-        <div 
+        <div
           className={
-            isMobile 
-              ? "flex gap-6 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory projects-scroll animate-slide-up" 
+            isMobile
+              ? "flex gap-6 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory projects-scroll animate-slide-up"
               : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-slide-up"
           }
         >
           {projects[activeTab as keyof typeof projects].map((project, index) => (
-            <Card 
-              key={project.id} 
-              className={`group overflow-hidden shadow-card hover:shadow-brand transition-all duration-500 hover:-translate-y-2 ${
-                isMobile ? 'flex-shrink-0 w-80 snap-center' : ''
-              }`}
-              style={{ animationDelay: `${index * 100}ms` }}
+            <div
+              key={project.id}
+              className={`group relative flex-shrink-0 transition-all duration-500 hover:-translate-y-2 ${isMobile ? 'snap-center' : ''
+                }`}
+              style={{
+                width: '387px',
+                height: '435px',
+                // Responsive adjustments if needed, but user asked for specific px.
+                // We'll let max-width handle shrinking on very small devices if container restricts it.
+                maxWidth: '100%',
+                // Removed overflow: hidden so the label can pop out
+                marginBottom: '40px', // Add margin to account for the pop-out label
+                animationDelay: `${index * 100}ms`
+              }}
+              onClick={() => handleViewDetails(project.slug)}
             >
-              <div className="relative overflow-hidden">
+              <div
+                className="w-full h-full relative"
+                style={{
+                  borderTopLeftRadius: '100px',
+                  borderBottomRightRadius: '100px',
+                  overflow: 'hidden',
+                  boxShadow: '0 10px 30px -10px rgba(0,0,0,0.3)',
+                }}
+              >
                 <img
                   src={project.image}
                   alt={project.name}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                  style={{
-                    borderTopLeftRadius: '2rem',
-                    borderTopRightRadius: '0',
-                    borderBottomRightRadius: '2rem',
-                    borderBottomLeftRadius: '0'
-                  }}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                {/* NEW RELEASE popup for first project */}
-                {index === 0 && (
-                  <div className="absolute top-4 right-4 bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform scale-95 group-hover:scale-100">
-                    NEW RELEASE
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                  <h3 className="text-xl font-bold mb-2">{project.name}</h3>
-                  <p className="text-sm opacity-90">{project.location}</p>
-                </div>
               </div>
-              <CardContent className="p-6">
-                <div className="space-y-3">
-                  <h3 className="text-xl font-bold text-brand-navy group-hover:text-brand-blue transition-colors">
-                    {project.name}
-                  </h3>
-                  <p className="text-brand-gray text-sm leading-relaxed">
-                    {project.description}
-                  </p>
-                  <div className="flex items-center justify-between pt-2">
-                    <span className="text-sm font-medium text-brand-blue">
-                      📍 {project.location}
-                    </span>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="text-brand-blue hover:text-brand-blue"
-                      onClick={() => handleViewDetails(project.slug)}
-                    >
-                      View Details →
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+
+              {/* Blue Label Label - Popped out */}
+              <div
+                className="absolute left-1/2 -translate-x-1/2 bg-[#1953B4] text-white text-center py-3 px-6 shadow-xl z-20"
+                style={{
+                  bottom: '-25px', // Pushed out of the box
+                  width: '70%',
+                  maxWidth: '280px',
+                  borderRadius: '8px' // Standard rounded corners for a "separate box" look
+                }}
+              >
+                <h3 className="text-lg font-bold leading-tight">{project.name}</h3>
+                <p className="text-sm opacity-90">{project.location}</p>
+              </div>
+            </div>
           ))}
         </div>
       </div>

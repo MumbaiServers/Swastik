@@ -5,6 +5,7 @@ interface StackedCard {
   borderColor?: string;
   background?: string;
   content: React.ReactNode;
+  customStyles?: React.CSSProperties;
 }
 interface StackedCardsProps {
   cards: StackedCard[];
@@ -17,93 +18,41 @@ const StackedCards: React.FC<StackedCardsProps> = ({
   cardClassName = ''
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeCard, setActiveCard] = useState(0);
-  useEffect(() => {
-    const updateCards = () => {
-      const scrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const cardElements = containerRef.current?.querySelectorAll('.stacked-card');
-      cardElements?.forEach((card, index) => {
-        const htmlCard = card as HTMLElement;
-        const cardTop = htmlCard.offsetTop;
-        const cardHeight = htmlCard.offsetHeight;
 
-        // Calculate if card should be stacked
-        const distanceFromTop = scrollY - cardTop + windowHeight * 0.2;
-        const progress = Math.max(0, Math.min(1, distanceFromTop / (cardHeight * 0.5)));
-        if (scrollY > cardTop - windowHeight * 0.8) {
-          // Scale down the PREVIOUS cards as new ones come over them
-          const scale = 1 - progress * 0.05 * (index + 1);
-          const translateY = progress * -10 * (index + 1);
-          htmlCard.style.transform = `scale(${scale}) translateY(${translateY}px)`;
-        } else {
-          htmlCard.style.transform = 'scale(1) translateY(0px)';
-        }
-
-        // Update active card indicator
-        if (scrollY >= cardTop - windowHeight * 0.5 && scrollY < cardTop + cardHeight - windowHeight * 0.5) {
-          setActiveCard(index);
-        }
-      });
-    };
-
-    // Smooth scroll behavior
-    let ticking = false;
-    const smoothScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateCards();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    window.addEventListener('scroll', smoothScroll);
-    window.addEventListener('resize', updateCards);
-
-    // Initialize
-    updateCards();
-    return () => {
-      window.removeEventListener('scroll', smoothScroll);
-      window.removeEventListener('resize', updateCards);
-    };
-  }, []);
-  const scrollToCard = (index: number) => {
-    const cardElements = containerRef.current?.querySelectorAll('.stacked-card');
-    const targetCard = cardElements?.[index] as HTMLElement;
-    if (targetCard) {
-      targetCard.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      });
-    }
-  };
-  return <>
+  return (
+    <>
       <div ref={containerRef} className={`relative max-w-6xl mx-auto py-16 ${containerClassName}`}>
-        {cards.map((card, index) => <div key={card.id || index} className={`stacked-card sticky top-8 w-full min-h-[80vh] mb-8 p-12 flex items-center transition-all duration-700 ease-out shadow-2xl ${cardClassName}`} style={{
-        zIndex: 1001 + index,
-        background: card.background || `linear-gradient(135deg, ${card.colors[0]}, ${card.colors[1]})`,
-        border: `1px solid ${card.borderColor || 'rgba(255, 255, 255, 0.5)'}`,
-        borderRadius: '60px 20px 60px 20px',
-        // top-left (curvy), top-right (pointy), bottom-right (curvy), bottom-left (pointy)
-        transformOrigin: 'center bottom',
-        opacity: 1
-      }}>
+        {cards.map((card, index) => (
+          <div
+            key={card.id || index}
+            className={`stacked-card sticky w-full mb-8 p-0 flex items-center transition-all duration-700 ease-out shadow-2xl overflow-hidden ${cardClassName}`}
+            style={{
+              zIndex: 10 + index,
+              // Calculate top offset for the "folder stack" effect
+              top: `calc(100px + ${index * 60}px)`,
+              background: card.background || `linear-gradient(135deg, ${card.colors[0]}, ${card.colors[1]})`,
+              border: `1px solid ${card.borderColor || 'rgba(255, 255, 255, 0.5)'}`,
+              borderRadius: '60px 20px 60px 20px',
+              fontFamily: '"Outfit", sans-serif',
+              ...card.customStyles
+            }}
+          >
             <div className="w-full h-full flex items-center">
               {card.content}
             </div>
-          </div>)}
+          </div>
+        ))}
       </div>
 
       {/* Scroll Indicator */}
-      
+
 
       {/* Mobile responsive styles */}
       <style>
         {`
           @media (max-width: 768px) {
             .stacked-card {
-              padding: 2rem !important;
+              padding: 0 !important;
               min-height: 70vh !important;
               margin-bottom: 1rem !important;
             }
@@ -122,6 +71,7 @@ const StackedCards: React.FC<StackedCardsProps> = ({
           }
         `}
       </style>
-    </>;
+    </>
+  );
 };
 export default StackedCards;
