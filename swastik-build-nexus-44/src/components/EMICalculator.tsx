@@ -27,13 +27,13 @@ const EMICalculator = ({ hideHeading = false }: EMICalculatorProps) => {
     const principal = loanAmount;
     const monthlyRate = interestRate / 100 / 12;
     const months = parseInt(tenure);
-    
-    const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) / 
-                (Math.pow(1 + monthlyRate, months) - 1);
-    
+
+    const emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) /
+      (Math.pow(1 + monthlyRate, months) - 1);
+
     const totalAmount = emi * months;
     const totalInterest = totalAmount - principal;
-    
+
     return {
       emi: Math.round(emi),
       totalAmount: Math.round(totalAmount),
@@ -46,7 +46,7 @@ const EMICalculator = ({ hideHeading = false }: EMICalculatorProps) => {
   const interestPercentage = (calculation.totalInterest / calculation.totalAmount) * 100;
 
   return (
-    <section id="emi-calculator" className="py-20 bg-white">
+    <section id="emi-calculator" className="py-12 bg-white">
       <div className="container mx-auto px-4 lg:px-8">
         {!hideHeading && (
           <div className="text-center mb-12 animate-fade-in">
@@ -138,8 +138,8 @@ const EMICalculator = ({ hideHeading = false }: EMICalculatorProps) => {
                       // Reverse calculate loan amount based on EMI
                       const monthlyRate = interestRate / 100 / 12;
                       const months = parseInt(tenure);
-                      const principal = (value[0] * (Math.pow(1 + monthlyRate, months) - 1)) / 
-                                       (monthlyRate * Math.pow(1 + monthlyRate, months));
+                      const principal = (value[0] * (Math.pow(1 + monthlyRate, months) - 1)) /
+                        (monthlyRate * Math.pow(1 + monthlyRate, months));
                       setLoanAmount(Math.round(principal));
                     }}
                     max={100000}

@@ -64,7 +64,7 @@ const ProjectsSection = () => {
   };
 
   return (
-    <section id="projects" className="py-20 bg-white">
+    <section id="projects" className="py-12 bg-white">
       <div className="container mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12 animate-fade-in">
@@ -79,10 +79,10 @@ const ProjectsSection = () => {
           {/* Tab Navigation */}
           <div className="flex justify-center space-x-2 bg-brand-light-gray rounded-lg p-2 inline-flex">
             <Button
-              variant={activeTab === "completed" ? "brand" : "ghost"}
+              variant={activeTab === "completed" ? "default" : "ghost"}
               size="lg"
               onClick={() => setActiveTab("completed")}
-              className="px-8"
+              className={`px-8 ${activeTab === "completed" ? "bg-[#1953B4] hover:bg-[#1953B4]/90 text-white" : ""}`}
             >
               Completed
             </Button>

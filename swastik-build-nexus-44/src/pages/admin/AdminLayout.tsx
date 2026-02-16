@@ -18,6 +18,7 @@ import AdminProjects from './AdminProjects';
 import AdminBlogs from './AdminBlogs';
 import AdminFAQs from './AdminFAQs';
 import AdminSettings from './AdminSettings';
+import AdminLeads from './AdminLeads';
 
 const AdminLayout = () => {
   return (
@@ -25,13 +26,13 @@ const AdminLayout = () => {
       <SidebarProvider>
         <div className="min-h-screen flex w-full">
           <AdminSidebar />
-          
+
           <div className="flex-1 flex flex-col">
             <header className="h-14 flex items-center border-b bg-background px-4">
               <SidebarTrigger />
               <h1 className="ml-4 text-lg font-medium">Admin Panel</h1>
             </header>
-            
+
             <main className="flex-1 p-6 bg-muted/30">
               <Routes>
                 <Route path="/" element={<AdminDashboard />} />
@@ -48,6 +49,7 @@ const AdminLayout = () => {
                 <Route path="/projects" element={<AdminProjects />} />
                 <Route path="/blogs" element={<AdminBlogs />} />
                 <Route path="/faqs" element={<AdminFAQs />} />
+                <Route path="/leads" element={<AdminLeads />} />
                 <Route path="/settings" element={<AdminSettings />} />
               </Routes>
             </main>

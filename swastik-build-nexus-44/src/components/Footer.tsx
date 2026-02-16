@@ -9,7 +9,7 @@ const Footer = () => {
       locations: ["Ghatkopar", "Mulund", "Chembur", "Vikhroli"]
     },
     {
-      title: "2 BHK Flats", 
+      title: "2 BHK Flats",
       locations: ["Ghatkopar", "Mulund", "Chembur", "Vikhroli"]
     },
     {
@@ -30,11 +30,11 @@ const Footer = () => {
       {/* Contact CTA Section - Compact */}
       <div className="border-b border-white/10">
         <div className="container mx-auto px-4 lg:px-6 py-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          <div className="flex overflow-x-auto sm:grid sm:grid-cols-3 gap-4 max-w-4xl mx-auto projects-scroll snap-x snap-mandatory pb-2">
             {/* Phone */}
-            <div className="text-center group">
-              <Button 
-                variant="ghost" 
+            <div className="text-center group min-w-[240px] sm:min-w-0 snap-center">
+              <Button
+                variant="ghost"
                 size="sm"
                 className="w-full h-auto flex-col space-y-2 p-4 bg-white/5 hover:bg-brand-blue/20 border border-white/10 rounded-lg transition-all duration-300"
               >
@@ -49,9 +49,9 @@ const Footer = () => {
             </div>
 
             {/* Email */}
-            <div className="text-center group">
-              <Button 
-                variant="ghost" 
+            <div className="text-center group min-w-[240px] sm:min-w-0 snap-center">
+              <Button
+                variant="ghost"
                 size="sm"
                 className="w-full h-auto flex-col space-y-2 p-4 bg-white/5 hover:bg-brand-blue/20 border border-white/10 rounded-lg transition-all duration-300"
               >
@@ -66,18 +66,18 @@ const Footer = () => {
             </div>
 
             {/* Enquiry */}
-            <div className="text-center group">
-              <Button 
-                variant="brand" 
+            <div className="text-center group min-w-[240px] sm:min-w-0 snap-center">
+              <Button
+                variant="ghost"
                 size="sm"
-                className="w-full h-auto flex-col space-y-2 p-4 hover:scale-105 shadow-brand"
+                className="w-full h-auto flex-col space-y-2 p-4 bg-white/5 hover:bg-brand-blue/20 border border-white/10 rounded-lg transition-all duration-300"
               >
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center">
                   <MessageSquare className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold">Enquiry Now</p>
-                  <p className="text-xs text-white/90">Click to Connect Instantly</p>
+                  <p className="text-sm font-bold text-white">Enquiry Now</p>
+                  <p className="text-xs text-white/70">Click to Connect Instantly</p>
                 </div>
               </Button>
             </div>
@@ -87,9 +87,9 @@ const Footer = () => {
 
       {/* Main Footer Content - Compact */}
       <div className="container mx-auto px-4 lg:px-6 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-8 max-w-6xl mx-auto projects-scroll snap-x snap-mandatory pb-4">
           {/* Company Info */}
-          <div className="space-y-4">
+          <div className="space-y-4 min-w-[280px] md:min-w-0 snap-center">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center">
                 <img src={swastikLogo} alt="Swastik Group" className="h-8 w-auto filter brightness-0 invert" />
@@ -108,7 +108,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links - Compact */}
-          <div className="space-y-4">
+          <div className="space-y-4 min-w-[280px] md:min-w-0 snap-center">
             <h3 className="text-lg font-bold text-white">Quick Links</h3>
             <div className="grid grid-cols-3 gap-4">
               {quickLinks.map((section, index) => (
@@ -131,7 +131,7 @@ const Footer = () => {
           </div>
 
           {/* Social Media */}
-          <div className="space-y-4">
+          <div className="space-y-4 min-w-[280px] md:min-w-0 snap-center">
             <h3 className="text-lg font-bold text-white">Follow Us</h3>
             <div className="flex items-center space-x-3">
               {socialLinks.map((social) => (

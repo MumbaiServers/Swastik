@@ -39,7 +39,7 @@ const ProjectDetails = () => {
       fullDescription: "The minute you step in from the colossal gates, the massive living space will pause your senses. This magnificent tower of 22 storys will ensure that you are treated to an experience that is tailored to your noble tastes. Walk from room to room amidst rich textures and gorgeous interiors. Your palatial abode has been curated with the finest amenities from the mines of excellence.",
       connectivities: [
         "2 mins from railway station / metro station",
-        "2 mins from Eastern Express Highway", 
+        "2 mins from Eastern Express Highway",
         "Easy access to JVLR & Eastern Freeway",
         "10 mins to Powai"
       ],
@@ -50,7 +50,7 @@ const ProjectDetails = () => {
       ]
     },
     "swastik-heights": {
-      name: "Swastik Heights", 
+      name: "Swastik Heights",
       location: "Vikhroli East",
       image: projectTower2,
       description: "Premium high-rise apartments with scenic views and world-class amenities.",
@@ -68,20 +68,180 @@ const ProjectDetails = () => {
     },
     "swastik-grandeur": {
       name: "Swastik Grandeur",
-      location: "Mulund West", 
+      location: "Mulund West",
       image: projectTower3,
       description: "Contemporary living spaces with world-class facilities and modern architecture.",
       fullDescription: "Discover a new dimension of luxury with spacious homes designed for the modern family, featuring premium finishes and state-of-the-art amenities.",
       connectivities: [
         "2 mins from Mulund Railway Station",
         "Easy access to LBS Marg",
-        "Close to R Mall Mulund", 
+        "Close to R Mall Mulund",
         "Quick connectivity to Thane"
       ],
       configurations: [
         { type: "1 BHK", area: "485 RCA Sq. Ft", price: "Click for price" },
         { type: "2 BHK", area: "720 RCA Sq. Ft", price: "Click for price" },
         { type: "3 BHK", area: "1050 RCA Sq. Ft", price: "Click for price" }
+      ]
+    },
+    "swastik-pearl": {
+      name: "Swastik Pearl",
+      location: "Ghatkopar West",
+      image: projectTower1, // Reusing similar project image
+      description: "Experience luxury living with modern amenities and premium finishes.",
+      fullDescription: "Swastik Pearl offers a perfect blend of comfort and luxury. Located in the prime area of Ghatkopar West, it provides easy access to all major hubs while offering a peaceful living environment.",
+      connectivities: [
+        "2 mins from railway station / metro station",
+        "2 mins from Eastern Express Highway",
+        "Easy access to JVLR",
+        "10 mins to Powai"
+      ],
+      configurations: [
+        { type: "1 BHK", area: "418 RCA Sq. Ft", price: "Click for price" },
+        { type: "2 BHK", area: "579 RCA Sq. Ft", price: "Click for price" },
+        { type: "3 BHK", area: "811 RCA Sq. Ft", price: "Click for price" }
+      ]
+    },
+    "swastik-elegance": {
+      name: "Swastik Elegance",
+      location: "Vikhroli East",
+      image: projectTower2,
+      description: "Premium high-rise apartments with scenic views and world-class facilities.",
+      fullDescription: "Swastik Elegance is designed for those who appreciate the finer things in life. With state-of-the-art amenities and stunning architecture, it redefines modern living in Vikhroli.",
+      connectivities: [
+        "3 mins from Vikhroli Railway Station",
+        "Direct access to Eastern Express Highway",
+        "Close to R City Mall",
+        "15 mins to BKC"
+      ],
+      configurations: [
+        { type: "2 BHK", area: "650 RCA Sq. Ft", price: "Click for price" },
+        { type: "3 BHK", area: "920 RCA Sq. Ft", price: "Click for price" }
+      ]
+    },
+    "swastik-onyx": {
+      name: "Swastik Onyx",
+      location: "Mulund West",
+      image: projectTower3,
+      description: "Contemporary living spaces with sustainable design and smart features.",
+      fullDescription: "Swastik Onyx brings you sustainable luxury with eco-friendly features and smart home capabilities. Located in the heart of Mulund, it connects you to the best of city life.",
+      connectivities: [
+        "2 mins from Mulund Railway Station",
+        "Easy access to LBS Marg",
+        "Close to R Mall Mulund",
+        "Quick connectivity to Thane"
+      ],
+      configurations: [
+        { type: "1 BHK", area: "485 RCA Sq. Ft", price: "Click for price" },
+        { type: "2 BHK", area: "720 RCA Sq. Ft", price: "Click for price" },
+        { type: "3 BHK", area: "1050 RCA Sq. Ft", price: "Click for price" }
+      ]
+    },
+    // Duplicate entries for the repeated cards in the projects list to ensure they all work
+    "swastik-pearl-2": {
+      name: "Swastik Pearl",
+      location: "Ghatkopar West",
+      image: projectTower1,
+      description: "Experience luxury living with modern amenities and premium finishes.",
+      fullDescription: "Swastik Pearl offers a perfect blend of comfort and luxury. Located in the prime area of Ghatkopar West, it provides easy access to all major hubs while offering a peaceful living environment.",
+      connectivities: [
+        "2 mins from railway station / metro station",
+        "2 mins from Eastern Express Highway",
+        "Easy access to JVLR",
+        "10 mins to Powai"
+      ],
+      configurations: [
+        { type: "1 BHK", area: "418 RCA Sq. Ft", price: "Click for price" },
+        { type: "2 BHK", area: "579 RCA Sq. Ft", price: "Click for price" },
+        { type: "3 BHK", area: "811 RCA Sq. Ft", price: "Click for price" }
+      ]
+    },
+    "swastik-elegance-2": {
+      name: "Swastik Elegance",
+      location: "Vikhroli East",
+      image: projectTower2,
+      description: "Premium high-rise apartments with scenic views and world-class facilities.",
+      fullDescription: "Swastik Elegance is designed for those who appreciate the finer things in life. With state-of-the-art amenities and stunning architecture, it redefines modern living in Vikhroli.",
+      connectivities: [
+        "3 mins from Vikhroli Railway Station",
+        "Direct access to Eastern Express Highway",
+        "Close to R City Mall",
+        "15 mins to BKC"
+      ],
+      configurations: [
+        { type: "2 BHK", area: "650 RCA Sq. Ft", price: "Click for price" },
+        { type: "3 BHK", area: "920 RCA Sq. Ft", price: "Click for price" }
+      ]
+    },
+    "swastik-onyx-2": {
+      name: "Swastik Onyx",
+      location: "Mulund West",
+      image: projectTower3,
+      description: "Contemporary living spaces with sustainable design and smart features.",
+      fullDescription: "Swastik Onyx brings you sustainable luxury with eco-friendly features and smart home capabilities. Located in the heart of Mulund, it connects you to the best of city life.",
+      connectivities: [
+        "2 mins from Mulund Railway Station",
+        "Easy access to LBS Marg",
+        "Close to R Mall Mulund",
+        "Quick connectivity to Thane"
+      ],
+      configurations: [
+        { type: "1 BHK", area: "485 RCA Sq. Ft", price: "Click for price" },
+        { type: "2 BHK", area: "720 RCA Sq. Ft", price: "Click for price" },
+        { type: "3 BHK", area: "1050 RCA Sq. Ft", price: "Click for price" }
+      ]
+    },
+    "swastik-onyx-3": {
+      name: "Swastik Onyx",
+      location: "Mulund West",
+      image: projectTower3,
+      description: "Contemporary living spaces with sustainable design and smart features.",
+      fullDescription: "Swastik Onyx brings you sustainable luxury with eco-friendly features and smart home capabilities. Located in the heart of Mulund, it connects you to the best of city life.",
+      connectivities: [
+        "2 mins from Mulund Railway Station",
+        "Easy access to LBS Marg",
+        "Close to R Mall Mulund",
+        "Quick connectivity to Thane"
+      ],
+      configurations: [
+        { type: "1 BHK", area: "485 RCA Sq. Ft", price: "Click for price" },
+        { type: "2 BHK", area: "720 RCA Sq. Ft", price: "Click for price" },
+        { type: "3 BHK", area: "1050 RCA Sq. Ft", price: "Click for price" }
+      ]
+    },
+    "swastik-crown": {
+      name: "Swastik Crown",
+      location: "Chembur East",
+      image: projectTower1,
+      description: "Ultra-modern residential tower under construction with premium amenities.",
+      fullDescription: "Swastik Crown is an upcoming landmark in Chembur East, offering futuristic living spaces and premium lifestyle amenities.",
+      connectivities: [
+        "Near Monorail Station",
+        "Easy access to Eastern Freeway",
+        "Close to K Star Mall",
+        "20 mins to BKC"
+      ],
+      configurations: [
+        { type: "2 BHK", area: "750 RCA Sq. Ft", price: "Click for price" },
+        { type: "3 BHK", area: "1100 RCA Sq. Ft", price: "Click for price" }
+      ]
+    },
+    "swastik-palace": {
+      name: "Swastik Palace",
+      location: "Ghatkopar East",
+      image: projectTower2,
+      description: "Luxurious apartments with premium amenities and modern design.",
+      fullDescription: "Swastik Palace redefines luxury in Ghatkopar East with exquisite design and world-class facilities for the discerning few.",
+      connectivities: [
+        "5 mins from Ghatkopar Station",
+        "Close to R City Mall",
+        "Easy access to LBS Marg",
+        "Near Schools & Hospitals"
+      ],
+      configurations: [
+        { type: "1 BHK", area: "450 RCA Sq. Ft", price: "Click for price" },
+        { type: "2 BHK", area: "650 RCA Sq. Ft", price: "Click for price" },
+        { type: "3 BHK", area: "950 RCA Sq. Ft", price: "Click for price" }
       ]
     }
   };
@@ -170,7 +330,7 @@ const ProjectDetails = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="relative h-[50vh] md:h-[55vh] overflow-hidden">
         <img
@@ -183,25 +343,26 @@ const ProjectDetails = () => {
           <h1 className="text-3xl md:text-4xl font-bold mb-2">{project.name}</h1>
           <p className="text-lg md:text-xl">📍 {project.location}</p>
         </div>
-        
-        {/* Section Navigation Ribbon */}
-        <div className="absolute bottom-0 left-0 right-0 bg-[#1953B4]/95">
-          <div className="container mx-auto px-3 md:px-6">
-            <div className="flex gap-3 md:gap-4 items-center justify-between overflow-x-auto py-2 md:py-3 text-white">
-              <button onClick={() => scrollTo('overview')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Overview</button>
-              <button onClick={() => scrollTo('connectivities')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Connectivities</button>
-              <button onClick={() => scrollTo('amenities')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Amenities</button>
-              <button onClick={() => scrollTo('floor-plans')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Floor Plans</button>
-              <button onClick={() => scrollTo('video')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Video</button>
-              <button onClick={() => scrollTo('developer')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Developer</button>
-              <button onClick={() => scrollTo('other-projects')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Other Projects</button>
-              <button onClick={() => scrollTo('contact')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Contact</button>
-            </div>
-          </div>
-        </div>
+
       </section>
 
-      <div className="container mx-auto px-4 py-10 sm:py-12 space-y-12">
+      {/* Section Navigation Ribbon */}
+      <div className="w-full bg-[#1953B4]">
+        <div className="container mx-auto px-3 md:px-6">
+          <div className="flex gap-3 md:gap-4 items-center justify-between overflow-x-auto py-2 md:py-3 text-white projects-scroll">
+            <button onClick={() => scrollTo('overview')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Overview</button>
+            <button onClick={() => scrollTo('connectivities')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Connectivities</button>
+            <button onClick={() => scrollTo('amenities')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Amenities</button>
+            <button onClick={() => scrollTo('floor-plans')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Floor Plans</button>
+            <button onClick={() => scrollTo('video')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Video</button>
+            <button onClick={() => scrollTo('developer')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Developer</button>
+            <button onClick={() => scrollTo('other-projects')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Other Projects</button>
+            <button onClick={() => scrollTo('contact')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10">Contact</button>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-0">
         {/* Project Overview */}
         <section className="relative bg-[#EEF8FF]" id="overview">
           <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-[#EEF8FF]">
@@ -262,8 +423,8 @@ const ProjectDetails = () => {
                   </ul>
                 </div>
                 <div className="relative">
-                  <div className="w-full h-72 md:h-80 bg-gradient-to-br from-orange-200 to-orange-400 rounded-2xl flex items-center justify-center">
-                    <div className="text-center text-white">
+                  <div className="w-full h-72 md:h-80 bg-gradient-to-br from-[#DAEFFF] to-[#EEF8FF] rounded-2xl flex items-center justify-center border border-[#1953B4]/10">
+                    <div className="text-center text-[#1953B4]">
                       <div className="text-2xl font-bold mb-2">Location Map</div>
                       <div className="text-lg">Interactive map coming soon</div>
                     </div>
@@ -275,7 +436,7 @@ const ProjectDetails = () => {
         </section>
 
         {/* Gallery */}
-        <section>
+        <section className="container mx-auto px-4 py-12 md:py-20">
           <h2 className="text-3xl font-bold text-center mb-4">Gallery</h2>
           <div className="w-16 h-1 bg-primary mx-auto mb-8" />
 
@@ -299,7 +460,7 @@ const ProjectDetails = () => {
             {/* Track */}
             <div
               ref={galleryRef}
-              className="overflow-x-auto no-scrollbar px-10"
+              className="overflow-x-auto projects-scroll px-10"
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
               onTouchStart={() => setIsPaused(true)}
@@ -351,17 +512,18 @@ const ProjectDetails = () => {
                 </div>
               </div>
 
-              <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                <div className="relative overflow-hidden">
+              <div className="grid lg:grid-cols-[60%_40%] gap-8 lg:gap-12 items-center">
+                <div className="relative">
                   <img
                     src={amenityPool}
                     alt="Amenities"
-                    className="w-full h-72 md:h-96 object-cover"
+                    className="w-full object-cover"
                     style={{
-                      borderTopLeftRadius: '2rem',
+                      borderTopLeftRadius: '200px',
                       borderTopRightRadius: '0',
-                      borderBottomRightRadius: '2rem',
-                      borderBottomLeftRadius: '0'
+                      borderBottomRightRadius: '200px',
+                      borderBottomLeftRadius: '0',
+                      height: '431px'
                     }}
                   />
                 </div>
@@ -374,21 +536,12 @@ const ProjectDetails = () => {
                   ))}
                 </ol>
               </div>
-
-              {/* Wide illustrative image below amenities */}
-              <div className="mt-10">
-                <img
-                  src={amenityGym}
-                  alt="Amenities Layout"
-                  className="w-full h-56 md:h-72 lg:h-80 object-cover"
-                />
-              </div>
             </div>
           </div>
         </section>
 
         {/* Floor Plans */}
-        <section id="floor-plans">
+        <section id="floor-plans" className="container mx-auto px-4 py-12 md:py-20">
           <h2 className="text-3xl font-bold text-center mb-3">Floor Plans and Configurations</h2>
           <div className="w-44 h-2 bg-primary mx-auto mb-8 rounded-full" />
 
@@ -414,11 +567,10 @@ const ProjectDetails = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveFloorPlanTab(tab.id as 'a-wing' | 'b-wing' | 'c-wing')}
-                    className={`pb-3 -mb-px text-base md:text-lg transition-colors ${
-                      activeFloorPlanTab === tab.id
-                        ? 'text-brand-blue border-b-2 border-brand-blue'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
+                    className={`pb-3 -mb-px text-base md:text-lg transition-colors ${activeFloorPlanTab === tab.id
+                      ? 'text-brand-blue border-b-2 border-brand-blue'
+                      : 'text-muted-foreground hover:text-foreground'
+                      }`}
                   >
                     {tab.label}
                   </button>
@@ -485,7 +637,7 @@ const ProjectDetails = () => {
         </section>
 
         {/* EMI Calculator */}
-        <section>
+        <section className="container mx-auto px-4 py-12 md:py-20">
           <h2 className="text-3xl font-bold text-center mb-8 md:mb-12">EMI Calculator</h2>
           <div className="w-16 h-1 bg-primary mx-auto mb-8 md:mb-12" />
           <EMICalculator hideHeading />
@@ -493,86 +645,95 @@ const ProjectDetails = () => {
       </div>
 
       {/* About Developer + Stats + Projects */}
-      <section className="py-12 lg:py-16 bg-[#EEF8FF]" id="developer">
+      <section className="py-12 lg:py-20 bg-[#DDF4FF]" id="developer">
         <div className="container mx-auto px-4 lg:px-8">
-          {/* About Developer block */}
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
-            <div className="bg-white/70 backdrop-blur rounded-2xl p-6 md:p-8 shadow-sm">
-              <h2 className="text-3xl font-bold text-brand-navy mb-4">About Developer</h2>
-              <div className="w-20 h-1 bg-brand-blue rounded-full mb-6" />
-              <p className="text-brand-gray leading-relaxed">
-                At Swastik Group, we’re dedicated to honesty, openness, and quality work in each
-                single thing we do. We’ve successfully completed various projects that blend contemporary
-                design with luxury. We’re proud to build durable homes and buildings that reflects comfortable
-                living. With a committed and talented team, we aim to top expectations and leave a positive
+          {/* Main Grid: Card & Image */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start mb-0">
+            {/* Left Card */}
+            <div className="bg-[#D0EBFD] p-8 lg:p-12 rounded-[30px] relative z-10">
+              <h2 className="text-3xl lg:text-4xl font-bold text-black mb-4">About Developer</h2>
+              <div className="w-24 h-2 bg-[#5CA1F1] mb-6"></div>
+              <p className="text-gray-700 leading-relaxed text-base lg:text-lg">
+                At Swastik Group, we're dedicated to honesty, openness, and quality work
+                in each single thing we do. We've successfully completed various projects
+                that blend contemporary design with luxury. We're proud to build durable
+                homes and buildings that reflects comfortable living. With a committed
+                and talented team, we aim to top expectations and leave a positive
                 mark in the communities we serve.
               </p>
             </div>
-            <div className="relative overflow-hidden">
+
+            {/* Right Image */}
+            <div className="relative h-full flex justify-end">
               <img
                 src={project.image}
                 alt="Developer Visual"
-                className="w-full h-80 md:h-96 object-cover"
+                className="w-full h-full object-cover shadow-lg"
                 style={{
-                  borderTopLeftRadius: '3rem',
+                  width: '100%',
+                  maxWidth: '597px',
+                  height: '597px',
+                  borderTopLeftRadius: '220px',
                   borderTopRightRadius: '0',
-                  borderBottomRightRadius: '3rem',
+                  borderBottomRightRadius: '200px',
                   borderBottomLeftRadius: '0'
                 }}
               />
             </div>
           </div>
 
-          {/* Stats band (reused style) */}
-          <div className="mt-10 bg-gradient-brand p-8 lg:p-12 shadow-brand overflow-hidden" style={{ borderRadius: '20px 60px 20px 60px' }}>
-            <div className="flex items-center w-full overflow-hidden [--duration:30s] [--gap:1.5rem]">
-              <div className="flex w-max animate-marquee hover:pause">
-                {[
-                  { value: "25+", label: "Years of Excellence" },
-                  { value: "1.5", label: "Million Sq. Ft. Developed" },
-                  { value: "1500+", label: "Happy Families" },
-                  { value: "6.5", label: "Lakh Sq. Ft. Under Construction" },
-                  { value: "22", label: "Successful Projects" },
-                  { value: "7", label: "Prime Locations" }
-                ].map((stat, index) => (
-                  <div key={`about-first-${index}`} className="text-center text-white min-w-[120px] sm:min-w-[160px] lg:min-w-[200px] flex-shrink-0 mx-2 sm:mx-4 lg:mx-6">
-                    <div className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold mb-1 sm:mb-2">{stat.value}</div>
-                    <div className="text-xs sm:text-sm lg:text-base opacity-90 whitespace-normal leading-tight">{stat.label}</div>
-                  </div>
-                ))}
+          {/* Stats Bar - Static & Shaped */}
+          <div
+            className="bg-[#1953B4] text-white py-10 px-6 lg:px-12 relative z-20 -mt-10 lg:-mt-20 mx-4 lg:mx-0 shadow-xl"
+            style={{
+              borderTopLeftRadius: '100px',
+              borderTopRightRadius: '0',
+              borderBottomRightRadius: '100px',
+              borderBottomLeftRadius: '0'
+            }}
+          >
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 text-center items-start">
+              <div className="flex flex-col items-center">
+                <div className="text-3xl lg:text-4xl font-bold mb-1">25+</div>
+                <div className="text-xs lg:text-sm opacity-90 leading-tight">Years<br />of Experience</div>
               </div>
-              <div className="flex w-max animate-marquee hover:pause" aria-hidden="true">
-                {[
-                  { value: "25+", label: "Years of Excellence" },
-                  { value: "1.5", label: "Million Sq. Ft. Developed" },
-                  { value: "1500+", label: "Happy Families" },
-                  { value: "6.5", label: "Lakh Sq. Ft. Under Construction" },
-                  { value: "22", label: "Successful Projects" },
-                  { value: "7", label: "Prime Locations" }
-                ].map((stat, index) => (
-                  <div key={`about-second-${index}`} className="text-center text-white min-w-[120px] sm:min-w-[160px] lg:min-w-[200px] flex-shrink-0 mx-2 sm:mx-4 lg:mx-6">
-                    <div className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold mb-1 sm:mb-2">{stat.value}</div>
-                    <div className="text-xs sm:text-sm lg:text-base opacity-90 whitespace-normal leading-tight">{stat.label}</div>
-                  </div>
-                ))}
+              <div className="flex flex-col items-center">
+                <div className="text-3xl lg:text-4xl font-bold mb-1">1.5<span className="text-lg align-top"></span></div>
+                <div className="text-xs lg:text-sm opacity-90 leading-tight">Million sq.<br />ft. developed</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="text-3xl lg:text-4xl font-bold mb-1">1500+</div>
+                <div className="text-xs lg:text-sm opacity-90 leading-tight">Happy<br />Families</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="text-3xl lg:text-4xl font-bold mb-1">6.5</div>
+                <div className="text-xs lg:text-sm opacity-90 leading-tight">Lakh sq.<br />ft. ongoing</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="text-3xl lg:text-4xl font-bold mb-1">22</div>
+                <div className="text-xs lg:text-sm opacity-90 leading-tight">Projects<br />are completed</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="text-3xl lg:text-4xl font-bold mb-1">7</div>
+                <div className="text-xs lg:text-sm opacity-90 leading-tight">Projects which<br />are ongoing</div>
               </div>
             </div>
           </div>
 
           {/* Projects copy */}
-          <div className="mt-12" id="other-projects">
-            <div className="bg-white rounded-2xl">
+          <div className="mt-0" id="other-projects">
+            <div>
               <ProjectsSection />
             </div>
           </div>
 
           {/* Blogs section (copied from home) */}
-          <div className="mt-12">
+          <div className="mt-0">
             <BlogsSection />
           </div>
 
           {/* FAQ section (copied from home) */}
-          <div className="mt-12">
+          <div className="mt-0">
             <FAQSection />
           </div>
         </div>

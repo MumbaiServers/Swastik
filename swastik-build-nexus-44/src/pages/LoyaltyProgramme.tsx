@@ -31,83 +31,118 @@ const LoyaltyProgramme = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       {/* Hero Section */}
-      <section className="py-10 lg:py-12">
+      {/* Hero Section */}
+      <section className="pt-10 lg:pt-20 pb-16 lg:pb-24 overflow-hidden">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-3xl lg:text-5xl font-bold text-brand-navy mb-6">
-                  Swastik One Family Referral Program
-                </h1>
-                <div className="w-20 h-1 bg-brand-blue rounded-full mb-6"></div>
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center relative">
+            {/* Left Content */}
+            <div className="z-10 pt-8 flex flex-col h-full justify-between min-h-[600px]">
+              <div className="space-y-8">
+                <div>
+                  <h1 className="text-3xl lg:text-5xl font-bold text-black mb-4 tracking-tight leading-tight">
+                    Swastik One Family<br />
+                    Referral Program
+                  </h1>
+                  <div className="w-24 h-1.5 bg-[#60A5FA] rounded-full mb-8"></div>
+                </div>
+
+                <div className="space-y-4 max-w-lg">
+                  <h2 className="text-xl font-bold text-black">
+                    Refer and Earn Big Rewards!
+                  </h2>
+                  <p className="text-base text-gray-600 leading-relaxed">
+                    We value our community and believe in growing together.
+                    Be a part of the Swastik One Family by referring your
+                    friends or family and earn exciting rewards.
+                  </p>
+                </div>
+
+                <Button
+                  className="bg-[#1953B4] hover:bg-[#1953B4]/90 text-white text-lg font-medium px-8 py-6 h-auto rounded-md flex items-center gap-3 w-fit shadow-lg mt-8"
+                >
+                  <Phone className="w-5 h-5 -scale-x-100" />
+                  <span>022-50646565 / 9833108888</span>
+                </Button>
               </div>
-              
-              <div className="space-y-4">
-                <h2 className="text-xl lg:text-2xl font-semibold text-brand-navy">
-                  Refer and Earn Big Rewards!
-                </h2>
-                <p className="text-lg text-brand-gray leading-relaxed">
-                  We value our community and believe in growing together. 
-                  Be a part of the Swastik One Family by referring your 
-                  friends or family and earn exciting rewards.
-                </p>
+
+              {/* 1 BHK & 2 BHK Bonus Cards - Positioned in the left column */}
+              <div className="flex flex-wrap gap-5 mt-12 w-full relative z-20 pb-0 lg:translate-y-16">
+                {/* 1 BHK Card */}
+                <div className="bg-[#DAEFFF] p-6 lg:p-8 min-w-[240px] flex-1 rounded-[30px] rounded-br-[0] shadow-sm">
+                  <h3 className="text-lg font-bold text-black mb-1">Apartment Type: 1 BHK</h3>
+                  <p className="text-xl font-bold text-black">Referral Bonus: ₹50,000</p>
+                </div>
+
+                {/* 2 BHK Card */}
+                <div className="bg-[#DAEFFF] p-6 lg:p-8 min-w-[240px] flex-1 rounded-[30px] rounded-br-[0] shadow-sm">
+                  <h3 className="text-lg font-bold text-black mb-1">Apartment Type: 2 BHK</h3>
+                  <p className="text-xl font-bold text-black">Referral Bonus: ₹75,000</p>
+                </div>
               </div>
-              
-              <Button variant="brand" size="lg" className="flex items-center gap-2">
-                <Phone className="w-5 h-5" />
-                022-50646565 / 9833108888
-              </Button>
             </div>
-            
-            <div className="relative flex justify-center lg:justify-end">
-              <img 
-                src={familyImage} 
-                alt="Happy Family" 
-                className="w-full h-auto max-w-md md:max-w-lg"
+
+            {/* Right Image Section */}
+            <div className="relative mt-8 lg:mt-0 flex justify-center lg:justify-start lg:pl-10">
+              {/* Gray Background Shape */}
+              <div
+                className="absolute bg-[#F3F4F6] -z-10"
                 style={{
-                  borderTopLeftRadius: '3rem',
-                  borderTopRightRadius: '0',
-                  borderBottomRightRadius: '3rem',
-                  borderBottomLeftRadius: '0'
+                  width: '120%',
+                  height: '110%',
+                  top: '-10%',
+                  right: '-10%',
+                  borderTopLeftRadius: '200px',
+                  borderBottomLeftRadius: '100px'
                 }}
               />
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Referral Bonus Cards */}
-      <section className="py-10 lg:py-12 bg-muted/50">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-border/50">
-              <h3 className="text-lg font-semibold text-brand-navy mb-2">Apartment Type: 1BHK</h3>
-              <p className="text-2xl font-bold text-brand-blue">Referral Bonus: ₹50,000</p>
-            </div>
-            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-border/50">
-              <h3 className="text-lg font-semibold text-brand-navy mb-2">Apartment Type: 2BHK</h3>
-              <p className="text-2xl font-bold text-brand-blue">Referral Bonus: ₹75,000</p>
-            </div>
-            <div className="bg-gradient-brand p-6 rounded-2xl shadow-brand text-white">
-              <h3 className="text-lg font-semibold mb-2">Apartment Type: 3BHK</h3>
-              <p className="text-2xl font-bold">Referral Bonus: ₹1,00,000</p>
+              <div className="relative">
+                <img
+                  src={familyImage}
+                  alt="Happy Family"
+                  className="object-cover shadow-2xl z-0"
+                  style={{
+                    width: '552px',
+                    height: '608px',
+                    borderTopLeftRadius: '200px',
+                    borderBottomRightRadius: '200px',
+                    opacity: 1,
+                  }}
+                />
+
+                {/* 3 BHK Card - Dark Blue - Absolute positioned bottom-left of image */}
+                <div className="bg-[#1953B4] p-6 lg:p-8 rounded-[30px] rounded-tr-[0] rounded-bl-[30px] shadow-lg text-white absolute bottom-0 left-0 transform -translate-x-[25%] translate-y-[55%] z-20"
+                  style={{
+                    minWidth: '280px',
+                    borderTopRightRadius: '30px', /* Matches top right curve */
+                    borderBottomLeftRadius: '30px', /* Matches bottom left curve */
+                    borderTopLeftRadius: '0',     /* Sharp corner */
+                    borderBottomRightRadius: '0'  /* Sharp corner */
+                  }}
+                >
+                  <h3 className="text-lg font-bold mb-1">Apartment Type: 3 BHK</h3>
+                  <p className="text-2xl font-bold">Referral Bonus: ₹1,00,000</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Program Form */}
-      <section className="py-10 lg:py-12 relative bg-[#90D4FF80]">
+      <section className="py-10 lg:py-20 relative bg-[#90D4FF80]">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <div 
-              className="bg-white/90 backdrop-blur-sm p-8 lg:p-12 shadow-lg border border-border/20"
-              style={{ 
-                borderTopRightRadius: '2rem',
+          <div className="mx-auto flex justify-center">
+            <div
+              className="bg-white/90 backdrop-blur-sm p-8 lg:p-12 shadow-lg border border-border/20 w-full"
+              style={{
+                maxWidth: '1051px',
+                minHeight: 'auto',
+                borderTopRightRadius: '100px',
                 borderTopLeftRadius: '0',
-                borderBottomLeftRadius: '2rem',
+                borderBottomLeftRadius: '100px',
                 borderBottomRightRadius: '0'
               }}
             >
@@ -242,10 +277,10 @@ const LoyaltyProgramme = () => {
             </div>
           </div>
         </div>
-      </section>
-      
+      </section >
+
       <Footer />
-    </div>
+    </div >
   );
 };
 

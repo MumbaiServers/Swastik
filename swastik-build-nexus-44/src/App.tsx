@@ -15,6 +15,8 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./pages/admin/AdminLayout";
 import { AuthProvider } from "./contexts/AuthContext";
 
+import ScrollToTop from "./components/ScrollToTop";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -23,20 +25,21 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/blogs" element={<Blogs />} />
-          <Route path="/careers" element={<Careers />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/loyalty-programme" element={<LoyaltyProgramme />} />
-          <Route path="/project/:projectId" element={<ProjectDetails />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/*" element={<AdminLayout />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/careers" element={<Careers />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/loyalty-programme" element={<LoyaltyProgramme />} />
+            <Route path="/project/:projectId" element={<ProjectDetails />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/*" element={<AdminLayout />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

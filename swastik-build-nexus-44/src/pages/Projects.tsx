@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Eye } from 'lucide-react';
@@ -10,11 +11,13 @@ import projectTower3 from '@/assets/project-tower-3.jpg';
 
 const Projects = () => {
   const [activeTab, setActiveTab] = useState('completed');
+  const navigate = useNavigate();
 
   const projects = {
     completed: [
       {
         id: 1,
+        slug: 'swastik-pearl',
         name: 'Swastik Pearl',
         subtitle: 'Residential',
         location: 'Ghatkopar West',
@@ -26,6 +29,7 @@ const Projects = () => {
       },
       {
         id: 2,
+        slug: 'swastik-elegance',
         name: 'Swastik Elegance',
         subtitle: 'Residential',
         location: 'Vikhroli East',
@@ -37,6 +41,7 @@ const Projects = () => {
       },
       {
         id: 3,
+        slug: 'swastik-onyx',
         name: 'Swastik Onyx',
         subtitle: 'Residential',
         location: 'Mulund West',
@@ -48,6 +53,7 @@ const Projects = () => {
       },
       {
         id: 4,
+        slug: 'swastik-pearl-2',
         name: 'Swastik Pearl',
         subtitle: 'Residential',
         location: 'Ghatkopar West',
@@ -59,6 +65,7 @@ const Projects = () => {
       },
       {
         id: 5,
+        slug: 'swastik-elegance-2',
         name: 'Swastik Elegance',
         subtitle: 'Residential',
         location: 'Vikhroli East',
@@ -70,6 +77,7 @@ const Projects = () => {
       },
       {
         id: 6,
+        slug: 'swastik-onyx-2',
         name: 'Swastik Onyx',
         subtitle: 'Residential',
         location: 'Mulund West',
@@ -81,6 +89,7 @@ const Projects = () => {
       },
       {
         id: 7,
+        slug: 'swastik-onyx-3',
         name: 'Swastik Onyx',
         subtitle: 'Residential',
         location: 'Mulund West',
@@ -94,6 +103,7 @@ const Projects = () => {
     ongoing: [
       {
         id: 8,
+        slug: 'swastik-crown',
         name: 'Swastik Crown',
         subtitle: 'Residential',
         location: 'Chembur East',
@@ -105,6 +115,7 @@ const Projects = () => {
       },
       {
         id: 9,
+        slug: 'swastik-palace',
         name: 'Swastik Palace',
         subtitle: 'Residential',
         location: 'Ghatkopar East',
@@ -128,9 +139,9 @@ const Projects = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       {/* Blue Gradient Filter Banner */}
-      <section className="py-6 bg-gradient-to-r from-brand-blue to-brand-light-blue">
+      <section className="py-6 bg-[#1953B4]">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center gap-8 text-white">
             <button className="flex items-center gap-2 hover:text-white/80 transition-colors">
@@ -169,7 +180,7 @@ const Projects = () => {
             Our Projects
           </h1>
           <div className="w-20 h-1 bg-brand-blue rounded-full mx-auto mb-6"></div>
-          
+
           {/* Tab Navigation */}
           <div className="flex justify-center mb-8">
             <div className="flex bg-gray-100 rounded-lg p-1">
@@ -177,11 +188,10 @@ const Projects = () => {
                 variant={activeTab === 'completed' ? 'default' : 'ghost'}
                 size="lg"
                 onClick={() => setActiveTab('completed')}
-                className={`px-8 rounded-md transition-all duration-200 ${
-                  activeTab === 'completed' 
-                    ? 'bg-brand-blue text-white shadow-sm' 
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200'
-                }`}
+                className={`px-8 rounded-md transition-all duration-200 ${activeTab === 'completed'
+                  ? 'bg-[#1953B4] text-white shadow-sm'
+                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200'
+                  }`}
               >
                 Completed
               </Button>
@@ -189,11 +199,10 @@ const Projects = () => {
                 variant={activeTab === 'ongoing' ? 'default' : 'ghost'}
                 size="lg"
                 onClick={() => setActiveTab('ongoing')}
-                className={`px-8 rounded-md transition-all duration-200 ${
-                  activeTab === 'ongoing' 
-                    ? 'bg-brand-blue text-white shadow-sm' 
-                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200'
-                }`}
+                className={`px-8 rounded-md transition-all duration-200 ${activeTab === 'ongoing'
+                  ? 'bg-brand-blue text-white shadow-sm'
+                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200'
+                  }`}
               >
                 Ongoing
               </Button>
@@ -204,7 +213,7 @@ const Projects = () => {
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16">
           {projects[activeTab as keyof typeof projects].map((project) => (
-            <Card key={project.id} className="overflow-hidden shadow-brand hover:shadow-brand/80 transition-shadow duration-300 relative group border-0 bg-white/80 backdrop-blur-sm">              
+            <Card key={project.id} className="overflow-hidden shadow-brand hover:shadow-brand/80 transition-shadow duration-300 relative group border-0 bg-white/80 backdrop-blur-sm">
               {/* Project Image with custom border radius */}
               <div className="relative overflow-hidden">
                 <img
@@ -228,7 +237,7 @@ const Projects = () => {
                   </div>
                 </div>
               </div>
- 
+
               <CardContent className="p-0">
                 <div className="bg-[#EEF8FF] p-5">
                   <div className="space-y-3">
@@ -248,8 +257,9 @@ const Projects = () => {
                     <p className="text-brand-gray text-sm leading-relaxed">
                       {project.description}
                     </p>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
+                      onClick={() => navigate(`/project/${project.slug}`)}
                       className="w-full mt-4 border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white"
                     >
                       <Eye className="w-4 h-4 mr-2" />
@@ -268,7 +278,7 @@ const Projects = () => {
             Frequently Asked Questions
           </h2>
           <div className="w-20 h-1 bg-brand-blue rounded-full mx-auto mb-8"></div>
-          
+
           <div className="space-y-4 max-w-4xl mx-auto">
             {faqs.map((faq, index) => (
               <div key={index} className="bg-white/80 backdrop-blur-sm rounded-lg p-4 lg:p-6 shadow-sm border border-border/50">

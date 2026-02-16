@@ -21,19 +21,19 @@ const HeroSection = () => {
         </div>
         {/* Ribbon at the bottom */}
         <div
-          className="absolute left-0 right-0 bottom-0 z-20 w-full flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 px-4 py-3 md:py-4"
+          className="absolute left-0 right-0 bottom-0 z-20 w-full hidden md:flex flex-row items-center justify-center gap-8 px-4 py-4"
           style={{ backgroundColor: '#1953B4' }}
         >
-          <button className="flex items-center gap-2 text-white font-medium px-4 py-2 focus:outline-none w-full md:w-auto justify-center">
+          <button className="flex items-center gap-2 text-white font-medium px-4 py-2 focus:outline-none w-auto justify-center">
             Location <span className="ml-1">&#9662;</span>
           </button>
-          <button className="flex items-center gap-2 text-white font-medium px-4 py-2 focus:outline-none w-full md:w-auto justify-center">
+          <button className="flex items-center gap-2 text-white font-medium px-4 py-2 focus:outline-none w-auto justify-center">
             Property Type <span className="ml-1">&#9662;</span>
           </button>
-          <button className="flex items-center gap-2 text-white font-medium px-4 py-2 focus:outline-none w-full md:w-auto justify-center">
+          <button className="flex items-center gap-2 text-white font-medium px-4 py-2 focus:outline-none w-auto justify-center">
             Configuration <span className="ml-1">&#9662;</span>
           </button>
-          <button className="flex items-center justify-center text-white px-4 py-2 focus:outline-none w-full md:w-auto">
+          <button className="flex items-center justify-center text-white px-4 py-2 focus:outline-none w-auto">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
             </svg>
@@ -41,7 +41,7 @@ const HeroSection = () => {
         </div>
 
         {/* Fixed Enquiry Button */}
-        <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40">
+        <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40 hidden md:block">
           <Button
             variant="enquiry"
             size="lg"

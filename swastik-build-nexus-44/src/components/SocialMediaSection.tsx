@@ -25,14 +25,14 @@ const SocialMediaSection = () => {
   ];
 
   return (
-    <section id="social-media" className="py-20 bg-white">
+    <section id="social-media" className="py-12 bg-white">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-12 animate-fade-in">
           <h2 className="text-3xl lg:text-4xl font-bold text-brand-navy mb-4">
             Social Media Post
           </h2>
           <div className="w-20 h-1 bg-brand-blue rounded-full mx-auto mb-8"></div>
-          
+
           {/* Social Icons */}
           <div className="flex justify-center space-x-6">
             {socialLinks.map((social, index) => (

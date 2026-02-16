@@ -21,38 +21,38 @@ const FAQSection = () => {
     question: "How can I learn more about upcoming residential projects by Swastik Group in Vikhroli?",
     answer: "You can visit our website, contact our sales team at +91-22-6589 0000, or visit our corporate office. We also regularly update our social media channels with project launches, progress updates, and special offers. You can schedule a site visit or request a callback through our website for personalized assistance."
   }];
-  return <section id="faq" className="py-20 bg-gradient-light">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="text-center mb-12 animate-fade-in">
-          <h2 className="text-3xl lg:text-4xl font-bold text-brand-navy mb-4">
-            Frequently Asked Questions
-          </h2>
-          <div className="w-20 h-1 bg-brand-blue rounded-full mx-auto mb-6"></div>
-          <p className="text-lg text-brand-gray max-w-2xl mx-auto">
-            Find answers to common questions about our projects, services, and processes
-          </p>
-        </div>
+  return <section id="faq" className="py-12 bg-gradient-light">
+    <div className="container mx-auto px-4 lg:px-8">
+      <div className="text-center mb-12 animate-fade-in">
+        <h2 className="text-3xl lg:text-4xl font-bold text-brand-navy mb-4">
+          Frequently Asked Questions
+        </h2>
+        <div className="w-20 h-1 bg-brand-blue rounded-full mx-auto mb-6"></div>
+        <p className="text-lg text-brand-gray max-w-2xl mx-auto">
+          Find answers to common questions about our projects, services, and processes
+        </p>
+      </div>
 
-        <div className="max-w-4xl mx-auto">
-          <Accordion type="single" collapsible className="space-y-4 animate-slide-up">
-            {faqs.map((faq, index) => <AccordionItem key={faq.id} value={faq.id} className="bg-white rounded-xl shadow-card hover:shadow-brand transition-all duration-300 border-0" style={{
+      <div className="max-w-4xl mx-auto">
+        <Accordion type="single" collapsible className="space-y-4 animate-slide-up">
+          {faqs.map((faq, index) => <AccordionItem key={faq.id} value={faq.id} className="bg-white rounded-xl shadow-card hover:shadow-brand transition-all duration-300 border-0" style={{
             animationDelay: `${index * 100}ms`
           }}>
-                <AccordionTrigger className="px-6 py-4 text-left hover:no-underline [&[data-state=open]>svg]:rotate-180">
-                  <span className="text-brand-navy font-medium pr-4 leading-relaxed">
-                    {faq.question}
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4 text-brand-gray leading-relaxed">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>)}
-          </Accordion>
-        </div>
-
-        {/* Consultant Information */}
-        
+            <AccordionTrigger className="px-6 py-4 text-left hover:no-underline [&[data-state=open]>svg]:rotate-180">
+              <span className="text-brand-navy font-medium pr-4 leading-relaxed">
+                {faq.question}
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-4 text-brand-gray leading-relaxed">
+              {faq.answer}
+            </AccordionContent>
+          </AccordionItem>)}
+        </Accordion>
       </div>
-    </section>;
+
+      {/* Consultant Information */}
+
+    </div>
+  </section>;
 };
 export default FAQSection;

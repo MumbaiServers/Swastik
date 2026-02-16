@@ -58,27 +58,23 @@ const Index = () => {
               </div>
             </div>
           </div>
-          <div className="md:hidden">
-            <div className="relative h-48">
+          <div className="md:hidden flex h-full w-full bg-[#DDF4FF]">
+            <div className="flex-1 py-6 pl-12 pr-4 flex flex-col justify-center">
+              <div className="space-y-2">
+                <h3 className="text-lg font-extrabold text-black border-l-4 border-[#4B9FFF] pl-2 uppercase tracking-tight">
+                  Our Values
+                </h3>
+                <p className="text-black text-[10px] leading-snug font-bold">
+                  Integrity, transparency, and excellence form the foundation of everything we do.
+                </p>
+              </div>
+            </div>
+            <div className="flex-1 h-full border-l border-white/20">
               <img
                 src={lifestyleInterior}
                 alt="Our Values"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-            </div>
-            <div className="bg-values-bg p-6">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-bold text-brand-navy mb-3">
-                    Our Values
-                  </h3>
-                  <div className="w-12 h-1 bg-brand-blue rounded-full mb-4"></div>
-                </div>
-                <p className="text-brand-gray leading-relaxed">
-                  Integrity, transparency, and excellence form the foundation of everything we do.
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -124,27 +120,23 @@ const Index = () => {
               </div>
             </div>
           </div>
-          <div className="md:hidden">
-            <div className="relative h-48">
+          <div className="md:hidden flex h-full w-full bg-[#EBF7FF]">
+            <div className="flex-1 py-6 pl-12 pr-4 flex flex-col justify-center">
+              <div className="space-y-2">
+                <h3 className="text-lg font-extrabold text-black border-l-4 border-[#4B9FFF] pl-2 uppercase tracking-tight">
+                  Our Vision
+                </h3>
+                <p className="text-black text-[10px] leading-snug font-bold">
+                  To be Mumbai's most trusted real estate developer, creating sustainable communities.
+                </p>
+              </div>
+            </div>
+            <div className="flex-1 h-full border-l border-white/20">
               <img
                 src={lifestyleInterior}
                 alt="Our Vision"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-            </div>
-            <div className="bg-vision-bg p-6">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-bold text-brand-navy mb-3">
-                    Our Vision
-                  </h3>
-                  <div className="w-12 h-1 bg-brand-blue rounded-full mb-4"></div>
-                </div>
-                <p className="text-brand-gray leading-relaxed">
-                  To be Mumbai's most trusted real estate developer, creating sustainable communities.
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -192,27 +184,23 @@ const Index = () => {
               </div>
             </div>
           </div>
-          <div className="md:hidden">
-            <div className="relative h-48">
+          <div className="md:hidden flex h-full w-full bg-[#F5FBFF]">
+            <div className="flex-1 py-6 pl-12 pr-4 flex flex-col justify-center">
+              <div className="space-y-2">
+                <h3 className="text-lg font-extrabold text-black border-l-4 border-[#4B9FFF] pl-2 uppercase tracking-tight">
+                  Our Mission
+                </h3>
+                <p className="text-black text-[10px] font-bold leading-snug">
+                  Our mission is to offer the best and quick real estate solutions that improve people's lives.
+                </p>
+              </div>
+            </div>
+            <div className="flex-1 h-full border-l border-white/20">
               <img
                 src={lifestyleInterior}
                 alt="Our Mission"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-            </div>
-            <div className="bg-mission-bg p-6">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-bold text-brand-navy mb-3">
-                    Our Mission
-                  </h3>
-                  <div className="w-12 h-1 bg-brand-blue rounded-full mb-4"></div>
-                </div>
-                <p className="text-brand-gray leading-relaxed">
-                  Building quality homes that blend contemporary design with innovation and sustainability.
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -285,14 +273,14 @@ const Index = () => {
       {/* Who We Are Section */}
       <AboutUsSection />
       {/* Values, Vision & Mission Section */}
-      <section className="pt-6 pb-4 lg:pt-8 lg:pb-4 bg-muted/50">
+      <section className="pt-4 pb-2 lg:pt-8 lg:pb-4 bg-muted/50">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-brand-navy mb-6">
+          <div className="text-center mb-6 lg:mb-12">
+            <h2 className="text-2xl lg:text-4xl font-bold text-brand-navy mb-3 lg:mb-6">
               Our Values, Vision & Mission
             </h2>
-            <div className="w-20 h-1 bg-brand-blue rounded-full mx-auto mb-6"></div>
-            <p className="text-lg text-brand-gray max-w-4xl mx-auto leading-relaxed">
+            <div className="w-16 lg:w-20 h-1 bg-brand-blue rounded-full mx-auto mb-4 lg:mb-6"></div>
+            <p className="text-sm lg:text-lg text-brand-gray max-w-4xl mx-auto leading-relaxed">
               The core principles and aspirations that guide our journey in creating exceptional real estate experiences.
             </p>
           </div>

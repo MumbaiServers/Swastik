@@ -1,8 +1,10 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building2, FileText, MessageSquare, MapPin, Users, Eye } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const stats = [
     {
       title: 'Total Projects',
@@ -59,7 +61,11 @@ const AdminDashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {stats.map((stat) => (
-          <Card key={stat.title}>
+          <Card
+            key={stat.title}
+            className={stat.title === 'Inquiries' ? 'cursor-pointer hover:bg-muted/50 transition-colors' : ''}
+            onClick={() => stat.title === 'Inquiries' && navigate('/admin/leads')}
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 {stat.title}
@@ -124,9 +130,12 @@ const AdminDashboard = () => {
                 <div className="font-medium">Add New Project</div>
                 <div className="text-sm text-muted-foreground">Create a new development project</div>
               </button>
-              <button className="w-full text-left p-3 rounded-md border hover:bg-muted transition-colors">
-                <div className="font-medium">Write Blog Post</div>
-                <div className="text-sm text-muted-foreground">Publish new content</div>
+              <button
+                className="w-full text-left p-3 rounded-md border hover:bg-muted transition-colors"
+                onClick={() => navigate('/admin/leads')}
+              >
+                <div className="font-medium">Manage Leads</div>
+                <div className="text-sm text-muted-foreground">View and add new business inquiries</div>
               </button>
               <button className="w-full text-left p-3 rounded-md border hover:bg-muted transition-colors">
                 <div className="font-medium">Update Site Settings</div>

@@ -26,7 +26,7 @@ const WhyChooseUsSection = () => {
   ];
 
   return (
-    <section id="why-choose-us" className="py-20 bg-gradient-light">
+    <section id="why-choose-us" className="py-12 bg-gradient-light">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="space-y-6 animate-fade-in">
@@ -36,18 +36,18 @@ const WhyChooseUsSection = () => {
               </h2>
               <div className="w-20 h-1 bg-brand-blue rounded-full mb-6"></div>
             </div>
-            
+
             <p className="text-lg text-brand-gray leading-relaxed">
-              Our projects are known for their top-notch craftsmanship, smart design, 
+              Our projects are known for their top-notch craftsmanship, smart design,
               and solid construction, giving customers great value.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-slide-up">
+
+          <div className="flex overflow-x-auto md:grid md:grid-cols-2 gap-6 animate-slide-up projects-scroll snap-x snap-mandatory pb-4">
             {features.map((feature, index) => (
-              <Card 
-                key={index} 
-                className="bg-white shadow-card hover:shadow-brand transition-all duration-300 hover:-translate-y-1"
+              <Card
+                key={index}
+                className="bg-white shadow-card hover:shadow-brand transition-all duration-300 hover:-translate-y-1 min-w-[260px] md:min-w-0 snap-center"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <CardContent className="p-6 text-center">

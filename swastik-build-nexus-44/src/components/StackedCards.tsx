@@ -32,7 +32,6 @@ const StackedCards: React.FC<StackedCardsProps> = ({
               top: `calc(100px + ${index * 60}px)`,
               background: card.background || `linear-gradient(135deg, ${card.colors[0]}, ${card.colors[1]})`,
               border: `1px solid ${card.borderColor || 'rgba(255, 255, 255, 0.5)'}`,
-              borderRadius: '60px 20px 60px 20px',
               fontFamily: '"Outfit", sans-serif',
               ...card.customStyles
             }}
@@ -44,29 +43,29 @@ const StackedCards: React.FC<StackedCardsProps> = ({
         ))}
       </div>
 
-      {/* Scroll Indicator */}
-
-
       {/* Mobile responsive styles */}
       <style>
         {`
           @media (max-width: 768px) {
             .stacked-card {
               padding: 0 !important;
-              min-height: 70vh !important;
-              margin-bottom: 1rem !important;
-            }
-            
-            .fixed.right-8 {
-              right: 1rem !important;
+              margin-bottom: 2rem !important;
+              height: 269px !important;
+              width: 399px !important;
+              max-width: calc(100vw - 40px) !important;
+              left: 20px !important;
+              border-top-left-radius: 120px !important;
+              border-bottom-right-radius: 120px !important;
+              border-top-right-radius: 0 !important;
+              border-bottom-left-radius: 0 !important;
+              min-height: 0 !important;
             }
           }
           
           @media (max-width: 480px) {
             .stacked-card {
-              padding: 1.5rem !important;
-              min-height: 60vh !important;
-              top: 1rem !important;
+              height: 269px !important;
+              /* On very small devices, 399 might be too much, but we use max-width */
             }
           }
         `}

@@ -44,7 +44,7 @@ const BlogsSection = () => {
   ];
 
   return (
-    <section id="blogs" className="py-20 bg-gradient-light">
+    <section id="blogs" className="py-12 bg-gradient-light">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-12 animate-fade-in">
           <h2 className="text-3xl lg:text-4xl font-bold text-brand-navy mb-4">
@@ -56,11 +56,11 @@ const BlogsSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 projects-scroll snap-x snap-mandatory pb-4">
           {blogs.map((blog, index) => (
-            <Card 
+            <Card
               key={blog.id}
-              className="group overflow-hidden shadow-card hover:shadow-brand transition-all duration-500 hover:-translate-y-2 bg-white animate-slide-up"
+              className="group min-w-[280px] md:min-w-0 overflow-hidden shadow-card hover:shadow-brand transition-all duration-500 hover:-translate-y-2 bg-white animate-slide-up snap-center"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="relative overflow-hidden">
@@ -76,17 +76,17 @@ const BlogsSection = () => {
                   <span className="text-xs font-medium text-brand-navy">{blog.category}</span>
                 </div>
               </div>
-              
+
               <CardContent className="p-6">
                 <div className="space-y-3">
                   <h3 className="text-lg font-bold text-brand-navy group-hover:text-brand-blue transition-colors line-clamp-2">
                     {blog.title}
                   </h3>
-                  
+
                   <p className="text-sm text-brand-gray leading-relaxed line-clamp-3">
                     {blog.excerpt}
                   </p>
-                  
+
                   <div className="flex items-center justify-between text-xs text-brand-gray pt-2 border-t border-border">
                     <div className="flex items-center space-x-1">
                       <User className="w-3 h-3" />
@@ -97,10 +97,10 @@ const BlogsSection = () => {
                       <span>{blog.date}</span>
                     </div>
                   </div>
-                  
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     className="w-full mt-4 text-brand-blue hover:text-brand-blue hover:bg-brand-light-blue/20"
                   >
                     Read More →

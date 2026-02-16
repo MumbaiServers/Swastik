@@ -44,6 +44,7 @@ const menuItems = [
   { title: 'Projects', url: '/admin/projects', icon: Building2 },
   { title: 'Blogs', url: '/admin/blogs', icon: FileText },
   { title: 'FAQs', url: '/admin/faqs', icon: MessageSquare },
+  { title: 'Leads', url: '/admin/leads', icon: Users },
   { title: 'Settings', url: '/admin/settings', icon: Settings },
 ];
 
@@ -51,7 +52,7 @@ export function AdminSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const { logout, user } = useAuth();
-  
+
   const isActive = (path: string) => {
     if (path === '/admin') {
       return location.pathname === '/admin';
@@ -83,10 +84,9 @@ export function AdminSidebar() {
                       to={item.url}
                       end={item.url === '/admin'}
                       className={({ isActive }) =>
-                        `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
-                          isActive
-                            ? 'bg-primary text-primary-foreground'
-                            : 'hover:bg-muted'
+                        `flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${isActive
+                          ? 'bg-primary text-primary-foreground'
+                          : 'hover:bg-muted'
                         }`
                       }
                     >
