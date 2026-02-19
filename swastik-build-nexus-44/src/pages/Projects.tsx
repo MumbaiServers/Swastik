@@ -142,21 +142,21 @@ const Projects = () => {
 
       {/* Blue Gradient Filter Banner */}
       <section className="py-6 bg-[#1953B4]">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center gap-8 text-white">
-            <button className="flex items-center gap-2 hover:text-white/80 transition-colors">
+        <div className="container mx-auto px-4 overflow-x-auto projects-scroll">
+          <div className="flex items-center justify-start lg:justify-center gap-6 md:gap-8 text-white min-w-max">
+            <button className="flex items-center gap-2 hover:text-white/80 transition-colors whitespace-nowrap">
               <span className="text-sm md:text-base font-medium">Location</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-            <button className="flex items-center gap-2 hover:text-white/80 transition-colors">
-              <span className="text-sm md:text-base font-medium">Property Type</span>
+            <button className="flex items-center gap-2 hover:text-white/80 transition-colors whitespace-nowrap">
+              <span className="text-sm md:text-base font-medium">Project Type</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-            <button className="flex items-center gap-2 hover:text-white/80 transition-colors">
+            <button className="flex items-center gap-2 hover:text-white/80 transition-colors whitespace-nowrap">
               <span className="text-sm md:text-base font-medium">Configuration</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
