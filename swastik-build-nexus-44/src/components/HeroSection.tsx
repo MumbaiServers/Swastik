@@ -61,8 +61,14 @@ const HeroSection = () => {
               }}
             />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-black/20" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1953B4]/20 via-transparent to-transparent pointer-events-none" />
+
+          {/* Conditional gradient overlays only if heading or subtext exists */}
+          {(heroData.heading || heroData.subtext) && (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-black/20" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1953B4]/20 via-transparent to-transparent pointer-events-none" />
+            </>
+          )}
         </div>
 
         {/* Subtle floating particles effect */}
@@ -126,30 +132,36 @@ const HeroSection = () => {
           <div className="container mx-auto px-4 lg:px-8 text-center pointer-events-auto">
             <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 mt-12 md:mt-0">
               {/* Hero Text */}
-              <div className="space-y-4">
-                <h1
-                  className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight transition-all duration-1000"
-                  style={{
-                    opacity: isLoaded ? 1 : 0,
-                    transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
-                  }}
-                >
-                  {heroData.heading.split(' ').map((word, i, arr) => (
-                    <span key={i} className={i >= arr.length - 2 ? "block bg-gradient-to-r from-brand-light-blue to-white bg-clip-text text-transparent mt-2" : ""}>
-                      {word}{' '}
-                    </span>
-                  ))}
-                </h1>
-                <p
-                  className="text-lg md:text-2xl text-white/90 max-w-2xl mx-auto transition-all duration-1000 delay-300"
-                  style={{
-                    opacity: isLoaded ? 1 : 0,
-                    transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
-                  }}
-                >
-                  {heroData.subtext}
-                </p>
-              </div>
+              {(heroData.heading || heroData.subtext) && (
+                <div className="space-y-4">
+                  {heroData.heading && (
+                    <h1
+                      className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight transition-all duration-1000"
+                      style={{
+                        opacity: isLoaded ? 1 : 0,
+                        transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
+                      }}
+                    >
+                      {heroData.heading.split(' ').map((word, i, arr) => (
+                        <span key={i} className={i >= arr.length - 2 ? "block bg-gradient-to-r from-brand-light-blue to-white bg-clip-text text-transparent mt-2" : ""}>
+                          {word}{' '}
+                        </span>
+                      ))}
+                    </h1>
+                  )}
+                  {heroData.subtext && (
+                    <p
+                      className="text-lg md:text-2xl text-white/90 max-w-2xl mx-auto transition-all duration-1000 delay-300"
+                      style={{
+                        opacity: isLoaded ? 1 : 0,
+                        transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
+                      }}
+                    >
+                      {heroData.subtext}
+                    </p>
+                  )}
+                </div>
+              )}
 
               {/* CTA Button - Mobile only */}
               <div
