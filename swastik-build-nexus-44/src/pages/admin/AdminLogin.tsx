@@ -78,7 +78,7 @@ const AdminLogin = () => {
             </Button>
           </form>
           <div className="mt-4 text-sm text-muted-foreground text-center">
-            Demo credentials: admin@swastikgroup.com / admin123
+            Demo credentials: admin@swastikgroup.com / admin@123
           </div>
         </CardContent>
       </Card>

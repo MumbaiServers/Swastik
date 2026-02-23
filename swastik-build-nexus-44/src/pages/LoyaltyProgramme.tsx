@@ -3,12 +3,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Phone, User, Mail } from "lucide-react";
+import { Phone, User, Mail, Loader2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { loyaltyApi } from "@/services/cmsApi";
+import { toast } from "sonner";
 import familyImage from "/lovable-uploads/a3d318e5-2a94-4a3f-8113-f658b8992966.png";
+import SEO from "@/components/SEO";
 
+/**
+ * LoyaltyProgramme Page
+ * 
+ * Displays the Swastik One Family Referral Program details,
+ * rewards for different apartment types, and a submission form
+ * for new referrals.
+ */
 const LoyaltyProgramme = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -23,20 +34,97 @@ const LoyaltyProgramme = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    try {
+      setLoading(true);
+      await loyaltyApi.submit(formData);
+      toast.success("Referral submitted successfully! Our team will contact you soon.");
+      setFormData({
+        firstName: "",
+        lastName: "",
+        contactNumber: "",
+        email: "",
+        refereeName: "",
+        refereeContact: "",
+        preferredUnit: ""
+      });
+    } catch (error) {
+      console.error("Submission failed:", error);
+      toast.error("Failed to submit referral. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-background">
+      {/* SEO configuration for the Loyalty Programme page */}
+      <SEO title="Loyalty Programme" description="Swastik One Family Referral Program. Refer your friends and family to earn big rewards!" />
       <Header />
 
       {/* Hero Section */}
-      {/* Hero Section */}
-      <section className="pt-10 lg:pt-20 pb-16 lg:pb-24 overflow-hidden">
+      <section className="pt-6 lg:pt-20 pb-12 lg:pb-24 overflow-hidden bg-white lg:bg-transparent">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center relative">
+          {/* Mobile Layout (as per image) */}
+          <div className="block lg:hidden space-y-8">
+            <div className="space-y-4">
+              <h1 className="text-3xl font-bold text-[#1A1A1A] leading-tight tracking-tight">
+                Swastik One Family<br />
+                Referral Program
+              </h1>
+              <div className="w-32 h-1.5 bg-[#3B82F6] rounded-full"></div>
+            </div>
+
+            <div className="space-y-3">
+              <h2 className="text-xl font-extrabold text-[#1A1A1A]">
+                Refer and Earn Big Rewards!
+              </h2>
+              <p className="text-sm text-[#4A4A4A] leading-relaxed font-medium">
+                We value our community and believe in growing together.
+                Be a part of the Swastik One Family by referring your
+                friends or family and earn exciting rewards.
+              </p>
+            </div>
+
+            <Button
+              className="bg-[#1953B4] hover:bg-[#1953B4]/90 text-white text-base font-bold py-4 h-auto rounded-xl flex items-center justify-center gap-3 w-full shadow-lg transition-all active:scale-[0.98]"
+            >
+              <Phone className="w-5 h-5 fill-current" />
+              <span>022-50646565 / 9833108888</span>
+            </Button>
+
+            <div className="relative mt-12 pb-12">
+              {/* Family Image with symmetrical arch top */}
+              <div className="overflow-hidden shadow-xl" style={{ borderTopLeftRadius: '180px', borderTopRightRadius: '180px' }}>
+                <img
+                  src={familyImage}
+                  alt="Happy Family"
+                  className="w-full h-auto object-cover scale-105"
+                />
+              </div>
+
+              {/* Bonus Cards Stacked on Mobile */}
+              <div className="space-y-4 mt-0 bg-white">
+                <div className="bg-[#E1F1FF] p-6 py-8 rounded-b-[40px] shadow-sm text-center">
+                  <h3 className="text-sm font-extrabold text-black uppercase tracking-wide">
+                    Apartment Type: 1 BHK  Referral Bonus:
+                  </h3>
+                  <p className="text-2xl font-black text-black mt-2">₹50,000</p>
+                </div>
+
+                <div className="bg-[#1953B4] p-6 py-8 rounded-[30px] shadow-md text-center text-white">
+                  <h3 className="text-sm font-extrabold uppercase tracking-wide">
+                    Apartment Type: 3 BHK Referral Bonus:
+                  </h3>
+                  <p className="text-2xl font-black mt-2">₹1,00,000</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Layout (Existing) */}
+          <div className="hidden lg:grid lg:grid-cols-2 gap-12 lg:gap-20 items-center relative">
             {/* Left Content */}
             <div className="z-10 pt-8 flex flex-col h-full justify-between min-h-[600px]">
               <div className="space-y-8">
@@ -85,7 +173,6 @@ const LoyaltyProgramme = () => {
 
             {/* Right Image Section */}
             <div className="relative mt-8 lg:mt-0 flex justify-center lg:justify-start lg:pl-10">
-              {/* Gray Background Shape */}
               <div
                 className="absolute bg-[#F3F4F6] -z-10"
                 style={{
@@ -112,14 +199,13 @@ const LoyaltyProgramme = () => {
                   }}
                 />
 
-                {/* 3 BHK Card - Dark Blue - Absolute positioned bottom-left of image */}
                 <div className="bg-[#1953B4] p-6 lg:p-8 rounded-[30px] rounded-tr-[0] rounded-bl-[30px] shadow-lg text-white absolute bottom-0 left-0 transform -translate-x-[25%] translate-y-[55%] z-20"
                   style={{
                     minWidth: '280px',
-                    borderTopRightRadius: '30px', /* Matches top right curve */
-                    borderBottomLeftRadius: '30px', /* Matches bottom left curve */
-                    borderTopLeftRadius: '0',     /* Sharp corner */
-                    borderBottomRightRadius: '0'  /* Sharp corner */
+                    borderTopRightRadius: '30px',
+                    borderBottomLeftRadius: '30px',
+                    borderTopLeftRadius: '0',
+                    borderBottomRightRadius: '0'
                   }}
                 >
                   <h3 className="text-lg font-bold mb-1">Apartment Type: 3 BHK</h3>
@@ -269,8 +355,15 @@ const LoyaltyProgramme = () => {
                 </div>
 
                 <div className="text-center pt-6">
-                  <Button type="submit" variant="brand" size="lg" className="px-12">
-                    Enquire Now
+                  <Button type="submit" variant="brand" size="lg" className="px-12" disabled={loading}>
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      'Enquire Now'
+                    )}
                   </Button>
                 </div>
               </form>

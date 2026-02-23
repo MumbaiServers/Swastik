@@ -4,12 +4,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Mail, Upload, User, Building, Briefcase, Users } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
 const Careers = () => {
   return (
     <div className="min-h-screen bg-background">
+      {/* SEO settings for Careers page */}
+      <SEO title="Careers" description="Build Your Career with Swastik Group. Explore growth opportunities and flexible work environments." />
       <Header />
-      
+
       {/* Hero Section */}
       <section className="py-10 lg:py-12">
         <div className="container mx-auto px-4 lg:px-8">
@@ -28,7 +31,7 @@ const Careers = () => {
                 At Swastik Group, we're not just shaping skylines—we're shaping futures. With over 25 years of legacy, we offer a workplace where integrity, excellence, and innovation come together to let our talented team build something truly impactful.
               </p>
             </div>
-            
+
             <div className="grid gap-6">
               <Card className="bg-gradient-brand text-white border-0 shadow-brand">
                 <CardContent className="p-6 lg:p-8">
@@ -82,7 +85,7 @@ const Careers = () => {
       <section className="pt-4 pb-8 lg:pt-4 lg:pb-10">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="bg-gradient-brand p-6 lg:p-10 shadow-brand overflow-hidden" style={{ borderRadius: '20px 60px 20px 60px' }}>
-            <div 
+            <div
               className="flex items-center w-full overflow-hidden [--duration:30s] [--gap:1.5rem]"
               data-gap="1.5rem"
             >
@@ -132,104 +135,104 @@ const Careers = () => {
         <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-[#EEF8FF]">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="max-w-4xl mx-auto">
-              <div 
+              <div
                 className="bg-white/90 backdrop-blur-sm p-8 lg:p-12 shadow-lg border border-border/20"
-                style={{ 
+                style={{
                   borderTopRightRadius: '3rem',
                   borderTopLeftRadius: '0',
                   borderBottomLeftRadius: '3rem',
                   borderBottomRightRadius: '0'
                 }}
               >
-              <div className="text-center mb-8">
-                <h2 className="text-2xl lg:text-3xl font-bold text-brand-navy mb-4">
-                  Career Detail Form
-                </h2>
-                <p className="text-brand-gray">
-                  Please fill your details below
-                </p>
-              </div>
-              
-              <form className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="text-center mb-8">
+                  <h2 className="text-2xl lg:text-3xl font-bold text-brand-navy mb-4">
+                    Career Detail Form
+                  </h2>
+                  <p className="text-brand-gray">
+                    Please fill your details below
+                  </p>
+                </div>
+
+                <form className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+                        <User className="w-5 h-5 text-brand-gray" />
+                      </div>
+                      <Input
+                        type="text"
+                        className="h-12 pl-12 pr-4 bg-white/50"
+                        placeholder="First Name"
+                      />
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+                        <User className="w-5 h-5 text-brand-gray" />
+                      </div>
+                      <Input
+                        type="text"
+                        className="h-12 pl-12 pr-4 bg-white/50"
+                        placeholder="Last Name"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+                        <Phone className="w-5 h-5 text-brand-gray" />
+                      </div>
+                      <Input
+                        type="tel"
+                        className="h-12 pl-12 pr-4 bg-white/50"
+                        placeholder="Contact Number"
+                      />
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+                        <Mail className="w-5 h-5 text-brand-gray" />
+                      </div>
+                      <Input
+                        type="email"
+                        className="h-12 pl-12 pr-4 bg-white/50"
+                        placeholder="Email ID"
+                      />
+                    </div>
+                  </div>
+
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
-                      <User className="w-5 h-5 text-brand-gray" />
+                      <Briefcase className="w-5 h-5 text-brand-gray" />
                     </div>
-                    <Input 
+                    <Input
                       type="text"
                       className="h-12 pl-12 pr-4 bg-white/50"
-                      placeholder="First Name"
+                      placeholder="Message"
                     />
                   </div>
-                  
-                  <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
-                      <User className="w-5 h-5 text-brand-gray" />
-                    </div>
-                    <Input 
-                      type="text"
-                      className="h-12 pl-12 pr-4 bg-white/50"
-                      placeholder="Last Name"
-                    />
-                  </div>
-                </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
-                      <Phone className="w-5 h-5 text-brand-gray" />
-                    </div>
-                    <Input 
-                      type="tel"
-                      className="h-12 pl-12 pr-4 bg-white/50"
-                      placeholder="Contact Number"
-                    />
-                  </div>
-                  
-                  <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
-                      <Mail className="w-5 h-5 text-brand-gray" />
-                    </div>
-                    <Input 
-                      type="email"
-                      className="h-12 pl-12 pr-4 bg-white/50"
-                      placeholder="Email ID"
-                    />
-                  </div>
-                </div>
+                  <div className="text-center">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="w-full h-12 mb-6"
+                    >
+                      <Upload className="w-5 h-5 mr-2" />
+                      Upload Document
+                    </Button>
 
-                <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
-                    <Briefcase className="w-5 h-5 text-brand-gray" />
+                    <Button
+                      type="submit"
+                      variant="brand"
+                      size="lg"
+                      className="w-full md:w-auto px-12"
+                    >
+                      Enquiry Now
+                    </Button>
                   </div>
-                  <Input 
-                    type="text"
-                    className="h-12 pl-12 pr-4 bg-white/50"
-                    placeholder="Message"
-                  />
-                </div>
-
-                <div className="text-center">
-                  <Button 
-                    type="button"
-                    variant="secondary"
-                    className="w-full h-12 mb-6"
-                  >
-                    <Upload className="w-5 h-5 mr-2" />
-                    Upload Document
-                  </Button>
-
-                  <Button 
-                    type="submit" 
-                    variant="brand"
-                    size="lg"
-                    className="w-full md:w-auto px-12"
-                  >
-                    Enquiry Now
-                  </Button>
-                </div>
-              </form>
+                </form>
               </div>
             </div>
           </div>

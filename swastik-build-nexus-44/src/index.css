@@ -42,20 +42,23 @@ All colors MUST be HSL.
     --brand-navy: 216 45% 25%;
     --brand-gray: 0 0% 40%;
     --brand-light-gray: 0 0% 95%;
-    
+
     /* Values, Vision & Mission Card Colors */
-    --values-bg: 205 100% 80%;  /* #9ad6ff */
-    --vision-bg: 208 100% 87%;  /* #bce1ff */
-    --mission-bg: 213 100% 94%; /* #e2f2ff */
-    
+    --values-bg: 205 100% 80%;
+    /* #9ad6ff */
+    --vision-bg: 208 100% 87%;
+    /* #bce1ff */
+    --mission-bg: 213 100% 94%;
+    /* #e2f2ff */
+
     /* Gradients */
     --gradient-blue: linear-gradient(135deg, hsl(217, 52%, 50%), hsl(201, 100%, 70%));
     --gradient-light: linear-gradient(180deg, hsl(201, 100%, 95%), hsl(0, 0%, 100%));
-    
+
     /* Shadows */
     --shadow-brand: 0 10px 30px -10px hsl(217, 52%, 50%, 0.2);
     --shadow-card: 0 4px 20px -2px hsl(0, 0%, 0%, 0.1);
-    
+
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -130,6 +133,8 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   html {
@@ -175,4 +180,332 @@ All colors MUST be HSL.
   .projects-scroll {
     -webkit-overflow-scrolling: touch;
   }
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCROLL-TRIGGERED ANIMATION CLASSES
+   ═══════════════════════════════════════════════════════ */
+
+@layer utilities {
+
+  /* Reveal from bottom */
+  .reveal-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-up.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Reveal from left */
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-left.revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Reveal from right */
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-right.revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Scale reveal */
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-scale.revealed {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Blur reveal */
+  .reveal-blur {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-blur.revealed {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+
+  /* Stagger delay utilities */
+  .stagger-1 {
+    transition-delay: 100ms !important;
+  }
+
+  .stagger-2 {
+    transition-delay: 200ms !important;
+  }
+
+  .stagger-3 {
+    transition-delay: 300ms !important;
+  }
+
+  .stagger-4 {
+    transition-delay: 400ms !important;
+  }
+
+  .stagger-5 {
+    transition-delay: 500ms !important;
+  }
+
+  .stagger-6 {
+    transition-delay: 600ms !important;
+  }
+
+  .pause {
+    animation-play-state: paused;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   FLOATING / PULSING ANIMATIONS
+   ═══════════════════════════════════════════════════════ */
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes float-slow {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(25, 83, 180, 0.15);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(25, 83, 180, 0.35);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes width-grow {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 4s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ENHANCED HOVER EFFECTS
+   ═══════════════════════════════════════════════════════ */
+
+.hover-lift {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(25, 83, 180, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION DIVIDER
+   ═══════════════════════════════════════════════════════ */
+
+.section-divider {
+  position: relative;
+}
+
+.section-divider::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 600px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsl(217, 52%, 50%, 0.15), transparent);
+}
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE-SPECIFIC STYLES
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+
+  /* Prevent horizontal overflow globally */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Tighter section padding on mobile */
+  section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Better touch targets */
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Smoother mobile card hover */
+  .hover-lift:active {
+    transform: scale(0.98);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATED UNDERLINE FOR HEADINGS
+   ═══════════════════════════════════════════════════════ */
+
+.animated-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.animated-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, hsl(217, 52%, 50%), hsl(201, 100%, 70%));
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animated-underline.revealed::after,
+.animated-underline:hover::after {
+  width: 80px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GLASSMORPHISM UTILITY
+   ═══════════════════════════════════════════════════════ */
+
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }

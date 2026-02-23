@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
+import { useIsMobile } from "@/hooks/use-mobile";
+
 interface StackedCard {
   id: string;
   colors: [string, string];
@@ -7,17 +9,20 @@ interface StackedCard {
   content: React.ReactNode;
   customStyles?: React.CSSProperties;
 }
+
 interface StackedCardsProps {
   cards: StackedCard[];
   containerClassName?: string;
   cardClassName?: string;
 }
+
 const StackedCards: React.FC<StackedCardsProps> = ({
   cards,
   containerClassName = '',
   cardClassName = ''
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   return (
     <>
@@ -29,7 +34,8 @@ const StackedCards: React.FC<StackedCardsProps> = ({
             style={{
               zIndex: 10 + index,
               // Calculate top offset for the "folder stack" effect
-              top: `calc(100px + ${index * 60}px)`,
+              // Tighter spacing on mobile for better visibility
+              top: isMobile ? `calc(80px + ${index * 40}px)` : `calc(100px + ${index * 60}px)`,
               background: card.background || `linear-gradient(135deg, ${card.colors[0]}, ${card.colors[1]})`,
               border: `1px solid ${card.borderColor || 'rgba(255, 255, 255, 0.5)'}`,
               fontFamily: '"Outfit", sans-serif',
@@ -73,4 +79,5 @@ const StackedCards: React.FC<StackedCardsProps> = ({
     </>
   );
 };
+
 export default StackedCards;

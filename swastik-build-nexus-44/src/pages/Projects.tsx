@@ -1,143 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { MapPin, Eye } from 'lucide-react';
+import { MapPin, Eye, Loader2 } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import projectTower1 from '@/assets/project-tower-1.jpg';
-import projectTower2 from '@/assets/project-tower-2.jpg';
-import projectTower3 from '@/assets/project-tower-3.jpg';
+import SEO from '@/components/SEO';
+import FAQSection from '@/components/FAQSection';
+import { projectsApi, getImageUrl } from '@/services/cmsApi';
 
 const Projects = () => {
   const [activeTab, setActiveTab] = useState('completed');
+  const [allProjects, setAllProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const projects = {
-    completed: [
-      {
-        id: 1,
-        slug: 'swastik-pearl',
-        name: 'Swastik Pearl',
-        subtitle: 'Residential',
-        location: 'Ghatkopar West',
-        price: 'Starting at ₹70 Lakhs*',
-        image: projectTower1,
-        configuration: '1,2,3 BHK',
-        description: 'Experience luxury living with modern amenities and premium finishes.',
-        tag: 'Enquiry Now'
-      },
-      {
-        id: 2,
-        slug: 'swastik-elegance',
-        name: 'Swastik Elegance',
-        subtitle: 'Residential',
-        location: 'Vikhroli East',
-        price: 'Starting at ₹90 Lakhs*',
-        image: projectTower2,
-        configuration: '2,3,4 BHK',
-        description: 'Premium high-rise apartments with scenic views and world-class facilities.',
-        tag: 'Enquiry Now'
-      },
-      {
-        id: 3,
-        slug: 'swastik-onyx',
-        name: 'Swastik Onyx',
-        subtitle: 'Residential',
-        location: 'Mulund West',
-        price: 'Starting at ₹85 Lakhs*',
-        image: projectTower3,
-        configuration: '1,2,3 BHK',
-        description: 'Contemporary living spaces with sustainable design and smart features.',
-        tag: 'Enquiry Now'
-      },
-      {
-        id: 4,
-        slug: 'swastik-pearl-2',
-        name: 'Swastik Pearl',
-        subtitle: 'Residential',
-        location: 'Ghatkopar West',
-        price: 'Starting at ₹70 Lakhs*',
-        image: projectTower1,
-        configuration: '1,2,3 BHK',
-        description: 'Experience luxury living with modern amenities and premium finishes.',
-        tag: 'Enquiry Now'
-      },
-      {
-        id: 5,
-        slug: 'swastik-elegance-2',
-        name: 'Swastik Elegance',
-        subtitle: 'Residential',
-        location: 'Vikhroli East',
-        price: 'Starting at ₹90 Lakhs*',
-        image: projectTower2,
-        configuration: '2,3,4 BHK',
-        description: 'Premium high-rise apartments with scenic views and world-class facilities.',
-        tag: 'Enquiry Now'
-      },
-      {
-        id: 6,
-        slug: 'swastik-onyx-2',
-        name: 'Swastik Onyx',
-        subtitle: 'Residential',
-        location: 'Mulund West',
-        price: 'Starting at ₹85 Lakhs*',
-        image: projectTower3,
-        configuration: '1,2,3 BHK',
-        description: 'Contemporary living spaces with sustainable design and smart features.',
-        tag: 'Enquiry Now'
-      },
-      {
-        id: 7,
-        slug: 'swastik-onyx-3',
-        name: 'Swastik Onyx',
-        subtitle: 'Residential',
-        location: 'Mulund West',
-        price: 'Starting at ₹85 Lakhs*',
-        image: projectTower3,
-        configuration: '1,2,3 BHK',
-        description: 'Contemporary living spaces with sustainable design and smart features.',
-        tag: 'Enquiry Now'
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        const data = await projectsApi.getAll();
+        setAllProjects(data.projects || []);
+      } catch (err: any) {
+        console.error("Failed to fetch projects:", err);
+        setError(err.message || "Failed to load projects");
+      } finally {
+        setLoading(false);
       }
-    ],
-    ongoing: [
-      {
-        id: 8,
-        slug: 'swastik-crown',
-        name: 'Swastik Crown',
-        subtitle: 'Residential',
-        location: 'Chembur East',
-        price: 'Starting at ₹95 Lakhs*',
-        image: projectTower1,
-        configuration: '2,3,4 BHK',
-        description: 'Ultra-modern residential tower under construction with premium amenities.',
-        tag: 'Enquiry Now'
-      },
-      {
-        id: 9,
-        slug: 'swastik-palace',
-        name: 'Swastik Palace',
-        subtitle: 'Residential',
-        location: 'Ghatkopar East',
-        price: 'Starting at ₹80 Lakhs*',
-        image: projectTower2,
-        configuration: '1,2,3 BHK',
-        description: 'Luxurious apartments with premium amenities and modern design.',
-        tag: 'Enquiry Now'
-      }
-    ]
-  };
+    };
+    fetchProjects();
+  }, []);
 
-  const faqs = [
-    "What makes Swastik Group's value-based real estate a brilliant?",
-    "What type of residential projects does Swastik Group offer in Mumbai?",
-    "Why did we most choose Shoonya property companies in Mumbai?",
-    "How does Swastik Group ensure quality and sustainability in its real estate projects?",
-    "How can I learn more development opportunities and projects in Swastik Group in Mumbai?"
+  const projects = useMemo(() => {
+    return {
+      completed: allProjects.filter(p => p.status.toLowerCase() === 'completed'),
+      ongoing: allProjects.filter(p => p.status.toLowerCase() === 'ongoing' || p.status.toLowerCase() === 'planning')
+    };
+  }, [allProjects]);
+
+
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
+        {/* Basic SEO while projects load */}
+        <SEO title="Loading..." description="Loading projects" />
+        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+        <p className="text-muted-foreground">Loading projects...</p>
+      </div>
+    );
+  }
+
+  const consultants = [
+    { role: "MEP Consultant", name: "Mr. Rupesh Gujrathi" },
+    { role: "PMC", name: "Epsilon Project Management" },
+    { role: "Vastu Consultant", name: "Kamlesh Vastu Engineer" },
+    { role: "Legal Consultant", name: "Lexicon Law Partners" },
+    { role: "Design Architect", name: "Karch Architects" },
+    { role: "Liasoning Architect", name: "Sai Sampada DBS" },
+    { role: "Landscaping & Interior Design", name: "Madane Design Workshop" },
+    { role: "RCC Consultant", name: "System Structural Consultant Pvt Ltd" }
   ];
 
   return (
     <div className="min-h-screen bg-background">
+      {/* SEO configuration for the main Projects portfolio page */}
+      <SEO title="Our Projects" description="Explore our portfolio of completed and ongoing residential and commercial projects in Mumbai." />
       <Header />
 
       {/* Blue Gradient Filter Banner */}
@@ -171,8 +100,6 @@ const Projects = () => {
         </div>
       </section>
 
-      {/* Stats Section removed for Projects page */}
-
       <main className="container mx-auto px-4 py-10 lg:py-12">
         {/* Page Header */}
         <div className="text-center mb-12">
@@ -200,7 +127,7 @@ const Projects = () => {
                 size="lg"
                 onClick={() => setActiveTab('ongoing')}
                 className={`px-8 rounded-md transition-all duration-200 ${activeTab === 'ongoing'
-                  ? 'bg-brand-blue text-white shadow-sm'
+                  ? 'bg-[#1953B4] text-white shadow-sm'
                   : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200'
                   }`}
               >
@@ -210,142 +137,112 @@ const Projects = () => {
           </div>
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16">
+        {/* Project Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
           {projects[activeTab as keyof typeof projects].map((project) => (
-            <Card key={project.id} className="overflow-hidden shadow-brand hover:shadow-brand/80 transition-shadow duration-300 relative group border-0 bg-white/80 backdrop-blur-sm">
-              {/* Project Image with custom border radius */}
-              <div className="relative overflow-hidden">
+            <Card
+              key={project.id}
+              className="group border-none shadow-brand overflow-hidden flex flex-col h-full hover:translate-y-[-8px] transition-all duration-300"
+            >
+              <div className="relative h-64 overflow-hidden">
                 <img
-                  src={project.image}
+                  src={getImageUrl(project.image) || "/placeholder.svg"}
                   alt={project.name}
-                  className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                  style={{
-                    borderTopLeftRadius: '2rem',
-                    borderTopRightRadius: '0',
-                    borderBottomLeftRadius: '0',
-                    borderBottomRightRadius: '0'
-                  }}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute top-4 left-4 bg-gradient-brand text-white px-3 py-1 rounded-full text-xs font-medium">
-                  {project.tag}
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                  <div className="flex items-center text-white text-sm">
-                    <MapPin className="w-4 h-4 mr-1" />
-                    {project.location}
-                  </div>
+                <div className="absolute top-4 left-4">
+                  <span className="bg-[#1953B4] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                    {project.tag || project.subtitle || "Residential"}
+                  </span>
                 </div>
               </div>
-
-              <CardContent className="p-0">
-                <div className="bg-[#EEF8FF] p-5">
-                  <div className="space-y-3">
-                    <div>
-                      <h3 className="text-xl font-bold text-brand-navy">{project.name}</h3>
-                      <p className="text-sm text-brand-gray">{project.subtitle}</p>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-brand-gray">Configuration:</span>
-                        <span className="font-medium text-brand-navy">{project.configuration}</span>
-                      </div>
-                      <div className="text-brand-blue font-bold text-lg">
-                        {project.price}
-                      </div>
-                    </div>
-                    <p className="text-brand-gray text-sm leading-relaxed">
-                      {project.description}
-                    </p>
-                    <Button
-                      variant="outline"
-                      onClick={() => navigate(`/project/${project.slug}`)}
-                      className="w-full mt-4 border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white"
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      View Details
-                    </Button>
+              <CardContent className="p-6 flex flex-col flex-grow">
+                <div className="mb-4">
+                  <div className="flex items-center gap-1 text-brand-blue mb-1">
+                    <MapPin className="w-4 h-4" />
+                    <span className="text-sm font-medium">{project.location}</span>
                   </div>
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-brand-blue transition-colors">
+                    {project.name}
+                  </h3>
                 </div>
+
+                <div className="space-y-3 mb-6 flex-grow">
+                  {project.configuration && (
+                    <div className="flex justify-between items-center text-sm border-b border-gray-100 pb-2">
+                      <span className="text-gray-500">Configuration</span>
+                      <span className="font-semibold text-gray-800">{project.configuration}</span>
+                    </div>
+                  )}
+                  {project.price && (
+                    <div className="flex justify-between items-center text-sm border-b border-gray-100 pb-2">
+                      <span className="text-gray-500">Price</span>
+                      <span className="font-semibold text-brand-blue">{project.price}</span>
+                    </div>
+                  )}
+                  <p className="text-gray-600 text-sm line-clamp-2 mt-2">
+                    {project.description}
+                  </p>
+                </div>
+
+                <Button
+                  onClick={() => navigate(`/project/${project.slug}`)}
+                  className="w-full bg-[#1953B4] hover:bg-brand-navy text-white group/btn"
+                >
+                  <Eye className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
+                  View Details
+                </Button>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* FAQ Section */}
-        <div className="bg-muted/50 rounded-2xl p-8 lg:p-12 mb-8">
-          <h2 className="text-2xl lg:text-3xl font-bold text-center text-brand-navy mb-8">
-            Frequently Asked Questions
-          </h2>
-          <div className="w-20 h-1 bg-brand-blue rounded-full mx-auto mb-8"></div>
+        {projects[activeTab as keyof typeof projects].length === 0 && (
+          <div className="text-center py-20 bg-gray-50 rounded-2xl">
+            <p className="text-xl text-gray-500">No {activeTab} projects found.</p>
+          </div>
+        )}
 
-          <div className="space-y-4 max-w-4xl mx-auto">
-            {faqs.map((faq, index) => (
-              <div key={index} className="bg-white/80 backdrop-blur-sm rounded-lg p-4 lg:p-6 shadow-sm border border-border/50">
-                <div className="flex justify-between items-center">
-                  <p className="text-brand-navy font-medium text-sm lg:text-base">{faq}</p>
-                  <Button variant="ghost" size="sm" className="text-brand-blue">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                  </Button>
+        {/* Dynamic FAQ Section */}
+        <div className="mt-16 lg:mt-24">
+          <FAQSection />
+        </div>
+      </main>
+
+      {/* Consultant Marquee */}
+      <section className="overflow-hidden py-8 relative bg-[#E1F1FF] w-full">
+        <div
+          className="flex items-center w-full overflow-hidden [--duration:40s] [--gap:0px]"
+        >
+          <div className="flex w-max animate-marquee">
+            {[...consultants, ...consultants].map((consultant, index) => (
+              <div key={index} className="inline-flex items-center text-center h-full flex-shrink-0">
+                <div className="flex flex-col items-center justify-center px-8 lg:px-14">
+                  <span className="text-[10px] lg:text-sm font-medium text-brand-navy mb-1">{consultant.role}</span>
+                  <span className="text-xs lg:text-base font-bold text-brand-navy">{consultant.name}</span>
                 </div>
+                {/* Vertical Divider */}
+                <div className="h-12 w-[2px] bg-[#1953B4]" />
+              </div>
+            ))}
+          </div>
+          <div className="flex w-max animate-marquee" aria-hidden="true">
+            {[...consultants, ...consultants].map((consultant, index) => (
+              <div key={`dup-${index}`} className="inline-flex items-center text-center h-full flex-shrink-0">
+                <div className="flex flex-col items-center justify-center px-8 lg:px-14">
+                  <span className="text-[10px] lg:text-sm font-medium text-brand-navy mb-1">{consultant.role}</span>
+                  <span className="text-xs lg:text-base font-bold text-brand-navy">{consultant.name}</span>
+                </div>
+                {/* Vertical Divider */}
+                <div className="h-12 w-[2px] bg-[#1953B4]" />
               </div>
             ))}
           </div>
         </div>
-
-        {/* Consultants Strap */}
-        <div className="bg-[#DAEFFF] rounded-xl shadow-card overflow-hidden">
-          <div className="flex items-center w-full overflow-hidden [--duration:35s] [--gap:2rem] py-5">
-            {/* Track 1 */}
-            <div className="flex w-max items-center animate-marquee">
-              {[
-                { role: 'MEP Consultant', name: 'Mr. Rupesh Gujrathi' },
-                { role: 'PMC', name: 'Epsilon Project Management' },
-                { role: 'Vastu Consultant', name: 'Kamlesh Vastu Engineer' },
-                { role: 'Legal Consultant', name: 'Lexicon Law Partners' },
-                { role: 'Design Architect', name: 'Karch Architects' },
-                { role: 'Liasoning Architect', name: 'Sai Sampada DBS' },
-                { role: 'Landscaping &\nInterior Design', name: 'Madame Design Workshop' },
-                { role: 'RCC Consultant', name: 'System Structural Consultant Pvt Ltd' },
-              ].map((item, idx) => (
-                <div key={`strap-a-${idx}`} className="flex items-center">
-                  {idx !== 0 && <div className="h-10 w-px bg-[#1953B4] mx-6" />}
-                  <div className="text-center min-w-[240px]">
-                    <div className="text-xs text-[#1953B4] font-medium whitespace-pre-line">{item.role}</div>
-                    <div className="text-sm text-black font-semibold mt-1 whitespace-nowrap">{item.name}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* Track 2 (duplicate) */}
-            <div className="flex w-max items-center animate-marquee" aria-hidden="true">
-              {[
-                { role: 'MEP Consultant', name: 'Mr. Rupesh Gujrathi' },
-                { role: 'PMC', name: 'Epsilon Project Management' },
-                { role: 'Vastu Consultant', name: 'Kamlesh Vastu Engineer' },
-                { role: 'Legal Consultant', name: 'Lexicon Law Partners' },
-                { role: 'Design Architect', name: 'Karch Architects' },
-                { role: 'Liasoning Architect', name: 'Sai Sampada DBS' },
-                { role: 'Landscaping &\nInterior Design', name: 'Madame Design Workshop' },
-                { role: 'RCC Consultant', name: 'System Structural Consultant Pvt Ltd' },
-              ].map((item, idx) => (
-                <div key={`strap-b-${idx}`} className="flex items-center">
-                  {idx !== 0 && <div className="h-10 w-px bg-[#1953B4] mx-6" />}
-                  <div className="text-center min-w-[240px]">
-                    <div className="text-xs text-[#1953B4] font-medium whitespace-pre-line">{item.role}</div>
-                    <div className="text-sm text-black font-semibold mt-1 whitespace-nowrap">{item.name}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </main>
+      </section >
 
       <Footer />
-    </div>
+    </div >
   );
 };
 

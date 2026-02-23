@@ -25,11 +25,6 @@ const AdminSettings = () => {
       faqEnabled: true,
       emiCalculator: true,
       newsletterSignup: true
-    },
-    seo: {
-      metaTitle: 'Swastik Group - Real Estate Development',
-      metaDescription: 'Leading real estate development company with 20+ years of experience',
-      keywords: 'real estate, property, development, residential, commercial'
     }
   });
 
@@ -207,43 +202,6 @@ const AdminSettings = () => {
                 id="newsletterSignup"
                 checked={settings.features.newsletterSignup}
                 onCheckedChange={(checked) => handleInputChange('features', 'newsletterSignup', checked)}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>SEO Settings</CardTitle>
-            <CardDescription>
-              Search engine optimization settings
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="metaTitle">Meta Title</Label>
-              <Input
-                id="metaTitle"
-                value={settings.seo.metaTitle}
-                onChange={(e) => handleInputChange('seo', 'metaTitle', e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="metaDescription">Meta Description</Label>
-              <Textarea
-                id="metaDescription"
-                rows={3}
-                value={settings.seo.metaDescription}
-                onChange={(e) => handleInputChange('seo', 'metaDescription', e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="keywords">Keywords</Label>
-              <Input
-                id="keywords"
-                value={settings.seo.keywords}
-                onChange={(e) => handleInputChange('seo', 'keywords', e.target.value)}
-                placeholder="Separate keywords with commas"
               />
             </div>
           </CardContent>

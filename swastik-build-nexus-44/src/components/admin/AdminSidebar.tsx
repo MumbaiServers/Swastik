@@ -11,7 +11,8 @@ import {
   LogOut,
   Info,
   BarChart3,
-  Share2
+  Share2,
+  Gift
 } from 'lucide-react';
 import {
   Sidebar,
@@ -33,18 +34,18 @@ const menuItems = [
   { title: 'Dashboard', url: '/admin', icon: Home },
   { title: 'Home Banner', url: '/admin/home-banner', icon: Info },
   { title: 'Home Page', url: '/admin/home-page', icon: Home },
+  { title: 'Watch Our Story', url: '/admin/watch-our-story', icon: Info },
   { title: 'About Us', url: '/admin/about-us', icon: Users },
-  { title: 'Who We Are', url: '/admin/who-we-are', icon: Users },
   { title: 'Values, Vision & Mission', url: '/admin/values-vision-mission', icon: Info },
-  { title: 'Our Business', url: '/admin/our-business', icon: Building2 },
-  { title: 'Projects Description', url: '/admin/projects-description', icon: FileText },
   { title: 'Our Presence', url: '/admin/presence', icon: MapPin },
   { title: 'Social Media', url: '/admin/social-media', icon: Share2 },
   { title: 'Statistics', url: '/admin/statistics', icon: BarChart3 },
   { title: 'Projects', url: '/admin/projects', icon: Building2 },
   { title: 'Blogs', url: '/admin/blogs', icon: FileText },
   { title: 'FAQs', url: '/admin/faqs', icon: MessageSquare },
+  { title: 'Footer', url: '/admin/footer', icon: FileText },
   { title: 'Leads', url: '/admin/leads', icon: Users },
+  { title: 'Referrals', url: '/admin/loyalty', icon: Gift },
   { title: 'Settings', url: '/admin/settings', icon: Settings },
 ];
 

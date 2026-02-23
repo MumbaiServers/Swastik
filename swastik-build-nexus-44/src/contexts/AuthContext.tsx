@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { authApi } from '@/services/cmsApi';
 
 interface User {
   id: string;
   email: string;
+  name?: string;
   role: string;
 }
 
@@ -29,13 +31,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored auth token on mount
+    // Check for stored auth token on mount and validate it
     const token = localStorage.getItem('admin_token');
     const userData = localStorage.getItem('admin_user');
-    
+
     if (token && userData) {
       try {
-        setUser(JSON.parse(userData));
+        const parsed = JSON.parse(userData);
+        setUser(parsed);
+
+        // Validate token by calling /auth/me in background
+        authApi.me().then((res) => {
+          // Token is valid — update user data with latest from server
+          if (res.user) {
+            setUser(res.user);
+            localStorage.setItem('admin_user', JSON.stringify(res.user));
+          }
+        }).catch(() => {
+          // Token is invalid or expired — clear auth state
+          console.warn('Auth token expired, logging out');
+          setUser(null);
+          localStorage.removeItem('admin_token');
+          localStorage.removeItem('admin_user');
+        });
       } catch (error) {
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_user');
@@ -45,20 +63,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Demo login - in production, this would call your authentication API
-    if (email === 'admin@swastikgroup.com' && password === 'admin123') {
-      const userData = {
-        id: '1',
-        email: email,
-        role: 'admin'
-      };
-      
-      setUser(userData);
-      localStorage.setItem('admin_token', 'demo_token');
-      localStorage.setItem('admin_user', JSON.stringify(userData));
-      return true;
+    try {
+      const response = await authApi.login(email, password);
+
+      if (response.token && response.user) {
+        setUser(response.user);
+        localStorage.setItem('admin_token', response.token);
+        localStorage.setItem('admin_user', JSON.stringify(response.user));
+        return true;
+      }
+
+      return false;
+    } catch (error: any) {
+      console.error('Login failed:', error.message);
+      return false;
     }
-    return false;
   };
 
   const logout = () => {

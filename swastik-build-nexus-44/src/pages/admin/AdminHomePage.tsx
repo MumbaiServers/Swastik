@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -6,122 +6,148 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Loader2, Save, MapPin, Plus, Trash2, Image as ImageIcon } from 'lucide-react';
+import { sectionsApi, vvmApi, featureCardsApi, locationsApi, getImageUrl } from '@/services/cmsApi';
 
 const AdminHomePage = () => {
-  const [homePageData, setHomePageData] = useState({
-    whoWeAre: {
-      content: `At Swastik Group, we're dedicated to honesty, openness, and quality work in each stage we do. We've successfully completed various projects that blend contemporary design with luxury. We're proud to build durable homes and buildings that are built to last expectations and leave a positive mark in the construction landscape.
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-Our commitment to excellence and innovation drives us to create spaces that not only meet but exceed expectations, establishing lasting relationships built on trust and quality craftsmanship.`,
-      image: null as File | null
-    },
-    valuesVisionMission: {
-      values: "Integrity, transparency, and excellence form the foundation of everything we do.",
-      vision: "To be Mumbai's most trusted real estate developer, creating sustainable communities.",
-      mission: "Building quality homes that blend contemporary design with innovation and sustainability.",
-      image: null as File | null
-    },
-    whyChooseUs: {
-      description: "Our projects are known for their top-notch craftsmanship, smart design, and solid construction, giving customers great value.",
-      features: [
-        {
-          title: "Timely Delivery",
-          description: "We're proud to finish projects on time within the delivery date."
-        },
-        {
-          title: "Professional Team",
-          description: "Our experienced team always aims for excellence, from planning projects to helping customers."
-        },
-        {
-          title: "Market Leadership",
-          description: "We're leaders in redevelopment, known for quality work, on-time delivery, and being open with customers and partners."
-        },
-        {
-          title: "Minimal Bureaucracy",
-          description: "Our simple processes and 24/7 help make things easy for clients, creating a friendly and supportive atmosphere."
+  const [whoWeAre, setWhoWeAre] = useState({ title: '', content: '', image: '' });
+  const [whoWeAreFile, setWhoWeAreFile] = useState<File | null>(null);
+  const [whoWeArePreview, setWhoWeArePreview] = useState<string | null>(null);
+
+  const [vvmItems, setVvmItems] = useState<any[]>([]);
+  const [features, setFeatures] = useState<any[]>([]);
+  const [locations, setLocations] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const [whoRes, vvmRes, featureRes, locRes] = await Promise.all([
+        sectionsApi.getByKey('who_we_are'),
+        vvmApi.getAll(),
+        featureCardsApi.getAll('home'),
+        locationsApi.getAll()
+      ]);
+
+      if (whoRes.section) {
+        setWhoWeAre({
+          title: whoRes.section.title,
+          content: whoRes.section.content,
+          image: whoRes.section.image
+        });
+        if (whoRes.section.image) {
+          setWhoWeArePreview(getImageUrl(whoRes.section.image));
         }
-      ]
-    },
-    ourPresence: {
-      locations: ["Chembur", "Ghatkopar", "Vikhroli", "Mulund", "Powai", "Andheri"]
-    }
-  });
-
-  const handleInputChange = (section: string, field: string, value: string) => {
-    setHomePageData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section as keyof typeof prev],
-        [field]: value
       }
-    }));
+      setVvmItems(vvmRes.vvmItems || []);
+      setFeatures(featureRes.cards || []);
+      setLocations(locRes.locations || []);
+    } catch (error) {
+      console.error('Failed to fetch home page data:', error);
+      toast.error('Failed to load page content');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleImageUpload = (section: string, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleWhoWeAreImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setHomePageData(prev => ({
-        ...prev,
-        [section]: {
-          ...prev[section as keyof typeof prev],
-          image: file
-        }
-      }));
+      setWhoWeAreFile(file);
+      setWhoWeArePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleWhoWeAreSave = async () => {
+    try {
+      setSaving(true);
+      const formData = new FormData();
+      formData.append('title', whoWeAre.title);
+      formData.append('content', whoWeAre.content);
+      if (whoWeAreFile) {
+        formData.append('image', whoWeAreFile);
+      }
+
+      await sectionsApi.update('who_we_are', formData);
+      toast.success('Who We Are section updated');
+      setWhoWeAreFile(null);
+    } catch (error) {
+      toast.error('Failed to save Who We Are section');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleLocationChange = (index: number, value: string) => {
+    const updated = [...locations];
+    updated[index].name = value;
+    setLocations(updated);
+  };
+
+  const addLocation = () => {
+    setLocations([...locations, { name: '' }]);
+  };
+
+  const removeLocation = (index: number) => {
+    setLocations(locations.filter((_, i) => i !== index));
+  };
+
+  const handleLocationsSave = async () => {
+    try {
+      setSaving(true);
+      const validLocations = locations.filter(l => l.name.trim() !== '');
+      await locationsApi.update(validLocations);
+      toast.success('Presence locations updated successfully');
+      await fetchData();
+    } catch (error) {
+      toast.error('Failed to save locations');
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleFeatureChange = (index: number, field: string, value: string) => {
-    setHomePageData(prev => ({
-      ...prev,
-      whyChooseUs: {
-        ...prev.whyChooseUs,
-        features: prev.whyChooseUs.features.map((feature, i) =>
-          i === index ? { ...feature, [field]: value } : feature
-        )
-      }
-    }));
+    const updated = [...features];
+    updated[index] = { ...updated[index], [field]: value };
+    setFeatures(updated);
   };
 
-  const handleLocationChange = (index: number, value: string) => {
-    setHomePageData(prev => ({
-      ...prev,
-      ourPresence: {
-        locations: prev.ourPresence.locations.map((location, i) =>
-          i === index ? value : location
-        )
-      }
-    }));
+  const handleFeaturesSave = async () => {
+    try {
+      setSaving(true);
+      await featureCardsApi.update('home', features);
+      toast.success('Why Choose Us features updated successfully');
+      await fetchData();
+    } catch (error) {
+      toast.error('Failed to save Why Choose Us features');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const addLocation = () => {
-    setHomePageData(prev => ({
-      ...prev,
-      ourPresence: {
-        locations: [...prev.ourPresence.locations, "New Location"]
-      }
-    }));
-  };
-
-  const removeLocation = (index: number) => {
-    setHomePageData(prev => ({
-      ...prev,
-      ourPresence: {
-        locations: prev.ourPresence.locations.filter((_, i) => i !== index)
-      }
-    }));
-  };
-
-  const handleSave = () => {
-    toast.success('Home page content updated successfully');
-  };
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Home Page Management</h1>
-        <p className="text-muted-foreground">
-          Update all sections displayed on the home page
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold">Home Page Management</h1>
+          <p className="text-muted-foreground">
+            Update all sections displayed on the home page
+          </p>
+        </div>
       </div>
 
       <Tabs defaultValue="who-we-are" className="space-y-6">
@@ -136,20 +162,23 @@ Our commitment to excellence and innovation drives us to create spaces that not 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Section Image</CardTitle>
-                <CardDescription>
-                  Upload the image for the "Who We Are" section
-                </CardDescription>
+                <CardTitle>Content</CardTitle>
+                <CardDescription>Edit text for the "Who We Are" section</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="who-we-are-image">Section Image</Label>
+                <div className="space-y-2">
+                  <Label>Section Title</Label>
                   <Input
-                    id="who-we-are-image"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload('whoWeAre', e)}
-                    className="mt-2"
+                    value={whoWeAre.title}
+                    onChange={(e) => setWhoWeAre({ ...whoWeAre, title: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Content Text</Label>
+                  <Textarea
+                    rows={8}
+                    value={whoWeAre.content}
+                    onChange={(e) => setWhoWeAre({ ...whoWeAre, content: e.target.value })}
                   />
                 </div>
               </CardContent>
@@ -157,132 +186,93 @@ Our commitment to excellence and innovation drives us to create spaces that not 
 
             <Card>
               <CardHeader>
-                <CardTitle>Content</CardTitle>
-                <CardDescription>
-                  Edit the text content for this section
-                </CardDescription>
+                <CardTitle>Section Image</CardTitle>
+                <CardDescription>Update the featured image for this section</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="who-we-are-content">Section Content</Label>
-                  <Textarea
-                    id="who-we-are-content"
-                    rows={10}
-                    value={homePageData.whoWeAre.content}
-                    onChange={(e) => handleInputChange('whoWeAre', 'content', e.target.value)}
-                    placeholder="Enter the content about your company..."
-                  />
+              <CardContent className="space-y-4 text-center">
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-muted flex items-center justify-center border-2 border-dashed">
+                  {whoWeArePreview ? (
+                    <img src={whoWeArePreview} className="w-full h-full object-cover" />
+                  ) : (
+                    <ImageIcon className="w-12 h-12 text-muted-foreground" />
+                  )}
                 </div>
+                <Label htmlFor="who-we-are-image" className="cursor-pointer inline-block bg-primary text-primary-foreground px-4 py-2 rounded-md">
+                  {whoWeAreFile || whoWeAre.image ? 'Change Image' : 'Upload Image'}
+                  <Input id="who-we-are-image" type="file" className="hidden" onChange={handleWhoWeAreImageChange} />
+                </Label>
               </CardContent>
             </Card>
+          </div>
+          <div className="flex justify-end mt-4">
+            <Button onClick={handleWhoWeAreSave} disabled={saving} size="lg">
+              {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+              Save Who We Are Changes
+            </Button>
           </div>
         </TabsContent>
 
         <TabsContent value="values-vision" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Section Image</CardTitle>
-                <CardDescription>
-                  Upload the image for the Values, Vision & Mission section
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="values-vision-image">Section Image</Label>
-                  <Input
-                    id="values-vision-image"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload('valuesVisionMission', e)}
-                    className="mt-2"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Content</CardTitle>
-                <CardDescription>
-                  Edit the values, vision, and mission content
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="values">Our Values</Label>
-                  <Textarea
-                    id="values"
-                    rows={3}
-                    value={homePageData.valuesVisionMission.values}
-                    onChange={(e) => handleInputChange('valuesVisionMission', 'values', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="vision">Our Vision</Label>
-                  <Textarea
-                    id="vision"
-                    rows={3}
-                    value={homePageData.valuesVisionMission.vision}
-                    onChange={(e) => handleInputChange('valuesVisionMission', 'vision', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="mission">Our Mission</Label>
-                  <Textarea
-                    id="mission"
-                    rows={3}
-                    value={homePageData.valuesVisionMission.mission}
-                    onChange={(e) => handleInputChange('valuesVisionMission', 'mission', e.target.value)}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Values, Vision & Mission</CardTitle>
+                <CardDescription>Manage core principles and long-term vision</CardDescription>
+              </div>
+              <Button onClick={() => window.location.href = '/admin/values-vision-mission'}>
+                Go to Dedicated Page
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {vvmItems.map((item: any) => (
+                  <div key={item.id} className="p-4 border rounded-lg">
+                    <h4 className="font-bold capitalize mb-2">{item.type}</h4>
+                    <p className="text-xs line-clamp-3">{item.content}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="why-choose-us" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Why Choose Us Content</CardTitle>
-              <CardDescription>
-                Edit the main description and feature cards
-              </CardDescription>
+              <CardTitle>Why Choose Us Cards</CardTitle>
+              <CardDescription>Key benefits shown on home page</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <Label htmlFor="why-choose-description">Main Description</Label>
-                <Textarea
-                  id="why-choose-description"
-                  rows={3}
-                  value={homePageData.whyChooseUs.description}
-                  onChange={(e) => handleInputChange('whyChooseUs', 'description', e.target.value)}
-                />
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="text-lg font-semibold">Feature Cards</h4>
-                {homePageData.whyChooseUs.features.map((feature, index) => (
-                  <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
-                    <div>
-                      <Label htmlFor={`feature-title-${index}`}>Feature Title</Label>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {features.map((card: any, index: number) => (
+                  <div key={card.id || index} className="p-4 border rounded-lg space-y-3">
+                    <div className="space-y-1">
+                      <Label>Title</Label>
                       <Input
-                        id={`feature-title-${index}`}
-                        value={feature.title}
+                        value={card.title}
                         onChange={(e) => handleFeatureChange(index, 'title', e.target.value)}
+                        placeholder="Feature Title"
+                        className="font-bold"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor={`feature-description-${index}`}>Feature Description</Label>
+                    <div className="space-y-1">
+                      <Label>Description</Label>
                       <Textarea
-                        id={`feature-description-${index}`}
-                        rows={3}
-                        value={feature.description}
+                        value={card.description}
                         onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
+                        placeholder="Feature Description"
+                        rows={3}
+                        className="text-xs"
                       />
                     </div>
                   </div>
                 ))}
+              </div>
+              <div className="flex justify-end mt-4">
+                <Button onClick={handleFeaturesSave} disabled={saving} size="lg">
+                  {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                  Save Why Choose Us
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -293,39 +283,41 @@ Our commitment to excellence and innovation drives us to create spaces that not 
             <CardHeader>
               <CardTitle>Our Presence Locations</CardTitle>
               <CardDescription>
-                Manage the list of locations where your company has presence
+                Manage list of locations
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {homePageData.ourPresence.locations.map((location, index) => (
-                <div key={index} className="flex gap-2">
+              {locations.map((location, index) => (
+                <div key={index} className="flex gap-2 items-center">
+                  <MapPin className="w-5 h-5 text-blue-600 shrink-0" />
                   <Input
-                    value={location}
+                    value={location.name}
                     onChange={(e) => handleLocationChange(index, e.target.value)}
                     placeholder="Location name"
                   />
                   <Button
                     variant="outline"
+                    size="icon"
                     onClick={() => removeLocation(index)}
-                    disabled={homePageData.ourPresence.locations.length <= 1}
+                    className="text-red-600"
                   >
-                    Remove
+                    <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               ))}
-              <Button variant="outline" onClick={addLocation}>
-                Add Location
-              </Button>
+              <div className="flex gap-4">
+                <Button variant="outline" onClick={addLocation} className="w-full">
+                  <Plus className="w-4 h-4 mr-2" /> Add Location
+                </Button>
+                <Button onClick={handleLocationsSave} disabled={saving} className="w-full">
+                  {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                  Save Presence List
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
-
-      <div className="flex justify-end">
-        <Button onClick={handleSave} size="lg">
-          Save All Changes
-        </Button>
-      </div>
     </div>
   );
 };

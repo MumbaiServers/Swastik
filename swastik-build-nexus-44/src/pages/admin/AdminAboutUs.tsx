@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -6,86 +6,182 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Loader2, Save, Upload } from 'lucide-react';
+import { sectionsApi, featureCardsApi, getImageUrl } from '@/services/cmsApi';
 
 const AdminAboutUs = () => {
-  const [aboutUsData, setAboutUsData] = useState({
-    ourBusiness: {
-      description: `Swastik Group is a prime real estate company. We are known for our honesty, transparency, and the best. Premium quality work. As we've been working around for more than 25 years and creating amazing homes and business spaces that redefine luxury living. We focus on doing things correctly, and meeting deadlines. This approach has made us leaders in the real estate industry, respected for our commitment to ensuring our customers are satisfied with our work.`,
-      image: null as File | null
-    },
-    aboutUs: {
-      content: `At Swastik Group, we're dedicated to honesty, openness, and quality work in each single thing we do. We've successfully completed various projects that blend contemporary design with luxury. We're proud to build durable homes and buildings that reflects comfortable living. With a committed and talented team, we aim to top expectations and leave a positive mark in the communities we serve.`,
-      image: null as File | null
-    },
-    whyChooseUs: {
-      description: "Our projects are known for their top-notch craftsmanship, smart design, and solid construction, giving customers great value.",
-      features: [
-        {
-          title: "Timely Delivery",
-          description: "We're proud to finish projects on time within the delivery date."
-        },
-        {
-          title: "Professional Team",
-          description: "Our experienced team always aims for excellence, from planning projects to helping customers."
-        },
-        {
-          title: "Market Leadership",
-          description: "We're leaders in redevelopment, known for quality work, on-time delivery, and being open with customers and partners."
-        },
-        {
-          title: "Minimal Bureaucracy",
-          description: "Our simple processes and 24/7 help make things easy for clients, creating a friendly and supportive atmosphere."
-        }
-      ]
-    }
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const [ourBusiness, setOurBusiness] = useState({
+    title: 'Our Business',
+    content: '',
+    image: null as string | null,
+    imageFile: null as File | null,
+    previewUrl: null as string | null
   });
 
-  const handleInputChange = (section: string, field: string, value: string) => {
-    setAboutUsData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section as keyof typeof prev],
-        [field]: value
+  const [aboutUsMain, setAboutUsMain] = useState({
+    title: 'About Us',
+    content: '',
+    image: null as string | null,
+    imageFile: null as File | null,
+    previewUrl: null as string | null
+  });
+
+  const [features, setFeatures] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch sections one by one to handle missing ones gracefully
+      try {
+        const bizRes = await sectionsApi.getByKey('our_business');
+        if (bizRes.section) {
+          setOurBusiness({
+            title: bizRes.section.title,
+            content: bizRes.section.content,
+            image: bizRes.section.image,
+            imageFile: null,
+            previewUrl: bizRes.section.image ? getImageUrl(bizRes.section.image) : null
+          });
+        }
+      } catch (e: any) {
+        console.warn('our_business section not found');
       }
-    }));
+
+      try {
+        const aboutRes = await sectionsApi.getByKey('about_us_main');
+        if (aboutRes.section) {
+          setAboutUsMain({
+            title: aboutRes.section.title,
+            content: aboutRes.section.content,
+            image: aboutRes.section.image,
+            imageFile: null,
+            previewUrl: aboutRes.section.image ? getImageUrl(aboutRes.section.image) : null
+          });
+        }
+      } catch (e: any) {
+        console.warn('about_us_main section not found');
+      }
+
+      try {
+        const featuresRes = await featureCardsApi.getAll('home');
+        setFeatures(featuresRes.cards || []);
+      } catch (e: any) {
+        console.warn('features not found');
+      }
+    } catch (error) {
+      console.error('Unexpected error fetching About Us data:', error);
+      toast.error('Failed to load page content');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleImageUpload = (section: string, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOurBusinessChange = (field: string, value: any) => {
+    setOurBusiness(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleAboutUsChange = (field: string, value: any) => {
+    setAboutUsMain(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleOurBusinessImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setAboutUsData(prev => ({
+      setOurBusiness(prev => ({
         ...prev,
-        [section]: {
-          ...prev[section as keyof typeof prev],
-          image: file
-        }
+        imageFile: file,
+        previewUrl: URL.createObjectURL(file)
+      }));
+    }
+  };
+
+  const handleAboutUsImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAboutUsMain(prev => ({
+        ...prev,
+        imageFile: file,
+        previewUrl: URL.createObjectURL(file)
       }));
     }
   };
 
   const handleFeatureChange = (index: number, field: string, value: string) => {
-    setAboutUsData(prev => ({
-      ...prev,
-      whyChooseUs: {
-        ...prev.whyChooseUs,
-        features: prev.whyChooseUs.features.map((feature, i) =>
-          i === index ? { ...feature, [field]: value } : feature
-        )
-      }
-    }));
+    const updated = [...features];
+    updated[index] = { ...updated[index], [field]: value };
+    setFeatures(updated);
   };
 
-  const handleSave = () => {
-    toast.success('About Us page content updated successfully');
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+
+      // Save Our Business
+      const bizData = new FormData();
+      bizData.append('sectionKey', 'our_business');
+      bizData.append('title', ourBusiness.title);
+      bizData.append('content', ourBusiness.content);
+      if (ourBusiness.imageFile) bizData.append('image', ourBusiness.imageFile);
+
+      try {
+        await sectionsApi.update('our_business', bizData);
+      } catch {
+        await sectionsApi.create(bizData);
+      }
+
+      // Save About Us Main
+      const aboutData = new FormData();
+      aboutData.append('sectionKey', 'about_us_main');
+      aboutData.append('title', aboutUsMain.title);
+      aboutData.append('content', aboutUsMain.content);
+      if (aboutUsMain.imageFile) aboutData.append('image', aboutUsMain.imageFile);
+
+      try {
+        await sectionsApi.update('about_us_main', aboutData);
+      } catch {
+        await sectionsApi.create(aboutData);
+      }
+
+      // Save Features (Home page cards)
+      await featureCardsApi.update('home', features);
+
+      toast.success('About Us content saved successfully');
+      fetchData();
+    } catch (error) {
+      console.error('Save failed:', error);
+      toast.error('Failed to save changes');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">About Us Page Management</h1>
-        <p className="text-muted-foreground">
-          Update all sections displayed on the About Us page
-        </p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold">About Us Page Management</h1>
+          <p className="text-muted-foreground">Update all sections displayed on the About Us page</p>
+        </div>
+        <Button onClick={handleSave} disabled={saving} size="lg">
+          {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+          Save All Changes
+        </Button>
       </div>
 
       <Tabs defaultValue="our-business" className="space-y-6">
@@ -100,44 +196,39 @@ const AdminAboutUs = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Business Image</CardTitle>
-                <CardDescription>
-                  Upload the image for the "Our Business" section
-                </CardDescription>
+                <CardDescription>Featured image for "Our Business" section</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                {ourBusiness.previewUrl && (
+                  <div className="relative aspect-video rounded-lg overflow-hidden border">
+                    <img src={ourBusiness.previewUrl} className="w-full h-full object-cover" alt="Preview" />
+                  </div>
+                )}
                 <div>
-                  <Label htmlFor="business-image">Business Image</Label>
-                  <Input
-                    id="business-image"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload('ourBusiness', e)}
-                    className="mt-2"
-                  />
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Recommended size: 600x400px or similar aspect ratio (Max: 5MB)
-                  </p>
+                  <Label htmlFor="business-image" className="cursor-pointer">
+                    <div className="flex items-center justify-center w-full h-12 border-2 border-dashed rounded-lg hover:bg-muted/50 transition-colors">
+                      <Upload className="w-4 h-4 mr-2" />
+                      {ourBusiness.previewUrl ? 'Change Image' : 'Upload Image'}
+                    </div>
+                  </Label>
+                  <Input id="business-image" type="file" accept="image/*" className="hidden" onChange={handleOurBusinessImage} />
                 </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>Business Description</CardTitle>
-                <CardDescription>
-                  Edit the description text for the business section
-                </CardDescription>
+                <CardTitle>Business Details</CardTitle>
+                <CardDescription>Edit section title and content</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="business-description">Business Description</Label>
-                  <Textarea
-                    id="business-description"
-                    rows={10}
-                    value={aboutUsData.ourBusiness.description}
-                    onChange={(e) => handleInputChange('ourBusiness', 'description', e.target.value)}
-                    placeholder="Enter the business description..."
-                  />
+                <div className="space-y-2">
+                  <Label htmlFor="biz-title">Title</Label>
+                  <Input id="biz-title" value={ourBusiness.title} onChange={(e) => handleOurBusinessChange('title', e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="biz-content">Content</Label>
+                  <Textarea id="biz-content" rows={8} value={ourBusiness.content} onChange={(e) => handleOurBusinessChange('content', e.target.value)} />
                 </div>
               </CardContent>
             </Card>
@@ -149,44 +240,39 @@ const AdminAboutUs = () => {
             <Card>
               <CardHeader>
                 <CardTitle>About Us Image</CardTitle>
-                <CardDescription>
-                  Upload the image for the "About Us" section
-                </CardDescription>
+                <CardDescription>Featured image for the main "About Us" section</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                {aboutUsMain.previewUrl && (
+                  <div className="relative aspect-video rounded-lg overflow-hidden border">
+                    <img src={aboutUsMain.previewUrl} className="w-full h-full object-cover" alt="Preview" />
+                  </div>
+                )}
                 <div>
-                  <Label htmlFor="about-us-image">About Us Image</Label>
-                  <Input
-                    id="about-us-image"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload('aboutUs', e)}
-                    className="mt-2"
-                  />
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Recommended size: 600x400px or similar aspect ratio (Max: 5MB)
-                  </p>
+                  <Label htmlFor="about-image" className="cursor-pointer">
+                    <div className="flex items-center justify-center w-full h-12 border-2 border-dashed rounded-lg hover:bg-muted/50 transition-colors">
+                      <Upload className="w-4 h-4 mr-2" />
+                      {aboutUsMain.previewUrl ? 'Change Image' : 'Upload Image'}
+                    </div>
+                  </Label>
+                  <Input id="about-image" type="file" accept="image/*" className="hidden" onChange={handleAboutUsImage} />
                 </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>About Us Content</CardTitle>
-                <CardDescription>
-                  Edit the text content for the about us section
-                </CardDescription>
+                <CardTitle>About Us Details</CardTitle>
+                <CardDescription>Edit section title and content</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="about-us-content">About Us Content</Label>
-                  <Textarea
-                    id="about-us-content"
-                    rows={10}
-                    value={aboutUsData.aboutUs.content}
-                    onChange={(e) => handleInputChange('aboutUs', 'content', e.target.value)}
-                    placeholder="Enter the about us content..."
-                  />
+                <div className="space-y-2">
+                  <Label htmlFor="about-title">Title</Label>
+                  <Input id="about-title" value={aboutUsMain.title} onChange={(e) => handleAboutUsChange('title', e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="about-content">Content</Label>
+                  <Textarea id="about-content" rows={8} value={aboutUsMain.content} onChange={(e) => handleAboutUsChange('content', e.target.value)} />
                 </div>
               </CardContent>
             </Card>
@@ -196,42 +282,20 @@ const AdminAboutUs = () => {
         <TabsContent value="why-choose-us" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Why Choose Us Content</CardTitle>
-              <CardDescription>
-                Edit the main description and feature cards
-              </CardDescription>
+              <CardTitle>Why Choose Us Features</CardTitle>
+              <CardDescription>These features appear on both Home and About Us pages</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div>
-                <Label htmlFor="why-choose-description">Main Description</Label>
-                <Textarea
-                  id="why-choose-description"
-                  rows={3}
-                  value={aboutUsData.whyChooseUs.description}
-                  onChange={(e) => handleInputChange('whyChooseUs', 'description', e.target.value)}
-                />
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="text-lg font-semibold">Feature Cards</h4>
-                {aboutUsData.whyChooseUs.features.map((feature, index) => (
-                  <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
-                    <div>
-                      <Label htmlFor={`feature-title-${index}`}>Feature Title</Label>
-                      <Input
-                        id={`feature-title-${index}`}
-                        value={feature.title}
-                        onChange={(e) => handleFeatureChange(index, 'title', e.target.value)}
-                      />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {features.map((feature, index) => (
+                  <div key={index} className="space-y-4 p-4 border rounded-xl bg-muted/20">
+                    <div className="space-y-1">
+                      <Label className="text-xs uppercase font-bold text-muted-foreground">Title</Label>
+                      <Input value={feature.title} onChange={(e) => handleFeatureChange(index, 'title', e.target.value)} />
                     </div>
-                    <div>
-                      <Label htmlFor={`feature-description-${index}`}>Feature Description</Label>
-                      <Textarea
-                        id={`feature-description-${index}`}
-                        rows={3}
-                        value={feature.description}
-                        onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
-                      />
+                    <div className="space-y-1">
+                      <Label className="text-xs uppercase font-bold text-muted-foreground">Description</Label>
+                      <Textarea rows={3} value={feature.description} onChange={(e) => handleFeatureChange(index, 'description', e.target.value)} />
                     </div>
                   </div>
                 ))}
@@ -240,12 +304,6 @@ const AdminAboutUs = () => {
           </Card>
         </TabsContent>
       </Tabs>
-
-      <div className="flex justify-end">
-        <Button onClick={handleSave} size="lg">
-          Save All Changes
-        </Button>
-      </div>
     </div>
   );
 };

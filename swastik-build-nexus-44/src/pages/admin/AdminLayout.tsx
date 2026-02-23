@@ -7,18 +7,20 @@ import AdminDashboard from './AdminDashboard';
 import AdminHomeBanner from './AdminHomeBanner';
 import AdminHomePage from './AdminHomePage';
 import AdminAboutUs from './AdminAboutUs';
-import AdminWhoWeAre from './AdminWhoWeAre';
 import AdminValuesVisionMission from './AdminValuesVisionMission';
-import AdminOurBusiness from './AdminOurBusiness';
-import AdminProjectsDescription from './AdminProjectsDescription';
 import AdminPresence from './AdminPresence';
 import AdminSocialMedia from './AdminSocialMedia';
 import AdminStatistics from './AdminStatistics';
 import AdminProjects from './AdminProjects';
+import AdminProjectEdit from './AdminProjectEdit';
 import AdminBlogs from './AdminBlogs';
 import AdminFAQs from './AdminFAQs';
 import AdminSettings from './AdminSettings';
 import AdminLeads from './AdminLeads';
+import AdminWatchOurStory from './AdminWatchOurStory';
+import AdminFooter from './AdminFooter';
+import AdminBlogEdit from './AdminBlogEdit';
+import AdminLoyalty from './AdminLoyalty';
 
 const AdminLayout = () => {
   return (
@@ -38,18 +40,22 @@ const AdminLayout = () => {
                 <Route path="/" element={<AdminDashboard />} />
                 <Route path="/home-banner" element={<AdminHomeBanner />} />
                 <Route path="/home-page" element={<AdminHomePage />} />
+                <Route path="/watch-our-story" element={<AdminWatchOurStory />} />
                 <Route path="/about-us" element={<AdminAboutUs />} />
-                <Route path="/who-we-are" element={<AdminWhoWeAre />} />
                 <Route path="/values-vision-mission" element={<AdminValuesVisionMission />} />
-                <Route path="/our-business" element={<AdminOurBusiness />} />
-                <Route path="/projects-description" element={<AdminProjectsDescription />} />
                 <Route path="/presence" element={<AdminPresence />} />
                 <Route path="/social-media" element={<AdminSocialMedia />} />
                 <Route path="/statistics" element={<AdminStatistics />} />
                 <Route path="/projects" element={<AdminProjects />} />
+                <Route path="/projects/new" element={<AdminProjectEdit />} />
+                <Route path="/projects/:id" element={<AdminProjectEdit />} />
                 <Route path="/blogs" element={<AdminBlogs />} />
+                <Route path="/blogs/new" element={<AdminBlogEdit />} />
+                <Route path="/blogs/:id" element={<AdminBlogEdit />} />
                 <Route path="/faqs" element={<AdminFAQs />} />
+                <Route path="/footer" element={<AdminFooter />} />
                 <Route path="/leads" element={<AdminLeads />} />
+                <Route path="/loyalty" element={<AdminLoyalty />} />
                 <Route path="/settings" element={<AdminSettings />} />
               </Routes>
             </main>
