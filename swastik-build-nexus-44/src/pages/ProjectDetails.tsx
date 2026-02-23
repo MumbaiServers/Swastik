@@ -10,9 +10,10 @@ import BlogsSection from "@/components/BlogsSection";
 import FAQSection from "@/components/FAQSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import { projectsApi, statisticsApi, getImageUrl } from "@/services/cmsApi";
-import { Loader2, MapPin, ChevronUp, X } from "lucide-react";
+import { Loader2, MapPin, ChevronUp, X, ArrowRight, Star } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import lifestyleInterior from "@/assets/lifestyle-interior.jpg";
 
 const scrollTo = (id: string) => {
   const el = document.getElementById(id);
@@ -178,7 +179,6 @@ const ProjectDetails = () => {
           alt={project.name}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/10 md:bg-black/40" />
 
         {/* Section Navigation Ribbon - Desktop Only */}
         <div className="hidden md:block absolute left-0 right-0 bottom-0 z-20 w-full bg-[#1953B4]">
@@ -220,7 +220,7 @@ const ProjectDetails = () => {
               <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                 <div className="relative overflow-hidden shadow-brand">
                   <img
-                    src={getImageUrl(project.image) || ""}
+                    src={project.overviewImage ? getImageUrl(project.overviewImage) : lifestyleInterior}
                     alt="Project Overview"
                     className="w-full h-72 md:h-96 object-cover"
                     style={{
@@ -244,7 +244,9 @@ const ProjectDetails = () => {
           </div>
         </section>
 
-        {/* Nearby Connectivities */}
+
+
+        {/* ─── Connectivities ────────────────────────────────── */}
         <section className="relative bg-[#EEF8FF]" id="connectivities">
           <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-[#EEF8FF]">
             <div className="container mx-auto px-4 py-10 md:py-12">
@@ -282,30 +284,17 @@ const ProjectDetails = () => {
                 </div>
                 <div className="relative">
                   <div className="w-full h-72 md:h-80 overflow-hidden rounded-2xl border border-[#1953B4]/10 shadow-brand">
-                    {project.googleMapsUrl ? (
-                      <iframe
-                        src={(() => {
-                          const url = project.googleMapsUrl;
-                          if (url.includes('<iframe')) {
-                            const match = url.match(/src="([^"]+)"/);
-                            return match ? match[1] : '';
-                          }
-                          return url;
-                        })()}
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0 }}
-                        allowFullScreen
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        title="Project Location"
-                        className="w-full h-full"
-                      ></iframe>
+                    {project.connectivitiesImage ? (
+                      <img
+                        src={getImageUrl(project.connectivitiesImage) || ""}
+                        alt="Project Location Map"
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-[#DAEFFF] to-[#EEF8FF] flex items-center justify-center">
                         <div className="text-center text-[#1953B4]">
                           <div className="text-2xl font-bold mb-2">Location Map</div>
-                          <div className="text-lg">Interactive map coming soon</div>
+                          <div className="text-lg">Map image coming soon</div>
                         </div>
                       </div>
                     )}
@@ -400,7 +389,7 @@ const ProjectDetails = () => {
                 <div className="grid lg:grid-cols-[55%_45%] gap-8 lg:gap-20 items-center">
                   <div className="relative">
                     <img
-                      src={getImageUrl(project.image) || ""}
+                      src={getImageUrl(project.amenitiesImage || project.image) || ""}
                       alt="Amenities"
                       className="w-full object-cover"
                       style={{
@@ -429,7 +418,7 @@ const ProjectDetails = () => {
           </section>
         )}
 
-        {/* Floor Plans */}
+        {/* ─── Floor Plans ───────────────────────────────────── */}
         {project.configurations?.length > 0 && (
           <section id="floor-plans" className="container mx-auto px-4 py-12 md:py-20">
             <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">Floor Plans and Configurations</h2>
@@ -438,7 +427,7 @@ const ProjectDetails = () => {
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
               <div className="hidden lg:block rounded-3xl bg-[#F2E2D3]/60 p-4 md:p-6">
                 <img
-                  src={project.floorPlanImage ? getImageUrl(project.floorPlanImage) : getImageUrl(project.image) || ""}
+                  src={project.floorPlanImage ? getImageUrl(project.floorPlanImage) : lifestyleInterior}
                   alt="Floor Plan"
                   className="w-full h-72 md:h-[420px] object-contain"
                 />
@@ -487,7 +476,7 @@ const ProjectDetails = () => {
                     </DialogTrigger>
                     <DialogContent className="max-w-3xl p-1 bg-white border-0">
                       <img
-                        src={project.floorPlanImage ? getImageUrl(project.floorPlanImage) : getImageUrl(project.image) || ""}
+                        src={project.floorPlanImage ? getImageUrl(project.floorPlanImage) : lifestyleInterior}
                         alt="Floor Plan"
                         className="w-full h-auto object-contain rounded-lg max-h-[80vh]"
                       />
@@ -590,7 +579,7 @@ const ProjectDetails = () => {
 
             <div className="relative h-auto lg:h-full flex justify-center lg:justify-end">
               <img
-                src={getImageUrl(project.aboutDeveloperImage || project.image) || ""}
+                src={project.aboutDeveloperImage ? getImageUrl(project.aboutDeveloperImage) : lifestyleInterior}
                 alt="Developer Visual"
                 className="w-full aspect-square md:aspect-auto h-auto md:h-[400px] lg:h-[597px] object-cover shadow-lg"
                 style={{
@@ -676,7 +665,7 @@ const ProjectDetails = () => {
       <div id="contact" />
 
       <Footer />
-    </div >
+    </div>
   );
 };
 

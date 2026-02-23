@@ -15,7 +15,7 @@ import ContactFormModal from "@/components/ContactFormModal";
 import lifestyleInterior from "@/assets/lifestyle-interior.jpg";
 import { useEffect, useRef, useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { sectionsApi, statisticsApi, vvmApi } from "@/services/cmsApi";
+import { sectionsApi, statisticsApi, vvmApi, getImageUrl } from "@/services/cmsApi";
 
 const Index = () => {
   const [watchOurStory, setWatchOurStory] = useState({
@@ -74,7 +74,7 @@ const Index = () => {
 
         // Fetch VVM
         const vvmRes = await vvmApi.getAll();
-        setVvmItems(vvmRes.vvmItems || []);
+        setVvmItems(vvmRes.items || []);
       } catch (error) {
         console.error('Failed to fetch home page data:', error);
       }
@@ -123,7 +123,7 @@ const Index = () => {
             <div className="flex-1">
               <div className="relative h-full min-h-[300px]">
                 <img
-                  src={""} // Ideally fetch from item.image if added later
+                  src={item.image ? getImageUrl(item.image) : lifestyleInterior}
                   alt={item.title}
                   className="w-full h-full object-cover"
                 />
@@ -144,7 +144,7 @@ const Index = () => {
             </div>
             <div className="flex-[1.2] h-full border-l border-white/20">
               <img
-                src={""}
+                src={item.image ? getImageUrl(item.image) : lifestyleInterior}
                 alt={item.title}
                 className="w-full h-full object-cover"
               />
@@ -167,7 +167,7 @@ const Index = () => {
       <AboutUsSection />
 
       {/* Values, Vision & Mission Section */}
-      <section className="pt-4 pb-2 lg:pt-8 lg:pb-4 bg-muted/50 overflow-hidden">
+      <section className="pt-4 pb-2 lg:pt-8 lg:pb-4 bg-muted/50">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="text-center mb-6 lg:mb-12" ref={vvmRef}>
             <h2

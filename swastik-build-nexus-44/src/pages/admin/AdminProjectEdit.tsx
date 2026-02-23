@@ -91,8 +91,16 @@ const AdminProjectEdit = () => {
     const [floorPlanPreview, setFloorPlanPreview] = useState<string | null>(null);
     const [aboutDeveloperFile, setAboutDeveloperFile] = useState<File | null>(null);
     const [aboutDeveloperPreview, setAboutDeveloperPreview] = useState<string | null>(null);
+    const [overviewImageFile, setOverviewImageFile] = useState<File | null>(null);
+    const [overviewImagePreview, setOverviewImagePreview] = useState<string | null>(null);
 
-    // Project basic data
+    const [connectivitiesImageFile, setConnectivitiesImageFile] = useState<File | null>(null);
+    const [connectivitiesImagePreview, setConnectivitiesImagePreview] = useState<string | null>(null);
+
+    const [amenitiesImageFile, setAmenitiesImageFile] = useState<File | null>(null);
+    const [amenitiesImagePreview, setAmenitiesImagePreview] = useState<string | null>(null);
+
+    // Project State
     const [project, setProject] = useState<ProjectData>({
         slug: '',
         name: '',
@@ -176,6 +184,18 @@ const AdminProjectEdit = () => {
                 setAboutDeveloperPreview(getImageUrl(found.aboutDeveloperImage) || null);
             }
 
+            if (found.overviewImage) {
+                setOverviewImagePreview(getImageUrl(found.overviewImage) || null);
+            }
+
+            if (found.connectivitiesImage) {
+                setConnectivitiesImagePreview(getImageUrl(found.connectivitiesImage) || null);
+            }
+
+            if (found.amenitiesImage) {
+                setAmenitiesImagePreview(getImageUrl(found.amenitiesImage) || null);
+            }
+
             setConfigurations(
                 (found.configurations || []).map((c: any) => ({
                     type: c.type,
@@ -255,6 +275,38 @@ const AdminProjectEdit = () => {
         }
     };
 
+    const handleAboutDeveloperChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setAboutDeveloperFile(file);
+            setAboutDeveloperPreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleOverviewImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setOverviewImageFile(file);
+            setOverviewImagePreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleConnectivitiesImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setConnectivitiesImageFile(file);
+            setConnectivitiesImagePreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleAmenitiesImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setAmenitiesImageFile(file);
+            setAmenitiesImagePreview(URL.createObjectURL(file));
+        }
+    };
+
     // ─── Save Project ────────────────────────────────────────
 
     const handleSave = async () => {
@@ -319,6 +371,18 @@ const AdminProjectEdit = () => {
 
             if (aboutDeveloperFile) {
                 formData.append('aboutDeveloperImage', aboutDeveloperFile);
+            }
+
+            if (overviewImageFile) {
+                formData.append('overviewImage', overviewImageFile);
+            }
+
+            if (connectivitiesImageFile) {
+                formData.append('connectivitiesImage', connectivitiesImageFile);
+            }
+
+            if (amenitiesImageFile) {
+                formData.append('amenitiesImage', amenitiesImageFile);
             }
 
             let savedProjectId = projectId;
@@ -856,6 +920,52 @@ const AdminProjectEdit = () => {
                                 </div>
                             </CardContent>
                         </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Project Overview Image</CardTitle>
+                                <CardDescription>Image displayed next to the Project Overview section</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                {overviewImagePreview && (
+                                    <div className="relative rounded-lg overflow-hidden border">
+                                        <img
+                                            src={overviewImagePreview}
+                                            alt="Overview preview"
+                                            className="w-full h-48 object-cover"
+                                        />
+                                        <Button
+                                            variant="destructive"
+                                            size="icon"
+                                            className="absolute top-2 right-2 h-7 w-7"
+                                            onClick={() => {
+                                                setOverviewImageFile(null);
+                                                setOverviewImagePreview(null);
+                                            }}
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                )}
+                                <div>
+                                    <Label htmlFor="overview-image-upload" className="cursor-pointer">
+                                        <div className="border-2 border-dashed rounded-lg p-6 text-center hover:bg-muted/50 transition-colors">
+                                            <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                                            <p className="text-sm text-muted-foreground">
+                                                Click to upload project overview image
+                                            </p>
+                                        </div>
+                                    </Label>
+                                    <input
+                                        id="overview-image-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={handleOverviewImageChange}
+                                    />
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
             )}
@@ -1037,6 +1147,55 @@ const AdminProjectEdit = () => {
                                 ))}
                             </div>
                         )}
+
+                        {/* Amenities Map Image Section */}
+                        <div className="bg-muted/30 p-4 rounded-lg border space-y-4 mt-8">
+                            <div className="flex items-center gap-2 text-primary font-semibold">
+                                <Image className="h-4 w-4" />
+                                Amenities Image
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                                Upload an image displaying the amenities for the project.
+                            </p>
+                            {amenitiesImagePreview && (
+                                <div className="relative rounded-lg overflow-hidden border">
+                                    <img
+                                        src={amenitiesImagePreview}
+                                        alt="Amenities Map preview"
+                                        className="w-full h-48 object-cover"
+                                    />
+                                    <Button
+                                        variant="destructive"
+                                        size="icon"
+                                        className="absolute top-2 right-2 h-7 w-7"
+                                        onClick={() => {
+                                            setAmenitiesImageFile(null);
+                                            setAmenitiesImagePreview(null);
+                                        }}
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            )}
+                            <div>
+                                <Label htmlFor="amenities-image-upload" className="cursor-pointer">
+                                    <div className="border-2 border-dashed rounded-lg p-6 text-center hover:bg-muted/50 transition-colors">
+                                        <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                                        <p className="text-sm text-muted-foreground">
+                                            Click to upload amenities image
+                                        </p>
+                                    </div>
+                                </Label>
+                                <input
+                                    id="amenities-image-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleAmenitiesImageChange}
+                                />
+                            </div>
+                        </div>
+
                     </CardContent>
                 </Card>
             )}
@@ -1059,49 +1218,52 @@ const AdminProjectEdit = () => {
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                        {/* Google Maps Link Section */}
+                        {/* Connectivities Map Image Section */}
                         <div className="bg-muted/30 p-4 rounded-lg border space-y-4">
                             <div className="flex items-center gap-2 text-primary font-semibold">
                                 <MapPin className="h-4 w-4" />
-                                Google Maps Embed Link
+                                Connectivities Map Image
                             </div>
-                            <div className="space-y-2">
-                                <p className="text-xs text-muted-foreground leading-relaxed">
-                                    To get this link: Go to Google Maps → Share → Embed a map → Copy HTML.
-                                    <br />
-                                    <b>You can paste the whole &lt;iframe&gt; tag or just the source URL.</b>
-                                </p>
-                                <Input
-                                    value={project.googleMapsUrl}
-                                    onChange={(e) => handleFieldChange('googleMapsUrl', e.target.value)}
-                                    placeholder='e.g. <iframe src="https://www.google.com/maps/embed?pb=..." ...></iframe>'
-                                />
-                            </div>
-
-                            {project.googleMapsUrl && (
-                                <div className="space-y-2">
-                                    <Label className="text-xs uppercase font-bold text-muted-foreground">Preview</Label>
-                                    <div className="w-full h-48 rounded-lg overflow-hidden border bg-white">
-                                        <iframe
-                                            src={(() => {
-                                                const url = project.googleMapsUrl;
-                                                if (url.includes('<iframe')) {
-                                                    const match = url.match(/src="([^"]+)"/);
-                                                    return match ? match[1] : '';
-                                                }
-                                                return url;
-                                            })()}
-                                            width="100%"
-                                            height="100%"
-                                            style={{ border: 0 }}
-                                            title="Map Preview"
-                                        ></iframe>
-                                    </div>
-                                    <p className="text-[10px] text-muted-foreground italic">
-                                        If the preview above is blank, your link might be incorrect. Make sure you use the "Embed a map" link from Google Maps.
-                                    </p>
+                            <p className="text-xs text-muted-foreground">
+                                Upload a custom map image replacing the default Google Maps view.
+                            </p>
+                            {connectivitiesImagePreview && (
+                                <div className="relative rounded-lg overflow-hidden border">
+                                    <img
+                                        src={connectivitiesImagePreview}
+                                        alt="Connectivities Map preview"
+                                        className="w-full h-48 object-cover"
+                                    />
+                                    <Button
+                                        variant="destructive"
+                                        size="icon"
+                                        className="absolute top-2 right-2 h-7 w-7"
+                                        onClick={() => {
+                                            setConnectivitiesImageFile(null);
+                                            setConnectivitiesImagePreview(null);
+                                        }}
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </Button>
                                 </div>
                             )}
+                            <div>
+                                <Label htmlFor="connectivities-image-upload" className="cursor-pointer">
+                                    <div className="border-2 border-dashed rounded-lg p-6 text-center hover:bg-muted/50 transition-colors">
+                                        <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                                        <p className="text-sm text-muted-foreground">
+                                            Click to upload connectivities map image
+                                        </p>
+                                    </div>
+                                </Label>
+                                <input
+                                    id="connectivities-image-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleConnectivitiesImageChange}
+                                />
+                            </div>
                         </div>
 
                         <div className="space-y-4">

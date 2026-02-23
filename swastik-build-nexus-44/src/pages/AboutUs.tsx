@@ -55,7 +55,7 @@ const AboutUs = () => {
         }
 
         setStats(statsRes.statistics || []);
-        setVvmItems(vvmRes.vvmItems || []);
+        setVvmItems(vvmRes.items || []);
       } catch (error) {
         console.error('Failed to fetch About Us data:', error);
       } finally {
@@ -102,7 +102,7 @@ const AboutUs = () => {
             <div className="flex-1">
               <div className="relative h-full min-h-[300px]">
                 <img
-                  src={item.image ? getImageUrl(item.image)! : ""}
+                  src={item.image ? getImageUrl(item.image)! : lifestyleInterior}
                   alt={item.title}
                   className="w-full h-full object-cover"
                 />
@@ -123,7 +123,7 @@ const AboutUs = () => {
             </div>
             <div className="flex-[1.2] h-full border-l border-white/20">
               <img
-                src={item.image ? getImageUrl(item.image)! : ""}
+                src={item.image ? getImageUrl(item.image)! : lifestyleInterior}
                 alt={item.title}
                 className="w-full h-full object-cover"
               />

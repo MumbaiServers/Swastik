@@ -75,6 +75,9 @@ export const createProject = async (req: Request, res: Response) => {
         const mahareraQr = files['mahareraQr'] ? getFileUrl(files['mahareraQr'][0]) : null;
         const floorPlanImage = files['floorPlanImage'] ? getFileUrl(files['floorPlanImage'][0]) : null;
         const aboutDeveloperImage = files['aboutDeveloperImage'] ? getFileUrl(files['aboutDeveloperImage'][0]) : null;
+        const overviewImage = files['overviewImage'] ? getFileUrl(files['overviewImage'][0]) : null;
+        const connectivitiesImage = files['connectivitiesImage'] ? getFileUrl(files['connectivitiesImage'][0]) : null;
+        const amenitiesImage = files['amenitiesImage'] ? getFileUrl(files['amenitiesImage'][0]) : null;
 
         const project = await prisma.project.create({
             data: {
@@ -84,6 +87,9 @@ export const createProject = async (req: Request, res: Response) => {
                 location,
                 price: price || null,
                 image,
+                overviewImage,
+                connectivitiesImage,
+                amenitiesImage,
                 floorPlanImage,
                 aboutDeveloperImage,
                 description,
@@ -128,6 +134,9 @@ export const updateProject = async (req: Request, res: Response) => {
         let mahareraQr = existing.mahareraQr;
         let floorPlanImage = existing.floorPlanImage;
         let aboutDeveloperImage = existing.aboutDeveloperImage;
+        let overviewImage = existing.overviewImage;
+        let connectivitiesImage = existing.connectivitiesImage;
+        let amenitiesImage = existing.amenitiesImage;
 
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
@@ -149,6 +158,21 @@ export const updateProject = async (req: Request, res: Response) => {
         if (files && files['aboutDeveloperImage']) {
             if (existing.aboutDeveloperImage) await deleteFile(existing.aboutDeveloperImage);
             aboutDeveloperImage = getFileUrl(files['aboutDeveloperImage'][0]);
+        }
+
+        if (files && files['overviewImage']) {
+            if (existing.overviewImage) await deleteFile(existing.overviewImage);
+            overviewImage = getFileUrl(files['overviewImage'][0]);
+        }
+
+        if (files && files['connectivitiesImage']) {
+            if (existing.connectivitiesImage) await deleteFile(existing.connectivitiesImage);
+            connectivitiesImage = getFileUrl(files['connectivitiesImage'][0]);
+        }
+
+        if (files && files['amenitiesImage']) {
+            if (existing.amenitiesImage) await deleteFile(existing.amenitiesImage);
+            amenitiesImage = getFileUrl(files['amenitiesImage'][0]);
         }
 
         const {
@@ -182,6 +206,10 @@ export const updateProject = async (req: Request, res: Response) => {
                 ...(connectivitiesDescription !== undefined && { connectivitiesDescription }),
                 ...(aboutDeveloperText !== undefined && { aboutDeveloperText }),
                 ...(aboutDeveloperImage !== undefined && { aboutDeveloperImage }),
+                ...(overviewImage !== undefined && { overviewImage }),
+                ...(connectivitiesImage !== undefined && { connectivitiesImage }),
+                ...(amenitiesImage !== undefined && { amenitiesImage }),
+                ...(floorPlanImage !== undefined && { floorPlanImage }),
                 ...(sortOrder !== undefined && { sortOrder: parseInt(sortOrder) }),
                 ...(isActive !== undefined && { isActive: isActive === 'true' || isActive === true }),
             },
@@ -210,6 +238,9 @@ export const deleteProject = async (req: Request, res: Response) => {
         if (existing.image) await deleteFile(existing.image);
         if (existing.mahareraQr) await deleteFile(existing.mahareraQr);
         if (existing.floorPlanImage) await deleteFile(existing.floorPlanImage);
+        if (existing.overviewImage) await deleteFile(existing.overviewImage);
+        if (existing.connectivitiesImage) await deleteFile(existing.connectivitiesImage);
+        if (existing.amenitiesImage) await deleteFile(existing.amenitiesImage);
 
         await prisma.project.delete({ where: { id } });
         res.json({ message: 'Project deleted successfully.' });

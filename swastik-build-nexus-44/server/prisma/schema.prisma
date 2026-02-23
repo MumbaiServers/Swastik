@@ -104,8 +104,11 @@ model Project {
   mahareraUrl               String?                @db.VarChar(500)
   floorPlanImage            String?                @db.VarChar(500)
   connectivitiesDescription String?                @db.Text
+  connectivitiesImage       String?                @db.VarChar(500)
+  amenitiesImage            String?                @db.VarChar(500)
   aboutDeveloperText        String?                @db.Text
   aboutDeveloperImage       String?                @db.VarChar(500)
+  overviewImage             String?                @db.VarChar(500)
   amenities                 ProjectAmenity[]
   configurations            ProjectConfiguration[]
   connectivities            ProjectConnectivity[]
