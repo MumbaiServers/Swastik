@@ -47,7 +47,7 @@ const HeroSection = () => {
       <section id="home" className="relative w-full overflow-hidden bg-black flex flex-col justify-center">
         {/* Background Image dictates section height */}
         <div className="w-full relative z-0 overflow-hidden">
-          <picture>
+          <picture className="w-full block">
             <source media="(min-width: 1921px)" srcSet={heroData.image2560 || heroData.fallbackImage || ""} />
             <source media="(min-width: 1537px)" srcSet={heroData.image1920 || heroData.fallbackImage || ""} />
             <source media="(min-width: 769px)" srcSet={heroData.image1536 || heroData.fallbackImage || ""} />
@@ -163,21 +163,7 @@ const HeroSection = () => {
                 </div>
               )}
 
-              {/* CTA Button - Mobile only */}
-              <div
-                className="md:hidden transition-all duration-1000 delay-500"
-                style={{
-                  opacity: isLoaded ? 1 : 0,
-                  transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
-                }}
-              >
-                <Button
-                  onClick={() => setIsContactModalOpen(true)}
-                  className="bg-[#1953B4] hover:bg-[#1953B4]/90 text-white font-bold text-lg py-6 px-10 rounded-xl shadow-lg shadow-blue-900/30"
-                >
-                  Explore Projects
-                </Button>
-              </div>
+
 
               {/* Scroll indicator */}
               <div
