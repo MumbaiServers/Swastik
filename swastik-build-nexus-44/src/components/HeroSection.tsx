@@ -44,9 +44,9 @@ const HeroSection = () => {
 
   return (
     <>
-      <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image with Parallax-like Ken Burns and Responsive Media Queries */}
-        <div className="absolute inset-0 overflow-hidden">
+      <section id="home" className="relative w-full overflow-hidden bg-black flex flex-col justify-center">
+        {/* Background Image dictates section height */}
+        <div className="w-full relative z-0 overflow-hidden">
           <picture>
             <source media="(min-width: 1921px)" srcSet={heroData.image2560 || heroData.fallbackImage || ""} />
             <source media="(min-width: 1537px)" srcSet={heroData.image1920 || heroData.fallbackImage || ""} />
@@ -55,15 +55,14 @@ const HeroSection = () => {
             <img
               src={heroData.fallbackImage || ""}
               alt="Hero Background"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[20000ms] ease-linear"
+              className="w-full h-auto block transition-transform duration-[20000ms] ease-linear origin-center"
               style={{
-                transform: isLoaded ? 'scale(1.1)' : 'scale(1)',
+                transform: isLoaded ? 'scale(1.02)' : 'scale(1)',
               }}
             />
           </picture>
           <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-black/20" />
-          {/* Animated gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1953B4]/20 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1953B4]/20 via-transparent to-transparent pointer-events-none" />
         </div>
 
         {/* Subtle floating particles effect */}
@@ -123,62 +122,64 @@ const HeroSection = () => {
         </div>
 
         {/* Content - Staggered reveal */}
-        <div className="relative z-10 container mx-auto px-4 lg:px-8 text-center">
-          <div className="max-w-4xl mx-auto space-y-8">
-            {/* Hero Text */}
-            <div className="space-y-4">
-              <h1
-                className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight transition-all duration-1000"
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 pb-8 md:pb-0">
+          <div className="container mx-auto px-4 lg:px-8 text-center pointer-events-auto">
+            <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 mt-12 md:mt-0">
+              {/* Hero Text */}
+              <div className="space-y-4">
+                <h1
+                  className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight transition-all duration-1000"
+                  style={{
+                    opacity: isLoaded ? 1 : 0,
+                    transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
+                  }}
+                >
+                  {heroData.heading.split(' ').map((word, i, arr) => (
+                    <span key={i} className={i >= arr.length - 2 ? "block bg-gradient-to-r from-brand-light-blue to-white bg-clip-text text-transparent mt-2" : ""}>
+                      {word}{' '}
+                    </span>
+                  ))}
+                </h1>
+                <p
+                  className="text-lg md:text-2xl text-white/90 max-w-2xl mx-auto transition-all duration-1000 delay-300"
+                  style={{
+                    opacity: isLoaded ? 1 : 0,
+                    transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
+                  }}
+                >
+                  {heroData.subtext}
+                </p>
+              </div>
+
+              {/* CTA Button - Mobile only */}
+              <div
+                className="md:hidden transition-all duration-1000 delay-500"
                 style={{
                   opacity: isLoaded ? 1 : 0,
-                  transform: isLoaded ? 'translateY(0)' : 'translateY(40px)',
+                  transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
                 }}
               >
-                {heroData.heading.split(' ').map((word, i, arr) => (
-                  <span key={i} className={i >= arr.length - 2 ? "block bg-gradient-to-r from-brand-light-blue to-white bg-clip-text text-transparent mt-2" : ""}>
-                    {word}{' '}
-                  </span>
-                ))}
-              </h1>
-              <p
-                className="text-lg md:text-2xl text-white/90 max-w-2xl mx-auto transition-all duration-1000 delay-300"
+                <Button
+                  onClick={() => setIsContactModalOpen(true)}
+                  className="bg-[#1953B4] hover:bg-[#1953B4]/90 text-white font-bold text-lg py-6 px-10 rounded-xl shadow-lg shadow-blue-900/30"
+                >
+                  Explore Projects
+                </Button>
+              </div>
+
+              {/* Scroll indicator */}
+              <div
+                className="hidden md:block transition-all duration-1000 delay-700"
                 style={{
                   opacity: isLoaded ? 1 : 0,
-                  transform: isLoaded ? 'translateY(0)' : 'translateY(30px)',
+                  transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
                 }}
               >
-                {heroData.subtext}
-              </p>
-            </div>
-
-            {/* CTA Button - Mobile only */}
-            <div
-              className="md:hidden transition-all duration-1000 delay-500"
-              style={{
-                opacity: isLoaded ? 1 : 0,
-                transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
-              }}
-            >
-              <Button
-                onClick={() => setIsContactModalOpen(true)}
-                className="bg-[#1953B4] hover:bg-[#1953B4]/90 text-white font-bold text-lg py-6 px-10 rounded-xl shadow-lg shadow-blue-900/30"
-              >
-                Explore Projects
-              </Button>
-            </div>
-
-            {/* Scroll indicator */}
-            <div
-              className="hidden md:block transition-all duration-1000 delay-700"
-              style={{
-                opacity: isLoaded ? 1 : 0,
-                transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
-              }}
-            >
-              <div className="animate-bounce mt-8">
-                <svg className="w-6 h-6 mx-auto text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
+                <div className="animate-bounce mt-8">
+                  <svg className="w-6 h-6 mx-auto text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
