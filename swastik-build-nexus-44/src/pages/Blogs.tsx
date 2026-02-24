@@ -41,9 +41,9 @@ const Blogs = () => {
       <SEO title="Blogs & Insights" description="Stay updated with the latest trends, market shifts, and expert guidance in the real estate world." />
       <Header />
 
-      <div className="pt-20"> {/* Fixed header offset */}
+      <div>
         {/* Header Section */}
-        <section className="py-20 bg-brand-navy relative overflow-hidden">
+        <section className="py-12 lg:py-20 bg-brand-navy relative overflow-hidden">
           {/* Decorative Background */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 left-0 w-96 h-96 bg-brand-blue rounded-full filter blur-3xl -translate-x-1/2 -translate-y-1/2" />

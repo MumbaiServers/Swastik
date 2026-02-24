@@ -106,7 +106,7 @@ const ProjectsSection = () => {
             <div
               className={
                 isMobile
-                  ? "flex gap-6 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory projects-scroll"
+                  ? "flex gap-6 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory projects-scroll mobile-full-bleed px-4"
                   : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
               }
             >

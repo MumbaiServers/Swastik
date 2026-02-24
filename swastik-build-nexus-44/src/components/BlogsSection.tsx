@@ -67,7 +67,7 @@ const BlogsSection = () => {
 
         <div
           ref={cardsRef}
-          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 projects-scroll snap-x snap-mandatory pb-4"
+          className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 projects-scroll snap-x snap-mandatory pb-4 mobile-full-bleed px-4"
         >
           {loading ? (
             <div className="col-span-4 flex items-center justify-center py-20">

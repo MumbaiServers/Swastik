@@ -284,6 +284,18 @@ All colors MUST be HSL.
   .pause {
     animation-play-state: paused;
   }
+
+  /* Full bleed utility for mobile to make images fit the screen edge-to-edge */
+  @media (max-width: 767px) {
+    .mobile-full-bleed {
+      width: 100vw !important;
+      max-width: none !important;
+      margin-left: -1rem !important;
+      /* Matches container px-4 (1rem) */
+      margin-right: -1rem !important;
+      border-radius: 0 !important;
+    }
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -447,10 +459,11 @@ All colors MUST be HSL.
     overflow-x: hidden;
   }
 
-  /* Tighter section padding on mobile */
+  /* Removed global section padding to allow for full-width components like Hero sections.
+     Padding should be handled by .container or specific utility classes instead. */
   section {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   /* Better touch targets */

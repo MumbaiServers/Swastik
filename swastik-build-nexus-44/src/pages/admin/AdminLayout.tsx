@@ -35,7 +35,7 @@ const AdminLayout = () => {
               <h1 className="ml-4 text-lg font-medium">Admin Panel</h1>
             </header>
 
-            <main className="flex-1 p-6 bg-muted/30">
+            <main className="flex-1 p-4 md:p-6 bg-muted/30">
               <Routes>
                 <Route path="/" element={<AdminDashboard />} />
                 <Route path="/home-banner" element={<AdminHomeBanner />} />

@@ -72,7 +72,7 @@ const BlogDetail = () => {
             <SEO title={blog.title} description={`${blog.title} - ${blog.author}`} imageUrl={blog.image ? getImageUrl(blog.image) : undefined} />
             <Header />
 
-            <main className="pt-20">
+            <main>
                 {/* Hero Section */}
                 <section className="relative h-[60vh] min-h-[400px] overflow-hidden">
                     {blog.image ? (

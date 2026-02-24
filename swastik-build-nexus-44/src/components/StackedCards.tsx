@@ -57,9 +57,9 @@ const StackedCards: React.FC<StackedCardsProps> = ({
               padding: 0 !important;
               margin-bottom: 2rem !important;
               height: 269px !important;
-              width: 399px !important;
-              max-width: calc(100vw - 40px) !important;
-              left: 20px !important;
+              width: 100vw !important;
+              max-width: 100vw !important;
+              left: 0 !important;
               border-top-left-radius: 120px !important;
               border-bottom-right-radius: 120px !important;
               border-top-right-radius: 0 !important;

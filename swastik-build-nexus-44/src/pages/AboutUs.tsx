@@ -170,11 +170,11 @@ const AboutUs = () => {
               </div>
             </div>
             <div className="order-first lg:order-last animate-slide-up">
-              <div className="relative overflow-hidden custom-image-radius shadow-2xl">
+              <div className="relative md:overflow-hidden overflow-visible custom-image-radius shadow-2xl">
                 <img
                   src={ourBusiness.image || ""}
                   alt={ourBusiness.title}
-                  className="w-full h-[450px] object-cover hover:scale-105 transition-transform duration-500 custom-image-radius"
+                  className="w-full h-[450px] object-cover hover:scale-105 transition-transform duration-500 custom-image-radius mobile-full-bleed"
                 />
               </div>
             </div>
@@ -229,11 +229,11 @@ const AboutUs = () => {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="relative animate-slide-up">
-              <div className="relative overflow-hidden custom-image-radius shadow-2xl">
+              <div className="relative md:overflow-hidden overflow-visible custom-image-radius shadow-2xl">
                 <img
                   src={aboutUsSection.image || ""}
                   alt={aboutUsSection.title}
-                  className="w-full h-[450px] object-cover hover:scale-105 transition-transform duration-500 custom-image-radius"
+                  className="w-full h-[450px] object-cover hover:scale-105 transition-transform duration-500 custom-image-radius mobile-full-bleed"
                 />
               </div>
             </div>

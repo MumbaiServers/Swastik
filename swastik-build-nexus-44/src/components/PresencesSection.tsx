@@ -33,7 +33,7 @@ const PresencesSection = () => {
           {/* Map Illustration */}
           <div className="relative" ref={mapRef}>
             <div
-              className="transition-all duration-700"
+              className="transition-all duration-700 mobile-full-bleed"
               style={{
                 opacity: mapVisible ? 1 : 0,
                 transform: mapVisible ? 'translateX(0) scale(1)' : 'translateX(-40px) scale(0.95)',
@@ -42,7 +42,7 @@ const PresencesSection = () => {
               <img
                 src="/lovable-uploads/0a2b7a81-1bc6-4992-95ae-764f073f35f7.png"
                 alt="Mumbai Map showing Swastik Group's presence"
-                className="w-3/5 mx-auto hover:scale-105 transition-transform duration-700"
+                className="w-full md:w-4/5 mx-auto hover:scale-105 transition-transform duration-700"
                 style={{
                   borderTopLeftRadius: '4px',
                   borderTopRightRadius: '32px',
