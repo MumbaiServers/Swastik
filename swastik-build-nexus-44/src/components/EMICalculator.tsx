@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -40,15 +40,25 @@ const EMICalculator = ({ hideHeading = false }: EMICalculatorProps) => {
     const totalInterest = totalAmount - principal;
 
     return {
-      emi: Math.round(emi),
-      totalAmount: Math.round(totalAmount),
-      totalInterest: Math.round(totalInterest),
+      emi: Math.round(emi) || 0,
+      totalAmount: Math.round(totalAmount) || 0,
+      totalInterest: Math.round(totalInterest) || 0,
       principal: principal
     };
   };
 
   const calculation = calculateEMI();
-  const interestPercentage = (calculation.totalInterest / calculation.totalAmount) * 100;
+  const interestPercentage = calculation.totalAmount > 0
+    ? (calculation.totalInterest / calculation.totalAmount) * 100
+    : 0;
+
+  // Sync emiAmount state when other parameters change so the slider reflects the current calculation
+  useEffect(() => {
+    const currentEmi = calculation.emi;
+    if (emiAmount !== currentEmi) {
+      setEmiAmount(currentEmi);
+    }
+  }, [loanAmount, interestRate, tenure, calculation.emi]);
 
   return (
     <section id="emi-calculator" className="py-12 lg:py-16 bg-white section-divider">
