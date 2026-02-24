@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Phone, Mail, MessageSquare, Instagram, Facebook, Linkedin, Youtube, Loader2 } from "lucide-react";
-import swastikLogo from "@/assets/swastik-logo.png";
+import swastikLogo from "@/assets/Logo All png (12).png";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useEffect, useState } from "react";
 import { sectionsApi } from "@/services/cmsApi";
@@ -129,9 +129,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center">
-                <img src={swastikLogo} alt="Swastik Group" className="h-8 w-auto filter brightness-0 invert" />
-              </div>
+              <img src={swastikLogo} alt="Swastik Group" className="h-16 w-auto" />
               <div>
                 <h3 className="text-lg font-bold">Corporate Office</h3>
                 <p className="text-xs text-white/60">Over 25 years of trust & excellence</p>
