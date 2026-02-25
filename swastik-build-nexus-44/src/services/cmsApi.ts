@@ -201,6 +201,7 @@ export const inquiriesApi = {
 
 export const dashboardApi = {
     getStats: () => apiGet('/dashboard/stats'),
+    deleteActivity: (id: number) => apiDelete(`/dashboard/activity/${id}`),
 };
 
 // ─── Loyalty API ──────────────────────────────────────────

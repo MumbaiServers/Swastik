@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../config/database';
 import { getFileUrl, deleteFile } from '../middleware/upload';
+import { logActivity } from '../utils/logger';
 
 /**
  * Get all published blogs
@@ -86,6 +87,8 @@ export const createBlog = async (req: Request, res: Response) => {
             },
         });
 
+        await logActivity('blog', `New blog ${blog.status}: ${blog.title}`);
+
         res.status(201).json({ blog });
     } catch (error: any) {
         console.error("Blog creation error:", error);
@@ -132,6 +135,8 @@ export const updateBlog = async (req: Request, res: Response) => {
             },
         });
 
+        await logActivity('blog', `Blog ${blog.status}: ${blog.title}`);
+
         res.json({ blog });
     } catch (error: any) {
         console.error("Blog update error:", error);
@@ -158,6 +163,8 @@ export const deleteBlog = async (req: Request, res: Response) => {
 
         if (existing.image) await deleteFile(existing.image);
         await prisma.blog.delete({ where: { id } });
+
+        await logActivity('blog', `Blog deleted: ${existing.title}`);
 
         res.json({ message: 'Blog deleted successfully.' });
     } catch (error) {

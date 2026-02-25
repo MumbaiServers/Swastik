@@ -31,25 +31,41 @@ router.get('/stats', authenticate, async (_req: Request, res: Response) => {
             prisma.loyaltySubmission.count(),
         ]);
 
-        // Recent activity — last 10 items across models
-        const [recentProjects, recentBlogs, recentInquiries, recentFaqs, recentLoyalty] = await Promise.all([
-            prisma.project.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { id: true, name: true, updatedAt: true } }),
-            prisma.blog.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { id: true, title: true, updatedAt: true, status: true } }),
-            prisma.inquiry.findMany({ orderBy: { createdAt: 'desc' }, take: 3, select: { id: true, name: true, createdAt: true, status: true } }),
-            prisma.fAQ.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { id: true, question: true, updatedAt: true } }),
-            prisma.loyaltySubmission.findMany({ orderBy: { createdAt: 'desc' }, take: 3, select: { id: true, firstName: true, lastName: true, createdAt: true } }),
-        ]);
+        // Fetch activity logs
+        let recentActivity = await prisma.activityLog.findMany({
+            orderBy: { time: 'desc' },
+            take: 20
+        });
 
-        // Merge and sort recent activity
-        const recentActivity = [
-            ...recentProjects.map((p) => ({ type: 'project', label: `Project updated: ${p.name}`, time: p.updatedAt })),
-            ...recentBlogs.map((b) => ({ type: 'blog', label: `Blog ${b.status}: ${b.title}`, time: b.updatedAt })),
-            ...recentInquiries.map((i) => ({ type: 'inquiry', label: `New inquiry from ${i.name}`, time: i.createdAt })),
-            ...recentFaqs.map((f) => ({ type: 'faq', label: `FAQ updated: ${f.question.substring(0, 50)}...`, time: f.updatedAt })),
-            ...recentLoyalty.map((l) => ({ type: 'loyalty', label: `New referral from ${l.firstName} ${l.lastName}`, time: l.createdAt })),
-        ]
-            .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
-            .slice(0, 8);
+        // If logs are empty, auto-populate from existing data (backwards compatibility)
+        if (recentActivity.length === 0) {
+            const [recentProjects, recentBlogs, recentInquiries, recentFaqs, recentLoyalty] = await Promise.all([
+                prisma.project.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { name: true, updatedAt: true } }),
+                prisma.blog.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { title: true, updatedAt: true, status: true } }),
+                prisma.inquiry.findMany({ orderBy: { createdAt: 'desc' }, take: 3, select: { name: true, createdAt: true } }),
+                prisma.fAQ.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { question: true, updatedAt: true } }),
+                prisma.loyaltySubmission.findMany({ orderBy: { createdAt: 'desc' }, take: 3, select: { firstName: true, lastName: true, createdAt: true } }),
+            ]);
+
+            const initialLogs = [
+                ...recentProjects.map((p) => ({ type: 'project', label: `Project updated: ${p.name}`, time: p.updatedAt })),
+                ...recentBlogs.map((b) => ({ type: 'blog', label: `Blog ${b.status}: ${b.title}`, time: b.updatedAt })),
+                ...recentInquiries.map((i) => ({ type: 'inquiry', label: `New inquiry from ${i.name}`, time: i.createdAt })),
+                ...recentFaqs.map((f) => ({ type: 'faq', label: `FAQ updated: ${f.question.substring(0, 50)}...`, time: f.updatedAt })),
+                ...recentLoyalty.map((l) => ({ type: 'loyalty', label: `New referral from ${l.firstName} ${l.lastName}`, time: l.createdAt })),
+            ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()).slice(0, 10);
+
+            // Save these to the database if we want them to persist and be deletable
+            if (initialLogs.length > 0) {
+                await prisma.activityLog.createMany({
+                    data: initialLogs
+                });
+                recentActivity = await prisma.activityLog.findMany({
+                    orderBy: { time: 'desc' },
+                    take: 20
+                });
+            }
+        }
 
         res.json({
             stats: {
@@ -72,4 +88,19 @@ router.get('/stats', authenticate, async (_req: Request, res: Response) => {
     }
 });
 
+// DELETE /api/dashboard/activity/:id — Admin: delete an activity log entry
+router.delete('/activity/:id', authenticate, async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        await prisma.activityLog.delete({
+            where: { id: parseInt(id) }
+        });
+        res.json({ message: 'Activity deleted successfully' });
+    } catch (error) {
+        console.error('Delete activity error:', error);
+        res.status(500).json({ error: 'Failed to delete activity trace.' });
+    }
+});
+
 export default router;
+

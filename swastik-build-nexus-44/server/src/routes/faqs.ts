@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import prisma from '../config/database';
 import { authenticate } from '../middleware/auth';
+import { logActivity } from '../utils/logger';
 
 const router = Router();
 
@@ -43,6 +44,8 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
             },
         });
 
+        await logActivity('faq', `New FAQ created: ${question.substring(0, 50)}...`);
+
         res.status(201).json({ faq });
     } catch (error) {
         res.status(500).json({ error: 'Failed to create FAQ.' });
@@ -66,6 +69,8 @@ router.put('/:id', authenticate, async (req: Request, res: Response) => {
             },
         });
 
+        await logActivity('faq', `FAQ updated: ${faq.question.substring(0, 50)}...`);
+
         res.json({ faq });
     } catch (error) {
         res.status(500).json({ error: 'Failed to update FAQ.' });
@@ -76,7 +81,13 @@ router.put('/:id', authenticate, async (req: Request, res: Response) => {
 router.delete('/:id', authenticate, async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
+        const faq = await prisma.fAQ.findUnique({ where: { id } });
         await prisma.fAQ.delete({ where: { id } });
+
+        if (faq) {
+            await logActivity('faq', `FAQ deleted: ${faq.question.substring(0, 50)}...`);
+        }
+
         res.json({ message: 'FAQ deleted successfully.' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to delete FAQ.' });

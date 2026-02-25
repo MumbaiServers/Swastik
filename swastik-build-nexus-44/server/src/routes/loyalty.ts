@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import prisma from '../config/database';
 import { authenticate } from '../middleware/auth';
+import { logActivity } from '../utils/logger';
 
 const router = Router();
 
@@ -38,6 +39,8 @@ router.post('/', async (req: Request, res: Response) => {
                 status: 'pending'
             },
         });
+
+        await logActivity('loyalty', `New referral from ${firstName} ${lastName}`);
 
         res.status(201).json({ submission });
     } catch (error) {

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../config/database';
+import { logActivity } from '../utils/logger';
 
 /**
  * Get all inquiries with pagination and filtering
@@ -63,6 +64,8 @@ export const submitInquiry = async (req: Request, res: Response) => {
             },
         });
 
+        await logActivity('inquiry', `New inquiry from ${inquiry.name}`);
+
         res.status(201).json({ inquiry });
     } catch (error) {
         res.status(500).json({ error: 'Failed to submit inquiry.' });
@@ -82,6 +85,8 @@ export const updateStatus = async (req: Request, res: Response) => {
             where: { id },
             data: { status },
         });
+
+        await logActivity('inquiry', `Inquiry status updated: ${inquiry.name} (${status})`);
 
         res.json({ inquiry });
     } catch (error) {

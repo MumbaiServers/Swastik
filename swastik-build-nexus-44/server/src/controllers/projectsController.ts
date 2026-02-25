@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../config/database';
 import { getFileUrl, deleteFile } from '../middleware/upload';
+import { logActivity } from '../utils/logger';
 
 /**
  * Get all active projects
@@ -109,6 +110,8 @@ export const createProject = async (req: Request, res: Response) => {
             },
         });
 
+        await logActivity('project', `New project created: ${name}`);
+
         res.status(201).json({ project });
     } catch (error) {
         console.error('Create project error:', error);
@@ -215,6 +218,8 @@ export const updateProject = async (req: Request, res: Response) => {
             },
         });
 
+        await logActivity('project', `Project updated: ${project.name}`);
+
         res.json({ project });
     } catch (error) {
         res.status(500).json({ error: 'Failed to update project.' });
@@ -243,6 +248,9 @@ export const deleteProject = async (req: Request, res: Response) => {
         if (existing.amenitiesImage) await deleteFile(existing.amenitiesImage);
 
         await prisma.project.delete({ where: { id } });
+
+        await logActivity('project', `Project deleted: ${existing.name}`);
+
         res.json({ message: 'Project deleted successfully.' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to delete project.' });

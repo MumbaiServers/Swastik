@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building2, FileText, MessageSquare, MapPin, Users, Image, Loader2, Gift } from 'lucide-react';
+import { Building2, FileText, MessageSquare, MapPin, Users, Image, Loader2, Gift, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { dashboardApi } from '@/services/cmsApi';
+import { toast } from 'sonner';
 
 interface DashboardStats {
   totalProjects: number;
@@ -18,6 +19,7 @@ interface DashboardStats {
 }
 
 interface ActivityItem {
+  id: number;
   type: string;
   label: string;
   time: string;
@@ -36,23 +38,39 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setLoading(true);
-        const data = await dashboardApi.getStats();
-        setStats(data.stats);
-        setRecentActivity(data.recentActivity || []);
-      } catch (err: any) {
-        console.error('Failed to fetch dashboard stats:', err);
-        setError(err.message || 'Failed to load dashboard data');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const data = await dashboardApi.getStats();
+      setStats(data.stats);
+      setRecentActivity(data.recentActivity || []);
+    } catch (err: any) {
+      console.error('Failed to fetch dashboard stats:', err);
+      setError(err.message || 'Failed to load dashboard data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchDashboardData();
   }, []);
+
+  const handleDeleteActivity = async (id: number) => {
+    try {
+      if (!window.confirm('Are you sure you want to remove this activity from the dashboard?')) {
+        return;
+      }
+
+      await dashboardApi.deleteActivity(id);
+      toast.success('Activity removed');
+      // Update local state to remove the item
+      setRecentActivity(prev => prev.filter(item => item.id !== id));
+    } catch (err: any) {
+      console.error('Failed to delete activity:', err);
+      toast.error('Failed to remove activity');
+    }
+  };
 
   const getActivityColor = (type: string) => {
     switch (type) {
@@ -216,13 +234,20 @@ const AdminDashboard = () => {
               </p>
             ) : (
               <div className="space-y-4">
-                {recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-center space-x-4">
-                    <div className={`w-2 h-2 ${getActivityColor(activity.type)} rounded-full`}></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{activity.label}</p>
+                {recentActivity.map((activity) => (
+                  <div key={activity.id} className="flex items-center space-x-4 group">
+                    <div className={`w-2 h-2 ${getActivityColor(activity.type)} rounded-full shrink-0`}></div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{activity.label}</p>
                       <p className="text-xs text-muted-foreground">{formatTimeAgo(activity.time)}</p>
                     </div>
+                    <button
+                      onClick={() => handleDeleteActivity(activity.id)}
+                      className="p-1.5 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Delete activity"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                   </div>
                 ))}
               </div>
