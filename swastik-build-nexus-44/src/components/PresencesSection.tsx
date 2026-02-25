@@ -40,7 +40,7 @@ const PresencesSection = () => {
               }}
             >
               <img
-                src="/lovable-uploads/0a2b7a81-1bc6-4992-95ae-764f073f35f7.png"
+                src="/uploads/0a2b7a81-1bc6-4992-95ae-764f073f35f7.png"
                 alt="Mumbai Map showing Swastik Group's presence"
                 className="w-full md:w-4/5 mx-auto hover:scale-105 transition-transform duration-700"
                 style={{

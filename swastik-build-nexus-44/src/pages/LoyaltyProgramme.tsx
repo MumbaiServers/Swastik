@@ -8,7 +8,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { loyaltyApi } from "@/services/cmsApi";
 import { toast } from "sonner";
-import familyImage from "/lovable-uploads/a3d318e5-2a94-4a3f-8113-f658b8992966.png";
+import familyImage from "/uploads/a3d318e5-2a94-4a3f-8113-f658b8992966.png";
 import SEO from "@/components/SEO";
 
 /**
