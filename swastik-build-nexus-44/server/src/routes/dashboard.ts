@@ -31,40 +31,47 @@ router.get('/stats', authenticate, async (_req: Request, res: Response) => {
             prisma.loyaltySubmission.count(),
         ]);
 
-        // Fetch activity logs
-        let recentActivity = await prisma.activityLog.findMany({
-            orderBy: { time: 'desc' },
-            take: 20
-        });
+        // Fetch activity logs with error handling to prevent whole dashboard failure
+        let recentActivity: any[] = [];
+        try {
+            recentActivity = await prisma.activityLog.findMany({
+                orderBy: { time: 'desc' },
+                take: 20
+            });
 
-        // If logs are empty, auto-populate from existing data (backwards compatibility)
-        if (recentActivity.length === 0) {
-            const [recentProjects, recentBlogs, recentInquiries, recentFaqs, recentLoyalty] = await Promise.all([
-                prisma.project.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { name: true, updatedAt: true } }),
-                prisma.blog.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { title: true, updatedAt: true, status: true } }),
-                prisma.inquiry.findMany({ orderBy: { createdAt: 'desc' }, take: 3, select: { name: true, createdAt: true } }),
-                prisma.fAQ.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { question: true, updatedAt: true } }),
-                prisma.loyaltySubmission.findMany({ orderBy: { createdAt: 'desc' }, take: 3, select: { firstName: true, lastName: true, createdAt: true } }),
-            ]);
+            // If logs are empty, auto-populate from existing data (backwards compatibility)
+            if (recentActivity.length === 0) {
+                const [recentProjects, recentBlogs, recentInquiries, recentFaqs, recentLoyalty] = await Promise.all([
+                    prisma.project.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { name: true, updatedAt: true } }),
+                    prisma.blog.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { title: true, updatedAt: true, status: true } }),
+                    prisma.inquiry.findMany({ orderBy: { createdAt: 'desc' }, take: 3, select: { name: true, createdAt: true } }),
+                    prisma.fAQ.findMany({ orderBy: { updatedAt: 'desc' }, take: 3, select: { question: true, updatedAt: true } }),
+                    prisma.loyaltySubmission.findMany({ orderBy: { createdAt: 'desc' }, take: 3, select: { firstName: true, lastName: true, createdAt: true } }),
+                ]);
 
-            const initialLogs = [
-                ...recentProjects.map((p) => ({ type: 'project', label: `Project updated: ${p.name}`, time: p.updatedAt })),
-                ...recentBlogs.map((b) => ({ type: 'blog', label: `Blog ${b.status}: ${b.title}`, time: b.updatedAt })),
-                ...recentInquiries.map((i) => ({ type: 'inquiry', label: `New inquiry from ${i.name}`, time: i.createdAt })),
-                ...recentFaqs.map((f) => ({ type: 'faq', label: `FAQ updated: ${f.question.substring(0, 50)}...`, time: f.updatedAt })),
-                ...recentLoyalty.map((l) => ({ type: 'loyalty', label: `New referral from ${l.firstName} ${l.lastName}`, time: l.createdAt })),
-            ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()).slice(0, 10);
+                const initialLogs = [
+                    ...recentProjects.map((p) => ({ type: 'project', label: `Project updated: ${p.name}`, time: p.updatedAt })),
+                    ...recentBlogs.map((b) => ({ type: 'blog', label: `Blog ${b.status}: ${b.title}`, time: b.updatedAt })),
+                    ...recentInquiries.map((i) => ({ type: 'inquiry', label: `New inquiry from ${i.name}`, time: i.createdAt })),
+                    ...recentFaqs.map((f) => ({ type: 'faq', label: `FAQ updated: ${f.question.substring(0, 50)}...`, time: f.updatedAt })),
+                    ...recentLoyalty.map((l) => ({ type: 'loyalty', label: `New referral from ${l.firstName} ${l.lastName}`, time: l.createdAt })),
+                ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()).slice(0, 10);
 
-            // Save these to the database if we want them to persist and be deletable
-            if (initialLogs.length > 0) {
-                await prisma.activityLog.createMany({
-                    data: initialLogs
-                });
-                recentActivity = await prisma.activityLog.findMany({
-                    orderBy: { time: 'desc' },
-                    take: 20
-                });
+                // Save these to the database if we want them to persist and be deletable
+                if (initialLogs.length > 0) {
+                    await prisma.activityLog.createMany({
+                        data: initialLogs
+                    });
+                    recentActivity = await prisma.activityLog.findMany({
+                        orderBy: { time: 'desc' },
+                        take: 20
+                    });
+                }
             }
+        } catch (activityError) {
+            console.error('Failed to fetch or populate activity logs:', activityError);
+            // We continue without activity logs so the main stats can still render
+            recentActivity = [];
         }
 
         res.json({
