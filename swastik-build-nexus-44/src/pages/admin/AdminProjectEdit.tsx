@@ -254,57 +254,92 @@ const AdminProjectEdit = () => {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please upload an image file (PNG, JPG, WEBP)');
+                return;
+            }
             setImageFile(file);
             setImagePreview(URL.createObjectURL(file));
         }
+        e.target.value = '';
     };
 
     const handleQrChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please upload an image file (PNG, JPG, WEBP)');
+                return;
+            }
             setQrFile(file);
             setQrPreview(URL.createObjectURL(file));
         }
+        e.target.value = '';
     };
 
     const handleFloorPlanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please upload an image file (PNG, JPG, WEBP)');
+                return;
+            }
             setFloorPlanFile(file);
             setFloorPlanPreview(URL.createObjectURL(file));
         }
+        e.target.value = '';
     };
 
     const handleAboutDeveloperChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please upload an image file (PNG, JPG, WEBP)');
+                return;
+            }
             setAboutDeveloperFile(file);
             setAboutDeveloperPreview(URL.createObjectURL(file));
         }
+        e.target.value = '';
     };
 
     const handleOverviewImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please upload an image file (PNG, JPG, WEBP)');
+                return;
+            }
             setOverviewImageFile(file);
             setOverviewImagePreview(URL.createObjectURL(file));
         }
+        e.target.value = '';
     };
 
     const handleConnectivitiesImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please upload an image file (PNG, JPG, WEBP)');
+                return;
+            }
             setConnectivitiesImageFile(file);
             setConnectivitiesImagePreview(URL.createObjectURL(file));
         }
+        e.target.value = '';
     };
 
     const handleAmenitiesImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please upload an image file (PNG, JPG, WEBP)');
+                return;
+            }
             setAmenitiesImageFile(file);
             setAmenitiesImagePreview(URL.createObjectURL(file));
         }
+        e.target.value = '';
     };
 
     // ─── Save Project ────────────────────────────────────────
@@ -330,6 +365,18 @@ const AdminProjectEdit = () => {
             toast.error('Description is required');
             setActiveTab('basic');
             return;
+        }
+
+        // MahaRERA Validation (if provided)
+        if (project.maharera.trim()) {
+            const mahareraRegex = /^P\d{11}$/i;
+            if (!mahareraRegex.test(project.maharera.trim())) {
+                toast.error('Invalid MahaRERA Number format. It should start with "P" followed by 11 digits (e.g. P51800045216)');
+                setActiveTab('basic');
+                const mahareraInput = document.getElementById('maharera');
+                if (mahareraInput) mahareraInput.focus();
+                return;
+            }
         }
 
         try {
@@ -428,11 +475,23 @@ const AdminProjectEdit = () => {
     // ─── Gallery Upload ──────────────────────────────────────
 
     const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (!files || files.length === 0 || !projectId) return;
+        const files = Array.from(e.target.files || []);
+        if (files.length === 0 || !projectId) return;
+
+        // Validate all files are images
+        const invalidFiles = files.filter(file => !file.type.startsWith('image/'));
+        if (invalidFiles.length > 0) {
+            toast.error('Some files are not images and were skipped. Please use PNG, JPG, or WEBP.');
+        }
+
+        const validFiles = files.filter(file => file.type.startsWith('image/'));
+        if (validFiles.length === 0) {
+            e.target.value = '';
+            return;
+        }
 
         const formData = new FormData();
-        Array.from(files).forEach((file) => {
+        validFiles.forEach((file) => {
             formData.append('images', file);
         });
 
@@ -560,7 +619,7 @@ const AdminProjectEdit = () => {
                 <div className="flex gap-1 overflow-x-auto">
                     {TABS.map((tab) => {
                         const Icon = tab.icon;
-                        const isDisabled = isNew && tab.id === 'gallery';
+                        const isDisabled = false; // Gallery is no longer blocked for new projects
                         return (
                             <button
                                 key={tab.id}
@@ -721,9 +780,12 @@ const AdminProjectEdit = () => {
                                         <Input
                                             id="maharera"
                                             value={project.maharera}
-                                            onChange={(e) => handleFieldChange('maharera', e.target.value)}
+                                            onChange={(e) => handleFieldChange('maharera', e.target.value.toUpperCase())}
                                             placeholder="e.g. P51800045216"
                                         />
+                                        <p className="text-[10px] text-muted-foreground mt-1">
+                                            Format: P followed by 11 digits
+                                        </p>
                                     </div>
                                     <div>
                                         <Label htmlFor="mahareraUrl">MahaRERA Official Link</Label>
@@ -804,8 +866,14 @@ const AdminProjectEdit = () => {
                                     <Input
                                         id="sortOrder"
                                         type="number"
+                                        min="0"
                                         value={project.sortOrder}
-                                        onChange={(e) => handleFieldChange('sortOrder', e.target.value)}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            if (val === '' || parseInt(val) >= 0) {
+                                                handleFieldChange('sortOrder', val);
+                                            }
+                                        }}
                                         placeholder="0"
                                     />
                                     <p className="text-xs text-muted-foreground mt-1">
@@ -864,7 +932,7 @@ const AdminProjectEdit = () => {
                                     <input
                                         id="qr-upload"
                                         type="file"
-                                        accept="image/*"
+                                        accept="image/png, image/jpeg, image/jpg, image/webp"
                                         className="hidden"
                                         onChange={handleQrChange}
                                     />
@@ -913,7 +981,7 @@ const AdminProjectEdit = () => {
                                     <input
                                         id="image-upload"
                                         type="file"
-                                        accept="image/*"
+                                        accept="image/png, image/jpeg, image/jpg, image/webp"
                                         className="hidden"
                                         onChange={handleImageChange}
                                     />
@@ -959,7 +1027,7 @@ const AdminProjectEdit = () => {
                                     <input
                                         id="overview-image-upload"
                                         type="file"
-                                        accept="image/*"
+                                        accept="image/png, image/jpeg, image/jpg, image/webp"
                                         className="hidden"
                                         onChange={handleOverviewImageChange}
                                     />
@@ -1029,7 +1097,7 @@ const AdminProjectEdit = () => {
                                 <input
                                     id="floor-plan-upload"
                                     type="file"
-                                    accept="image/*"
+                                    accept="image/png, image/jpeg, image/jpg, image/webp"
                                     className="hidden"
                                     onChange={handleFloorPlanChange}
                                 />
@@ -1055,7 +1123,10 @@ const AdminProjectEdit = () => {
                                     <div key={index} className="grid grid-cols-[1fr_1fr_1fr_auto] gap-4 items-center">
                                         <Input
                                             value={config.type}
-                                            onChange={(e) => updateConfiguration(index, 'type', e.target.value)}
+                                            onChange={(e) => {
+                                                const val = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
+                                                updateConfiguration(index, 'type', val);
+                                            }}
                                             placeholder="1 BHK"
                                         />
                                         <Input
@@ -1065,8 +1136,11 @@ const AdminProjectEdit = () => {
                                         />
                                         <Input
                                             value={config.price}
-                                            onChange={(e) => updateConfiguration(index, 'price', e.target.value)}
-                                            placeholder="Click for price"
+                                            onChange={(e) => {
+                                                const val = e.target.value.replace(/\D/g, '');
+                                                updateConfiguration(index, 'price', val);
+                                            }}
+                                            placeholder="e.g. 7000000"
                                         />
                                         <Button
                                             variant="ghost"
@@ -1189,7 +1263,7 @@ const AdminProjectEdit = () => {
                                 <input
                                     id="amenities-image-upload"
                                     type="file"
-                                    accept="image/*"
+                                    accept="image/png, image/jpeg, image/jpg, image/webp"
                                     className="hidden"
                                     onChange={handleAmenitiesImageChange}
                                 />
@@ -1259,7 +1333,7 @@ const AdminProjectEdit = () => {
                                 <input
                                     id="connectivities-image-upload"
                                     type="file"
-                                    accept="image/*"
+                                    accept="image/png, image/jpeg, image/jpg, image/webp"
                                     className="hidden"
                                     onChange={handleConnectivitiesImageChange}
                                 />
@@ -1338,7 +1412,7 @@ const AdminProjectEdit = () => {
                             <input
                                 id="gallery-upload"
                                 type="file"
-                                accept="image/*"
+                                accept="image/png, image/jpeg, image/jpg, image/webp"
                                 multiple
                                 className="hidden"
                                 onChange={handleGalleryUpload}
@@ -1429,7 +1503,7 @@ const AdminProjectEdit = () => {
                                     <p className="text-sm font-medium">Click to upload image</p>
                                     <input
                                         type="file"
-                                        accept="image/*"
+                                        accept="image/png, image/jpeg, image/jpg, image/webp"
                                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                         onChange={(e) => {
                                             const file = e.target.files?.[0];

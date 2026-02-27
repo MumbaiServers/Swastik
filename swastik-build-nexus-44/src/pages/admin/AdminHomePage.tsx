@@ -59,6 +59,10 @@ const AdminHomePage = () => {
   const handleWhoWeAreImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload an image file (PNG, JPG, WEBP)');
+        return;
+      }
       setWhoWeAreFile(file);
       setWhoWeArePreview(URL.createObjectURL(file));
     }
@@ -199,7 +203,7 @@ const AdminHomePage = () => {
                 </div>
                 <Label htmlFor="who-we-are-image" className="cursor-pointer inline-block bg-primary text-primary-foreground px-4 py-2 rounded-md">
                   {whoWeAreFile || whoWeAre.image ? 'Change Image' : 'Upload Image'}
-                  <Input id="who-we-are-image" type="file" className="hidden" onChange={handleWhoWeAreImageChange} />
+                  <Input id="who-we-are-image" type="file" accept="image/png, image/jpeg, image/jpg, image/webp" className="hidden" onChange={handleWhoWeAreImageChange} />
                 </Label>
               </CardContent>
             </Card>
@@ -293,11 +297,15 @@ const AdminHomePage = () => {
                   <Input
                     value={location.name}
                     onChange={(e) => handleLocationChange(index, e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.preventDefault();
+                    }}
                     placeholder="Location name"
                   />
                   <Button
                     variant="outline"
                     size="icon"
+                    type="button"
                     onClick={() => removeLocation(index)}
                     className="text-red-600"
                   >
@@ -306,10 +314,10 @@ const AdminHomePage = () => {
                 </div>
               ))}
               <div className="flex gap-4">
-                <Button variant="outline" onClick={addLocation} className="w-full">
+                <Button variant="outline" type="button" onClick={addLocation} className="w-full">
                   <Plus className="w-4 h-4 mr-2" /> Add Location
                 </Button>
-                <Button onClick={handleLocationsSave} disabled={saving} className="w-full">
+                <Button type="button" onClick={handleLocationsSave} disabled={saving} className="w-full">
                   {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                   Save Presence List
                 </Button>

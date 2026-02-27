@@ -79,6 +79,7 @@ const AdminDashboard = () => {
       case 'inquiry': return 'bg-pink-600';
       case 'faq': return 'bg-purple-600';
       case 'loyalty': return 'bg-orange-600';
+      case 'location': return 'bg-indigo-600';
       default: return 'bg-gray-600';
     }
   };
@@ -154,7 +155,7 @@ const AdminDashboard = () => {
         description: 'Uploaded images & files',
         icon: Image,
         color: 'text-indigo-600',
-        route: null,
+        route: '/admin/projects',
       },
     ]
     : [];
@@ -235,15 +236,15 @@ const AdminDashboard = () => {
             ) : (
               <div className="space-y-4">
                 {recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-center space-x-4 group">
-                    <div className={`w-2 h-2 ${getActivityColor(activity.type)} rounded-full shrink-0`}></div>
+                  <div key={activity.id} className="flex items-start space-x-4 group overflow-hidden">
+                    <div className={`w-2 h-2 ${getActivityColor(activity.type)} rounded-full shrink-0 mt-1.5`}></div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{activity.label}</p>
-                      <p className="text-xs text-muted-foreground">{formatTimeAgo(activity.time)}</p>
+                      <p className="text-sm font-medium line-clamp-2 break-words">{activity.label}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{formatTimeAgo(activity.time)}</p>
                     </div>
                     <button
                       onClick={() => handleDeleteActivity(activity.id)}
-                      className="p-1.5 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="p-1.5 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
                       title="Delete activity"
                     >
                       <Trash2 className="h-4 w-4" />

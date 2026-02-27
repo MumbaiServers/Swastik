@@ -333,8 +333,14 @@ const AdminFAQs = () => {
                 <Input
                   id="sortOrder"
                   type="number"
+                  min="0"
                   value={currentFaq.sortOrder}
-                  onChange={(e) => setCurrentFaq({ ...currentFaq, sortOrder: parseInt(e.target.value) })}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '' || parseInt(val) >= 0) {
+                      setCurrentFaq({ ...currentFaq, sortOrder: val === '' ? 0 : parseInt(val) });
+                    }
+                  }}
                 />
               </div>
             </div>

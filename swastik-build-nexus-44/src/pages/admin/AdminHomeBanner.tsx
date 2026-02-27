@@ -82,6 +82,10 @@ const AdminHomeBanner = () => {
   const handleImageUpload = (field: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload an image file (PNG, JPG, WEBP)');
+        return;
+      }
       setFiles(prev => ({ ...prev, [field]: file }));
       setPreviews(prev => ({ ...prev, [field]: URL.createObjectURL(file) }));
     }
@@ -140,7 +144,7 @@ const AdminHomeBanner = () => {
         <Input
           id={`upload-${field}`}
           type="file"
-          accept="image/*"
+          accept="image/png, image/jpeg, image/jpg, image/webp"
           onChange={(e) => handleImageUpload(field, e)}
           className="hidden"
         />

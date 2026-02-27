@@ -89,6 +89,10 @@ const AdminBlogEdit = () => {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please upload an image file (PNG, JPG, WEBP)');
+                return;
+            }
             setSelectedFile(file);
             setPreviewUrl(URL.createObjectURL(file));
         }
@@ -296,7 +300,7 @@ const AdminBlogEdit = () => {
                                 <Input
                                     id="blog-image"
                                     type="file"
-                                    accept="image/*"
+                                    accept="image/png, image/jpeg, image/jpg, image/webp"
                                     className="hidden"
                                     onChange={handleImageChange}
                                 />

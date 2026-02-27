@@ -95,6 +95,10 @@ const AdminAboutUs = () => {
   const handleOurBusinessImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload an image file (PNG, JPG, WEBP)');
+        return;
+      }
       setOurBusiness(prev => ({
         ...prev,
         imageFile: file,
@@ -106,6 +110,10 @@ const AdminAboutUs = () => {
   const handleAboutUsImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload an image file (PNG, JPG, WEBP)');
+        return;
+      }
       setAboutUsMain(prev => ({
         ...prev,
         imageFile: file,
@@ -211,7 +219,7 @@ const AdminAboutUs = () => {
                       {ourBusiness.previewUrl ? 'Change Image' : 'Upload Image'}
                     </div>
                   </Label>
-                  <Input id="business-image" type="file" accept="image/*" className="hidden" onChange={handleOurBusinessImage} />
+                  <Input id="business-image" type="file" accept="image/png, image/jpeg, image/jpg, image/webp" className="hidden" onChange={handleOurBusinessImage} />
                 </div>
               </CardContent>
             </Card>
@@ -255,7 +263,7 @@ const AdminAboutUs = () => {
                       {aboutUsMain.previewUrl ? 'Change Image' : 'Upload Image'}
                     </div>
                   </Label>
-                  <Input id="about-image" type="file" accept="image/*" className="hidden" onChange={handleAboutUsImage} />
+                  <Input id="about-image" type="file" accept="image/png, image/jpeg, image/jpg, image/webp" className="hidden" onChange={handleAboutUsImage} />
                 </div>
               </CardContent>
             </Card>

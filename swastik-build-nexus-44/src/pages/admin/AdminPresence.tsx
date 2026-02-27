@@ -36,28 +36,25 @@ const AdminPresence = () => {
   };
 
   const handleLocationChange = (index: number, value: string) => {
-    const updated = [...locations];
-    updated[index].name = value;
-    setLocations(updated);
+    setLocations(prev => prev.map((loc, i) =>
+      i === index ? { ...loc, name: value } : loc
+    ));
   };
 
   const addLocation = () => {
-    setLocations([...locations, { name: '' }]);
+    setLocations(prev => [...prev, { name: '' }]);
   };
 
   const removeLocation = (index: number) => {
-    setLocations(locations.filter((_, i) => i !== index));
+    setLocations(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSave = async () => {
     try {
       setSaving(true);
-      // Clean up empty names
-      const validLocations = locations.filter(loc => loc.name.trim() !== '');
-
+      const validLocations = locations.filter(loc => loc.name && loc.name.trim() !== '');
       await locationsApi.update(validLocations);
       toast.success('Project locations updated successfully');
-      // Refetch to get updated IDs if any were new
       await fetchLocations();
     } catch (error) {
       console.error('Save locations error:', error);
@@ -84,7 +81,7 @@ const AdminPresence = () => {
             Update the list of locations where your projects are present
           </p>
         </div>
-        <Button onClick={handleSave} size="lg" disabled={saving}>
+        <Button type="button" onClick={handleSave} size="lg" disabled={saving}>
           {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
           Save Changes
         </Button>
@@ -110,6 +107,9 @@ const AdminPresence = () => {
                   <Input
                     value={location.name}
                     onChange={(e) => handleLocationChange(index, e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.preventDefault();
+                    }}
                     placeholder="Enter location name"
                     className="flex-1"
                   />
@@ -183,12 +183,6 @@ const AdminPresence = () => {
         </Card>
       </div>
 
-      <div className="flex justify-end">
-        <Button onClick={handleSave} size="lg" disabled={saving}>
-          {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-          Save Changes
-        </Button>
-      </div>
     </div>
   );
 };

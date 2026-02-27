@@ -16,7 +16,11 @@ router.get('/stats', authenticate, async (_req: Request, res: Response) => {
             totalLocations,
             totalInquiries,
             newInquiries,
-            totalMedia,
+            mediaLibraryCount,
+            galleryCount,
+            projectImageCount,
+            socialMediaCount,
+            bannerCount,
             totalReferrals,
         ] = await Promise.all([
             prisma.project.count({ where: { isActive: true } }),
@@ -28,8 +32,16 @@ router.get('/stats', authenticate, async (_req: Request, res: Response) => {
             prisma.inquiry.count(),
             prisma.inquiry.count({ where: { status: 'new' } }),
             prisma.media.count(),
+            prisma.projectGalleryImage.count(),
+            prisma.project.count({ where: { image: { not: null } } }),
+            prisma.socialMediaPost.count(),
+            prisma.heroBanner.count(),
             prisma.loyaltySubmission.count(),
         ]);
+
+        // Calculate a more realistic media count by summing images across all modules
+        // This is necessary because project images/gallery are stored in their own tables
+        const totalMedia = mediaLibraryCount + galleryCount + projectImageCount + socialMediaCount + (bannerCount * 5);
 
         // Fetch activity logs with error handling to prevent whole dashboard failure
         let recentActivity: any[] = [];

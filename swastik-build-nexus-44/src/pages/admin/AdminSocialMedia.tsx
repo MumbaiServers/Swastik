@@ -78,6 +78,11 @@ const AdminSocialMedia = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file (PNG, JPG, WEBP)');
+      return;
+    }
+
     try {
       setSavingPosts(true);
       const formData = new FormData();
@@ -208,7 +213,7 @@ const AdminSocialMedia = () => {
               <Input
                 id="post-upload"
                 type="file"
-                accept="image/*"
+                accept="image/png, image/jpeg, image/jpg, image/webp"
                 className="hidden"
                 onChange={handleCreatePost}
                 disabled={savingPosts}

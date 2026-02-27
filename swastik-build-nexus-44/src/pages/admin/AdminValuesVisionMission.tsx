@@ -86,6 +86,10 @@ const AdminValuesVisionMission = () => {
   const handleImageSelect = (type: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload an image file (PNG, JPG, WEBP)');
+        return;
+      }
       setImageFiles((prev) => ({ ...prev, [type]: file }));
       // Create local preview
       const reader = new FileReader();
@@ -238,7 +242,7 @@ const AdminValuesVisionMission = () => {
                     <input
                       id={`${config.type}-image-input`}
                       type="file"
-                      accept="image/*"
+                      accept="image/png, image/jpeg, image/jpg, image/webp"
                       onChange={(e) => handleImageSelect(config.type, e)}
                       className="hidden"
                     />
