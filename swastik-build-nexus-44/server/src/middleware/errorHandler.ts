@@ -33,7 +33,7 @@ export const errorHandler = (
     // Multer file size error
     if (err.message === 'File too large') {
         res.status(413).json({
-            error: 'File is too large. Maximum size is 10MB.',
+            error: 'File is too large. Maximum size is 50MB.',
         });
         return;
     }
