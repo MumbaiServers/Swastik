@@ -38,7 +38,7 @@ const AboutUsSection = () => {
     <>
       {/* Mobile Blue Band */}
       <div
-        className="md:hidden relative h-16 bg-[#1953B4] flex items-center justify-center z-30 cursor-pointer active:scale-[0.98] transition-transform"
+        className="md:hidden fixed bottom-0 left-0 right-0 w-full h-16 bg-[#1953B4] flex items-center justify-center z-50 cursor-pointer active:scale-[0.98] transition-transform"
         onClick={() => setIsContactModalOpen(true)}
       >
         <div

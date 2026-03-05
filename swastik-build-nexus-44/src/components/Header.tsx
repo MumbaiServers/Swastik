@@ -32,8 +32,8 @@ const Header = () => {
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled
-          ? 'bg-white/98 backdrop-blur-lg shadow-md'
-          : 'bg-white/95 backdrop-blur-md border-b border-border shadow-sm'
+        ? 'bg-white/98 backdrop-blur-lg shadow-md'
+        : 'bg-white/95 backdrop-blur-md border-b border-border shadow-sm'
         }`}
     >
       <div className="container mx-auto px-4 lg:px-8">
@@ -50,8 +50,8 @@ const Header = () => {
                 <Link
                   to={item.href}
                   className={`text-sm font-medium transition-all duration-300 relative py-1 ${location.pathname === item.href
-                      ? 'text-brand-blue'
-                      : 'text-foreground hover:text-brand-blue'
+                    ? 'text-brand-blue'
+                    : 'text-foreground hover:text-brand-blue'
                     }`}
                 >
                   {item.name}
@@ -81,7 +81,7 @@ const Header = () => {
           {/* Mobile menu button */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="lg:hidden">
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative text-black hover:text-brand-blue">
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
@@ -100,8 +100,8 @@ const Header = () => {
                         key={item.name}
                         to={item.href}
                         className={`block text-lg font-medium py-3 px-4 rounded-xl transition-all duration-300 ${location.pathname === item.href
-                            ? 'text-brand-blue bg-brand-light-blue/10'
-                            : 'text-foreground hover:text-brand-blue hover:bg-gray-50'
+                          ? 'text-brand-blue bg-brand-light-blue/10'
+                          : 'text-foreground hover:text-brand-blue hover:bg-gray-50'
                           }`}
                         onClick={() => setIsOpen(false)}
                         style={{
