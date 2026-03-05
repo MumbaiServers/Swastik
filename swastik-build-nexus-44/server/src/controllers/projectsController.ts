@@ -74,7 +74,7 @@ export const createProject = async (req: Request, res: Response) => {
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
         const image = files['image'] ? getFileUrl(files['image'][0]) : null;
         const mahareraQr = files['mahareraQr'] ? getFileUrl(files['mahareraQr'][0]) : null;
-        const floorPlanImage = files['floorPlanImage'] ? getFileUrl(files['floorPlanImage'][0]) : null;
+        const floorPlanImage = files['floorPlanImage'] ? JSON.stringify(files['floorPlanImage'].map(f => getFileUrl(f))) : null;
         const aboutDeveloperImage = files['aboutDeveloperImage'] ? getFileUrl(files['aboutDeveloperImage'][0]) : null;
         const overviewImage = files['overviewImage'] ? getFileUrl(files['overviewImage'][0]) : null;
         const connectivitiesImage = files['connectivitiesImage'] ? getFileUrl(files['connectivitiesImage'][0]) : null;
@@ -153,9 +153,41 @@ export const updateProject = async (req: Request, res: Response) => {
             mahareraQr = getFileUrl(files['mahareraQr'][0]);
         }
 
-        if (files && files['floorPlanImage']) {
-            if (existing.floorPlanImage) await deleteFile(existing.floorPlanImage);
-            floorPlanImage = getFileUrl(files['floorPlanImage'][0]);
+        const { existingFloorPlans } = req.body;
+        if (existingFloorPlans !== undefined) {
+            // If the client sends an updated list of existing floor plans to keep
+            try {
+                const keptUrls = JSON.parse(existingFloorPlans);
+                const oldUrls = existing.floorPlanImage ? JSON.parse(existing.floorPlanImage) : [];
+                const toDelete = (Array.isArray(oldUrls) ? oldUrls : [existing.floorPlanImage]).filter((url: string) => !keptUrls.includes(url));
+                for (const url of toDelete) {
+                    if (url) await deleteFile(url);
+                }
+
+                let newUrls: string[] = [];
+                if (files && files['floorPlanImage']) {
+                    newUrls = files['floorPlanImage'].map(f => getFileUrl(f));
+                }
+
+                floorPlanImage = JSON.stringify([...keptUrls, ...newUrls]);
+            } catch (e) {
+                console.error("Failed to parse existing floor plans");
+            }
+        } else if (files && files['floorPlanImage']) {
+            // Legacy overwrite behavior if no existingFloorPlans field is provided
+            if (existing.floorPlanImage) {
+                try {
+                    const oldImages = JSON.parse(existing.floorPlanImage);
+                    if (Array.isArray(oldImages)) {
+                        for (const img of oldImages) await deleteFile(img);
+                    } else {
+                        await deleteFile(existing.floorPlanImage);
+                    }
+                } catch (e) {
+                    await deleteFile(existing.floorPlanImage);
+                }
+            }
+            floorPlanImage = JSON.stringify(files['floorPlanImage'].map(f => getFileUrl(f)));
         }
 
         if (files && files['aboutDeveloperImage']) {
@@ -242,7 +274,18 @@ export const deleteProject = async (req: Request, res: Response) => {
 
         if (existing.image) await deleteFile(existing.image);
         if (existing.mahareraQr) await deleteFile(existing.mahareraQr);
-        if (existing.floorPlanImage) await deleteFile(existing.floorPlanImage);
+        if (existing.floorPlanImage) {
+            try {
+                const oldImages = JSON.parse(existing.floorPlanImage);
+                if (Array.isArray(oldImages)) {
+                    for (const img of oldImages) await deleteFile(img);
+                } else {
+                    await deleteFile(existing.floorPlanImage);
+                }
+            } catch (e) {
+                await deleteFile(existing.floorPlanImage);
+            }
+        }
         if (existing.overviewImage) await deleteFile(existing.overviewImage);
         if (existing.connectivitiesImage) await deleteFile(existing.connectivitiesImage);
         if (existing.amenitiesImage) await deleteFile(existing.amenitiesImage);

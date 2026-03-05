@@ -87,8 +87,9 @@ const AdminProjectEdit = () => {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [qrFile, setQrFile] = useState<File | null>(null);
     const [qrPreview, setQrPreview] = useState<string | null>(null);
-    const [floorPlanFile, setFloorPlanFile] = useState<File | null>(null);
-    const [floorPlanPreview, setFloorPlanPreview] = useState<string | null>(null);
+    const [floorPlanFiles, setFloorPlanFiles] = useState<File[]>([]);
+    const [floorPlanPreviews, setFloorPlanPreviews] = useState<string[]>([]);
+    const [existingFloorPlans, setExistingFloorPlans] = useState<string[]>([]);
     const [aboutDeveloperFile, setAboutDeveloperFile] = useState<File | null>(null);
     const [aboutDeveloperPreview, setAboutDeveloperPreview] = useState<string | null>(null);
     const [overviewImageFile, setOverviewImageFile] = useState<File | null>(null);
@@ -177,7 +178,16 @@ const AdminProjectEdit = () => {
             }
 
             if (found.floorPlanImage) {
-                setFloorPlanPreview(getImageUrl(found.floorPlanImage) || null);
+                try {
+                    const parsed = JSON.parse(found.floorPlanImage);
+                    if (Array.isArray(parsed)) {
+                        setExistingFloorPlans(parsed);
+                    } else {
+                        setExistingFloorPlans([found.floorPlanImage]);
+                    }
+                } catch (e) {
+                    setExistingFloorPlans([found.floorPlanImage]);
+                }
             }
 
             if (found.aboutDeveloperImage) {
@@ -278,16 +288,28 @@ const AdminProjectEdit = () => {
     };
 
     const handleFloorPlanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            if (!file.type.startsWith('image/')) {
-                toast.error('Please upload an image file (PNG, JPG, WEBP)');
-                return;
+        const files = e.target.files;
+        if (files) {
+            const arr = Array.from(files);
+            const validFiles = arr.filter(f => f.type.startsWith('image/'));
+            if (validFiles.length < arr.length) {
+                toast.error('Only image files are allowed');
             }
-            setFloorPlanFile(file);
-            setFloorPlanPreview(URL.createObjectURL(file));
+            if (validFiles.length > 0) {
+                setFloorPlanFiles(prev => [...prev, ...validFiles]);
+                setFloorPlanPreviews(prev => [...prev, ...validFiles.map(f => URL.createObjectURL(f))]);
+            }
         }
         e.target.value = '';
+    };
+
+    const removeNewFloorPlan = (index: number) => {
+        setFloorPlanFiles(prev => prev.filter((_, i) => i !== index));
+        setFloorPlanPreviews(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const removeExistingFloorPlan = (index: number) => {
+        setExistingFloorPlans(prev => prev.filter((_, i) => i !== index));
     };
 
     const handleAboutDeveloperChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -412,9 +434,10 @@ const AdminProjectEdit = () => {
                 formData.append('mahareraQr', qrFile);
             }
 
-            if (floorPlanFile) {
-                formData.append('floorPlanImage', floorPlanFile);
-            }
+            floorPlanFiles.forEach(file => {
+                formData.append('floorPlanImage', file);
+            });
+            formData.append('existingFloorPlans', JSON.stringify(existingFloorPlans));
 
             if (aboutDeveloperFile) {
                 formData.append('aboutDeveloperImage', aboutDeveloperFile);
@@ -1065,26 +1088,42 @@ const AdminProjectEdit = () => {
                             <p className="text-xs text-muted-foreground">
                                 This image will be displayed on the left side of the configurations table.
                             </p>
-                            {floorPlanPreview && (
-                                <div className="relative w-full max-w-sm rounded-lg overflow-hidden border bg-white p-2">
-                                    <img
-                                        src={floorPlanPreview}
-                                        alt="Floor Plan Preview"
-                                        className="w-full h-auto object-contain"
-                                    />
-                                    <Button
-                                        variant="destructive"
-                                        size="icon"
-                                        className="absolute top-2 right-2 h-7 w-7"
-                                        onClick={() => {
-                                            setFloorPlanFile(null);
-                                            setFloorPlanPreview(null);
-                                        }}
-                                    >
-                                        <X className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            )}
+                            <div className="flex flex-wrap gap-4">
+                                {existingFloorPlans.map((url, i) => (
+                                    <div key={`exist-${i}`} className="relative w-full max-w-sm rounded-lg overflow-hidden border bg-white p-2">
+                                        <img
+                                            src={getImageUrl(url) || ''}
+                                            alt="Floor Plan Preview"
+                                            className="w-full h-auto object-contain"
+                                        />
+                                        <Button
+                                            variant="destructive"
+                                            size="icon"
+                                            className="absolute top-2 right-2 h-7 w-7"
+                                            onClick={() => removeExistingFloorPlan(i)}
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+                                {floorPlanPreviews.map((src, i) => (
+                                    <div key={`new-${i}`} className="relative w-full max-w-sm rounded-lg overflow-hidden border bg-white p-2">
+                                        <img
+                                            src={src}
+                                            alt="Floor Plan Preview"
+                                            className="w-full h-auto object-contain"
+                                        />
+                                        <Button
+                                            variant="destructive"
+                                            size="icon"
+                                            className="absolute top-2 right-2 h-7 w-7"
+                                            onClick={() => removeNewFloorPlan(i)}
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
                             <div>
                                 <Label htmlFor="floor-plan-upload" className="cursor-pointer">
                                     <div className="border-2 border-dashed rounded-lg p-6 text-center hover:bg-muted/50 transition-colors">
@@ -1097,6 +1136,7 @@ const AdminProjectEdit = () => {
                                 <input
                                     id="floor-plan-upload"
                                     type="file"
+                                    multiple
                                     accept="image/png, image/jpeg, image/jpg, image/webp"
                                     className="hidden"
                                     onChange={handleFloorPlanChange}

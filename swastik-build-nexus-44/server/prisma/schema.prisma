@@ -102,7 +102,7 @@ model Project {
   financeBy       String?                @db.VarChar(255)
   mahareraQr      String?                @db.VarChar(500)
   mahareraUrl               String?                @db.VarChar(500)
-  floorPlanImage            String?                @db.VarChar(500)
+  floorPlanImage            String?                @db.LongText
   connectivitiesDescription String?                @db.Text
   connectivitiesImage       String?                @db.VarChar(500)
   amenitiesImage            String?                @db.VarChar(500)

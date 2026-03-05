@@ -62,6 +62,17 @@ const ProjectDetails = () => {
     };
   }, [project]);
 
+  const floorPlanImages = useMemo(() => {
+    if (!project || !project.floorPlanImage) return [];
+    try {
+      const parsed = JSON.parse(project.floorPlanImage);
+      if (Array.isArray(parsed)) return parsed.map((p: string) => getImageUrl(p));
+    } catch {
+      // Legacy single string
+    }
+    return [getImageUrl(project.floorPlanImage)];
+  }, [project]);
+
   const galleryImages = useMemo(() => {
     if (!project || !project.gallery || project.gallery.length === 0) return [];
     return project.gallery.map((img: any) => getImageUrl(img.imageUrl));
@@ -425,12 +436,25 @@ const ProjectDetails = () => {
             <div className="w-24 md:w-44 h-1 md:h-2 bg-[#1953B4] mx-auto mb-8 rounded-full" />
 
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-              <div className="hidden lg:block rounded-3xl bg-[#F2E2D3]/60 p-4 md:p-6">
-                <img
-                  src={project.floorPlanImage ? getImageUrl(project.floorPlanImage) : lifestyleInterior}
-                  alt="Floor Plan"
-                  className="w-full h-72 md:h-[420px] object-contain"
-                />
+              <div className="hidden lg:block relative max-h-[600px] overflow-y-auto projects-scroll pr-2">
+                {floorPlanImages.length > 0 ? (
+                  <div className="flex flex-col gap-6">
+                    {floorPlanImages.map((src, idx) => (
+                      <img
+                        key={idx}
+                        src={src || lifestyleInterior}
+                        alt={`Floor Plan ${idx + 1}`}
+                        className="w-full h-auto object-contain"
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <img
+                    src={lifestyleInterior}
+                    alt="Floor Plan"
+                    className="w-full h-72 md:h-[420px] object-contain"
+                  />
+                )}
               </div>
 
               <div className="flex flex-col">
@@ -474,12 +498,25 @@ const ProjectDetails = () => {
                         View Floor Plan
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-3xl p-1 bg-white border-0">
-                      <img
-                        src={project.floorPlanImage ? getImageUrl(project.floorPlanImage) : lifestyleInterior}
-                        alt="Floor Plan"
-                        className="w-full h-auto object-contain rounded-lg max-h-[80vh]"
-                      />
+                    <DialogContent className="max-w-3xl p-1 bg-white border-0 overflow-y-auto max-h-[85vh] projects-scroll">
+                      {floorPlanImages.length > 0 ? (
+                        <div className="flex flex-col gap-6 p-4">
+                          {floorPlanImages.map((src, idx) => (
+                            <img
+                              key={idx}
+                              src={src || lifestyleInterior}
+                              alt={`Floor Plan ${idx + 1}`}
+                              className="w-full h-auto object-contain rounded-lg"
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <img
+                          src={lifestyleInterior}
+                          alt="Floor Plan"
+                          className="w-full h-auto object-contain rounded-lg max-h-[80vh]"
+                        />
+                      )}
                     </DialogContent>
                   </Dialog>
 

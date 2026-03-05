@@ -18,7 +18,7 @@ router.post('/', authenticate, upload.fields([
     { name: 'connectivitiesImage', maxCount: 1 },
     { name: 'amenitiesImage', maxCount: 1 },
     { name: 'mahareraQr', maxCount: 1 },
-    { name: 'floorPlanImage', maxCount: 1 },
+    { name: 'floorPlanImage', maxCount: 10 },
     { name: 'aboutDeveloperImage', maxCount: 1 }
 ]), projectsController.createProject);
 
@@ -29,7 +29,7 @@ router.put('/:id', authenticate, upload.fields([
     { name: 'connectivitiesImage', maxCount: 1 },
     { name: 'amenitiesImage', maxCount: 1 },
     { name: 'mahareraQr', maxCount: 1 },
-    { name: 'floorPlanImage', maxCount: 1 },
+    { name: 'floorPlanImage', maxCount: 10 },
     { name: 'aboutDeveloperImage', maxCount: 1 }
 ]), projectsController.updateProject);
 
