@@ -57,7 +57,7 @@ const HeroSection = () => {
               <img
                 src={heroData.fallbackImage || ""}
                 alt="Hero Background"
-                className="w-full h-[calc(100vh-64px)] object-cover object-top md:h-auto md:max-h-none block transition-transform duration-[20000ms] ease-linear origin-center"
+                className="w-full h-auto block transition-transform duration-[20000ms] ease-linear origin-center"
                 style={{
                   transform: isLoaded ? 'scale(1.02)' : 'scale(1)',
                 }}
