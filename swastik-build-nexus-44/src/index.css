@@ -81,49 +81,7 @@ All colors MUST be HSL.
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  .dark {
-    --background: 216 45% 8%;
-    --foreground: 0 0% 98%;
-
-    --card: 216 45% 10%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 216 45% 10%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 201 100% 70%;
-    --primary-foreground: 216 45% 8%;
-
-    --secondary: 217 32% 18%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 217 32% 18%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 217 32% 18%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 217 32% 18%;
-    --input: 217 32% 18%;
-    --ring: 201 100% 70%;
-
-    /* Dark mode brand colors */
-    --brand-blue: 201 100% 70%;
-    --brand-light-blue: 217 52% 30%;
-    --brand-navy: 0 0% 95%;
-    --shadow-brand: 0 10px 30px -10px hsl(201, 100%, 70%, 0.3);
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+  /* Dark Mode has been completely removed to force light mode only. */
 }
 
 @layer base {
