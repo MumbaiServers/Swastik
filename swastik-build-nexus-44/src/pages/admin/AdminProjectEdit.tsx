@@ -177,6 +177,8 @@ const AdminProjectEdit = () => {
                 setQrPreview(getImageUrl(found.mahareraQr) || null);
             }
 
+            setFloorPlanFiles([]);
+            setFloorPlanPreviews([]);
             if (found.floorPlanImage) {
                 try {
                     const parsed = JSON.parse(found.floorPlanImage);
@@ -188,6 +190,8 @@ const AdminProjectEdit = () => {
                 } catch (e) {
                     setExistingFloorPlans([found.floorPlanImage]);
                 }
+            } else {
+                setExistingFloorPlans([]);
             }
 
             if (found.aboutDeveloperImage) {

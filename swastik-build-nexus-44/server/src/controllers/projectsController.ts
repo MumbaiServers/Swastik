@@ -157,9 +157,26 @@ export const updateProject = async (req: Request, res: Response) => {
         if (existingFloorPlans !== undefined) {
             // If the client sends an updated list of existing floor plans to keep
             try {
-                const keptUrls = JSON.parse(existingFloorPlans);
-                const oldUrls = existing.floorPlanImage ? JSON.parse(existing.floorPlanImage) : [];
-                const toDelete = (Array.isArray(oldUrls) ? oldUrls : [existing.floorPlanImage]).filter((url: string) => !keptUrls.includes(url));
+                let keptUrls: string[] = [];
+                try {
+                    const parsed = JSON.parse(existingFloorPlans);
+                    keptUrls = Array.isArray(parsed) ? parsed : [existingFloorPlans];
+                } catch {
+                    keptUrls = [existingFloorPlans];
+                }
+
+                // Identify what to delete
+                let currentUrls: string[] = [];
+                if (existing.floorPlanImage) {
+                    try {
+                        const parsed = JSON.parse(existing.floorPlanImage);
+                        currentUrls = Array.isArray(parsed) ? parsed : [existing.floorPlanImage];
+                    } catch {
+                        currentUrls = [existing.floorPlanImage];
+                    }
+                }
+
+                const toDelete = currentUrls.filter(url => !keptUrls.includes(url));
                 for (const url of toDelete) {
                     if (url) await deleteFile(url);
                 }
@@ -169,7 +186,8 @@ export const updateProject = async (req: Request, res: Response) => {
                     newUrls = files['floorPlanImage'].map(f => getFileUrl(f));
                 }
 
-                floorPlanImage = JSON.stringify([...keptUrls, ...newUrls]);
+                const combined = [...keptUrls.filter(Boolean), ...newUrls.filter(Boolean)];
+                floorPlanImage = combined.length > 0 ? JSON.stringify(combined) : null;
             } catch (e) {
                 console.error("Failed to parse existing floor plans");
             }

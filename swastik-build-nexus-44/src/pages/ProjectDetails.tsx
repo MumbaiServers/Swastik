@@ -26,6 +26,7 @@ const ProjectDetails = () => {
   const { projectId: slug } = useParams();
   const [activeAmenityTab, setActiveAmenityTab] = useState("podium");
   const [activeFloorPlanTab, setActiveFloorPlanTab] = useState("a-wing");
+  const [currentFloorPlanIndex, setCurrentFloorPlanIndex] = useState(0);
   const [project, setProject] = useState<any>(null);
   const [stats, setStats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -436,24 +437,43 @@ const ProjectDetails = () => {
             <div className="w-24 md:w-44 h-1 md:h-2 bg-[#1953B4] mx-auto mb-8 rounded-full" />
 
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-              <div className="hidden lg:block relative max-h-[600px] overflow-y-auto projects-scroll pr-2">
+              <div className="hidden lg:block relative group">
                 {floorPlanImages.length > 0 ? (
-                  <div className="flex flex-col gap-6">
-                    {floorPlanImages.map((src, idx) => (
-                      <img
-                        key={idx}
-                        src={src || lifestyleInterior}
-                        alt={`Floor Plan ${idx + 1}`}
-                        className="w-full h-auto object-contain"
-                      />
-                    ))}
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={floorPlanImages[currentFloorPlanIndex] || lifestyleInterior}
+                      alt={`Floor Plan ${currentFloorPlanIndex + 1}`}
+                      className="w-full h-[450px] object-contain transition-all duration-300"
+                    />
+
+                    {floorPlanImages.length > 1 && (
+                      <>
+                        <button
+                          onClick={() => setCurrentFloorPlanIndex(prev => (prev === 0 ? floorPlanImages.length - 1 : prev - 1))}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-primary shadow-lg rounded-full w-10 h-10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                        >
+                          ‹
+                        </button>
+                        <button
+                          onClick={() => setCurrentFloorPlanIndex(prev => (prev === floorPlanImages.length - 1 ? 0 : prev + 1))}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-primary shadow-lg rounded-full w-10 h-10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                        >
+                          ›
+                        </button>
+                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium">
+                          {currentFloorPlanIndex + 1} / {floorPlanImages.length}
+                        </div>
+                      </>
+                    )}
                   </div>
                 ) : (
-                  <img
-                    src={lifestyleInterior}
-                    alt="Floor Plan"
-                    className="w-full h-72 md:h-[420px] object-contain"
-                  />
+                  <div className="">
+                    <img
+                      src={lifestyleInterior}
+                      alt="Floor Plan placeholder"
+                      className="w-full h-[450px] object-contain"
+                    />
+                  </div>
                 )}
               </div>
 
