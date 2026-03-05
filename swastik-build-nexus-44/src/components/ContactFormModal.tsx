@@ -83,32 +83,32 @@ const ContactFormModal = ({ isOpen, onClose }: ContactFormModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-2xl p-0 bg-transparent border-0 shadow-none max-h-[90vh] overflow-y-auto">
-        <div className="relative mx-4 sm:mx-0">
+        <div className="relative mx-6 sm:mx-0">
           {!showSuccess ? (
             // Contact Form
             <div
-              className="bg-white p-6 sm:p-8 md:p-12 shadow-2xl relative overflow-hidden rounded-tl-[80px] rounded-br-[80px] rounded-tr-[8px] rounded-bl-[8px] sm:rounded-tl-[120px] sm:rounded-br-[120px]"
+              className="bg-white p-5 sm:p-8 md:p-12 shadow-2xl relative overflow-hidden rounded-tl-[80px] rounded-br-[80px] rounded-tr-[8px] rounded-bl-[8px] sm:rounded-tl-[120px] sm:rounded-br-[120px]"
               style={{
                 background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'
               }}
             >
-              <div className="text-center mb-6 sm:mb-8">
+              <div className="text-center mb-4 sm:mb-8">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3">Contact Us</h2>
                 <p className="text-sm sm:text-base text-gray-600">Please fill your details below</p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
-                      <User className="w-5 h-5 text-gray-400" />
+                      <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                     </div>
                     <Input
                       type="text"
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className="h-12 pl-12 pr-4 border border-gray-200 bg-white rounded-xl text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                      className="h-10 sm:h-12 pl-10 sm:pl-12 pr-4 border border-gray-200 bg-white rounded-xl text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm sm:text-base"
                       placeholder="First Name"
                       required
                     />
@@ -116,31 +116,31 @@ const ContactFormModal = ({ isOpen, onClose }: ContactFormModalProps) => {
 
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
-                      <User className="w-5 h-5 text-gray-400" />
+                      <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                     </div>
                     <Input
                       type="text"
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className="h-12 pl-12 pr-4 border border-gray-200 bg-white rounded-xl text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                      className="h-10 sm:h-12 pl-10 sm:pl-12 pr-4 border border-gray-200 bg-white rounded-xl text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm sm:text-base"
                       placeholder="Last Name"
                       required
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
-                      <Phone className="w-5 h-5 text-gray-400" />
+                      <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                     </div>
                     <Input
                       type="tel"
                       name="contactNumber"
                       value={formData.contactNumber}
                       onChange={handleInputChange}
-                      className="h-12 pl-12 pr-4 border border-gray-200 bg-white rounded-xl text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                      className="h-10 sm:h-12 pl-10 sm:pl-12 pr-4 border border-gray-200 bg-white rounded-xl text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm sm:text-base"
                       placeholder="Contact Number"
                       required
                     />
@@ -148,14 +148,14 @@ const ContactFormModal = ({ isOpen, onClose }: ContactFormModalProps) => {
 
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
-                      <Mail className="w-5 h-5 text-gray-400" />
+                      <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                     </div>
                     <Input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="h-12 pl-12 pr-4 border border-gray-200 bg-white rounded-xl text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                      className="h-10 sm:h-12 pl-10 sm:pl-12 pr-4 border border-gray-200 bg-white rounded-xl text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm sm:text-base"
                       placeholder="Email ID"
                       required
                     />
@@ -163,24 +163,24 @@ const ContactFormModal = ({ isOpen, onClose }: ContactFormModalProps) => {
                 </div>
 
                 <div className="relative">
-                  <div className="absolute left-4 top-4 z-10">
-                    <MessageSquare className="w-5 h-5 text-gray-400" />
+                  <div className="absolute left-4 top-3 sm:top-4 z-10">
+                    <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                   </div>
                   <Textarea
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
-                    className="min-h-[120px] pl-12 pr-4 pt-4 border border-gray-200 bg-white rounded-xl text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"
+                    className="min-h-[90px] sm:min-h-[120px] pl-10 sm:pl-12 pr-4 pt-3 sm:pt-4 border border-gray-200 bg-white rounded-xl text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none text-sm sm:text-base"
                     placeholder="Message"
                     required
                   />
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 items-center justify-center pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center pt-2 sm:pt-4">
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full sm:w-auto px-8 sm:px-12 h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="w-full sm:w-auto px-8 sm:px-12 h-10 sm:h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base"
                   >
                     {isSubmitting ? (
                       <>
