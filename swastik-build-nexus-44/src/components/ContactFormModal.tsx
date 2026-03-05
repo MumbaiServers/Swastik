@@ -87,12 +87,8 @@ const ContactFormModal = ({ isOpen, onClose }: ContactFormModalProps) => {
           {!showSuccess ? (
             // Contact Form
             <div
-              className="bg-white p-4 sm:p-8 md:p-12 shadow-2xl relative overflow-hidden"
+              className="bg-white p-6 sm:p-8 md:p-12 shadow-2xl relative overflow-hidden rounded-tl-[80px] rounded-br-[80px] rounded-tr-[8px] rounded-bl-[8px] sm:rounded-tl-[120px] sm:rounded-br-[120px]"
               style={{
-                borderTopLeftRadius: '8px',
-                borderTopRightRadius: '120px',
-                borderBottomLeftRadius: '120px',
-                borderBottomRightRadius: '8px',
                 background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'
               }}
             >
@@ -209,17 +205,10 @@ const ContactFormModal = ({ isOpen, onClose }: ContactFormModalProps) => {
           ) : (
             // Success Message
             <div
-              className="bg-white p-6 sm:p-8 md:p-12 shadow-2xl text-center relative"
+              className="bg-white p-6 sm:p-8 md:p-12 shadow-2xl text-center relative flex flex-col justify-center rounded-tl-[80px] rounded-br-[80px] rounded-tr-[8px] rounded-bl-[8px] sm:rounded-tl-[120px] sm:rounded-br-[120px]"
               style={{
-                borderTopLeftRadius: '8px',
-                borderTopRightRadius: '120px',
-                borderBottomLeftRadius: '120px',
-                borderBottomRightRadius: '8px',
                 background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-                minHeight: '250px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center'
+                minHeight: '250px'
               }}
             >
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
