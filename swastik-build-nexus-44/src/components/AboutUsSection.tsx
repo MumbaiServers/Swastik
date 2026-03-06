@@ -72,7 +72,7 @@ const AboutUsSection = () => {
                 style={{ width: mobileVisible ? '6rem' : '0' }}
               />
 
-              <p className="text-gray-800 text-lg leading-relaxed mb-10 line-clamp-[8]">
+              <p className="text-gray-800 text-lg leading-relaxed mb-10 line-clamp-[8] whitespace-pre-wrap">
                 {whoWeAre.content}
               </p>
 
@@ -110,8 +110,8 @@ const AboutUsSection = () => {
                   transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                 }}
               >
-                {whoWeAre.content.split('\n\n').map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
+                {whoWeAre.content.split(/\n\s*\n/).filter(p => p.trim()).map((paragraph, i) => (
+                  <p key={i} className="whitespace-pre-wrap">{paragraph}</p>
                 ))}
               </div>
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, Users, Trophy, DollarSign, Loader2 } from "lucide-react";
 import { useScrollAnimation, useStaggerAnimation } from "@/hooks/useScrollAnimation";
-import { featureCardsApi } from "@/services/cmsApi";
+import { featureCardsApi, sectionsApi } from "@/services/cmsApi";
 
 const iconMap: Record<string, any> = {
   'Timely Delivery': Clock,
@@ -21,6 +21,10 @@ const gradientMap = [
 
 const WhyChooseUsSection = () => {
   const [features, setFeatures] = useState<any[]>([]);
+  const [sectionText, setSectionText] = useState({
+    title: 'Why Choose Us?',
+    content: 'Our projects are known for their top-notch craftsmanship, smart design, and solid construction, giving customers great value.'
+  });
   const [loading, setLoading] = useState(true);
 
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
@@ -30,8 +34,18 @@ const WhyChooseUsSection = () => {
     const fetchFeatures = async () => {
       try {
         setLoading(true);
-        const response = await featureCardsApi.getAll('home');
-        setFeatures(response.cards || []);
+        const [featureRes, sectionRes] = await Promise.all([
+          featureCardsApi.getAll('home'),
+          sectionsApi.getByKey('why_choose_us').catch(() => ({ section: null }))
+        ]);
+
+        setFeatures(featureRes.cards || []);
+        if (sectionRes.section) {
+          setSectionText({
+            title: sectionRes.section.title || 'Why Choose Us?',
+            content: sectionRes.section.content || ''
+          });
+        }
       } catch (error) {
         console.error('Failed to fetch feature cards:', error);
       } finally {
@@ -54,7 +68,7 @@ const WhyChooseUsSection = () => {
                   transform: titleVisible ? 'translateX(0)' : 'translateX(-30px)',
                 }}
               >
-                Why Choose Us?
+                {sectionText.title}
               </h2>
               <div
                 className="h-1 bg-brand-blue rounded-full mb-6 transition-all duration-700 delay-200"
@@ -63,14 +77,13 @@ const WhyChooseUsSection = () => {
             </div>
 
             <p
-              className="text-lg text-brand-gray leading-relaxed transition-all duration-700 delay-300"
+              className="text-lg text-brand-gray leading-relaxed transition-all duration-700 delay-300 whitespace-pre-wrap"
               style={{
                 opacity: titleVisible ? 1 : 0,
                 transform: titleVisible ? 'translateY(0)' : 'translateY(20px)',
               }}
             >
-              Our projects are known for their top-notch craftsmanship, smart design,
-              and solid construction, giving customers great value.
+              {sectionText.content}
             </p>
           </div>
 

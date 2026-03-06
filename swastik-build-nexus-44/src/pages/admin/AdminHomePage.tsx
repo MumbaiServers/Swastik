@@ -17,6 +17,8 @@ const AdminHomePage = () => {
   const [whoWeAreFile, setWhoWeAreFile] = useState<File | null>(null);
   const [whoWeArePreview, setWhoWeArePreview] = useState<string | null>(null);
 
+  const [whyChooseUs, setWhyChooseUs] = useState({ title: 'Why Choose Us?', content: '' });
+
   const [vvmItems, setVvmItems] = useState<any[]>([]);
   const [features, setFeatures] = useState<any[]>([]);
   const [locations, setLocations] = useState<any[]>([]);
@@ -28,8 +30,9 @@ const AdminHomePage = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [whoRes, vvmRes, featureRes, locRes] = await Promise.all([
+      const [whoRes, whyRes, vvmRes, featureRes, locRes] = await Promise.all([
         sectionsApi.getByKey('who_we_are'),
+        sectionsApi.getByKey('why_choose_us').catch(() => ({ section: null })),
         vvmApi.getAll(),
         featureCardsApi.getAll('home'),
         locationsApi.getAll()
@@ -45,6 +48,14 @@ const AdminHomePage = () => {
           setWhoWeArePreview(getImageUrl(whoRes.section.image));
         }
       }
+
+      if (whyRes.section) {
+        setWhyChooseUs({
+          title: whyRes.section.title || 'Why Choose Us?',
+          content: whyRes.section.content || ''
+        });
+      }
+
       setVvmItems(vvmRes.vvmItems || []);
       setFeatures(featureRes.cards || []);
       setLocations(locRes.locations || []);
@@ -63,6 +74,10 @@ const AdminHomePage = () => {
         toast.error('Please upload an image file (PNG, JPG, WEBP)');
         return;
       }
+      // Revoke the old URL to avoid memory leaks
+      if (whoWeArePreview && whoWeArePreview.startsWith('blob:')) {
+        URL.revokeObjectURL(whoWeArePreview);
+      }
       setWhoWeAreFile(file);
       setWhoWeArePreview(URL.createObjectURL(file));
     }
@@ -72,6 +87,7 @@ const AdminHomePage = () => {
     try {
       setSaving(true);
       const formData = new FormData();
+      formData.append('sectionKey', 'who_we_are');
       formData.append('title', whoWeAre.title);
       formData.append('content', whoWeAre.content);
       if (whoWeAreFile) {
@@ -125,8 +141,23 @@ const AdminHomePage = () => {
   const handleFeaturesSave = async () => {
     try {
       setSaving(true);
+
+      // Save section text
+      const sectionData = new FormData();
+      sectionData.append('sectionKey', 'why_choose_us');
+      sectionData.append('title', whyChooseUs.title);
+      sectionData.append('content', whyChooseUs.content);
+
+      try {
+        await sectionsApi.update('why_choose_us', sectionData);
+      } catch (error) {
+        // If update fails, try creating
+        await sectionsApi.create(sectionData);
+      }
+
+      // Save feature cards
       await featureCardsApi.update('home', features);
-      toast.success('Why Choose Us features updated successfully');
+      toast.success('Why Choose Us updated successfully');
       await fetchData();
     } catch (error) {
       toast.error('Failed to save Why Choose Us features');
@@ -241,6 +272,32 @@ const AdminHomePage = () => {
         </TabsContent>
 
         <TabsContent value="why-choose-us" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Main Description</CardTitle>
+              <CardDescription>Edit the title and introductory text for this section</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Section Title</Label>
+                <Input
+                  value={whyChooseUs.title}
+                  onChange={(e) => setWhyChooseUs({ ...whyChooseUs, title: e.target.value })}
+                  placeholder="Why Choose Us?"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Description Text</Label>
+                <Textarea
+                  value={whyChooseUs.content}
+                  onChange={(e) => setWhyChooseUs({ ...whyChooseUs, content: e.target.value })}
+                  placeholder="Enter introductory text..."
+                  rows={4}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle>Why Choose Us Cards</CardTitle>
