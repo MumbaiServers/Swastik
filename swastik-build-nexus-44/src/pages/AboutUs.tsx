@@ -94,7 +94,7 @@ const AboutUs = () => {
                   </h3>
                   <div className="w-16 h-1 bg-brand-blue rounded-full mb-6"></div>
                 </div>
-                <p className="text-brand-gray leading-relaxed text-lg">
+                <p className="text-brand-gray leading-relaxed text-lg whitespace-pre-wrap">
                   {item.content}
                 </p>
               </div>
@@ -116,7 +116,7 @@ const AboutUs = () => {
                 <h3 className="text-lg font-extrabold text-black border-l-4 border-[#4B9FFF] pl-2 uppercase tracking-tight">
                   {item.title}
                 </h3>
-                <p className="text-black text-[10px] leading-snug font-bold">
+                <p className="text-black text-[10px] leading-snug font-bold whitespace-pre-wrap">
                   {item.content}
                 </p>
               </div>

@@ -150,7 +150,7 @@ const BlogDetail = () => {
                             {/* Main Content */}
                             <div className="lg:col-span-6">
                                 <div
-                                    className="prose prose-lg max-w-none text-brand-gray leading-[1.8] first-letter:text-5xl first-letter:font-bold first-letter:text-brand-navy first-letter:mr-3 first-letter:float-left"
+                                    className="prose prose-lg max-w-none text-brand-gray leading-[1.8] whitespace-pre-wrap"
                                     dangerouslySetInnerHTML={{ __html: blog.content }}
                                 />
                             </div>
