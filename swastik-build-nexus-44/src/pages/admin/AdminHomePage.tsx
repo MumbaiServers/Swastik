@@ -18,6 +18,7 @@ const AdminHomePage = () => {
   const [whoWeArePreview, setWhoWeArePreview] = useState<string | null>(null);
 
   const [whyChooseUs, setWhyChooseUs] = useState({ title: 'Why Choose Us?', content: '' });
+  const [ourPresence, setOurPresence] = useState({ title: 'Our Presences', content: '' });
 
   const [vvmItems, setVvmItems] = useState<any[]>([]);
   const [features, setFeatures] = useState<any[]>([]);
@@ -30,9 +31,10 @@ const AdminHomePage = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [whoRes, whyRes, vvmRes, featureRes, locRes] = await Promise.all([
+      const [whoRes, whyRes, presRes, vvmRes, featureRes, locRes] = await Promise.all([
         sectionsApi.getByKey('who_we_are'),
         sectionsApi.getByKey('why_choose_us').catch(() => ({ section: null })),
+        sectionsApi.getByKey('our_presence').catch(() => ({ section: null })),
         vvmApi.getAll(),
         featureCardsApi.getAll('home'),
         locationsApi.getAll()
@@ -53,6 +55,13 @@ const AdminHomePage = () => {
         setWhyChooseUs({
           title: whyRes.section.title || 'Why Choose Us?',
           content: whyRes.section.content || ''
+        });
+      }
+
+      if (presRes.section) {
+        setOurPresence({
+          title: presRes.section.title || 'Our Presences',
+          content: presRes.section.content || ''
         });
       }
 
@@ -121,9 +130,22 @@ const AdminHomePage = () => {
   const handleLocationsSave = async () => {
     try {
       setSaving(true);
+
+      // Save section text
+      const sectionData = new FormData();
+      sectionData.append('sectionKey', 'our_presence');
+      sectionData.append('title', ourPresence.title);
+      sectionData.append('content', ourPresence.content);
+
+      try {
+        await sectionsApi.update('our_presence', sectionData);
+      } catch (error) {
+        await sectionsApi.create(sectionData);
+      }
+
       const validLocations = locations.filter(l => l.name.trim() !== '');
       await locationsApi.update(validLocations);
-      toast.success('Presence locations updated successfully');
+      toast.success('Our Presence updated successfully');
       await fetchData();
     } catch (error) {
       toast.error('Failed to save locations');
@@ -342,6 +364,32 @@ const AdminHomePage = () => {
         <TabsContent value="our-presence" className="space-y-6">
           <Card>
             <CardHeader>
+              <CardTitle>Section Description</CardTitle>
+              <CardDescription>Edit the title and introductory text for the Presence section</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Section Title</Label>
+                <Input
+                  value={ourPresence.title}
+                  onChange={(e) => setOurPresence({ ...ourPresence, title: e.target.value })}
+                  placeholder="Our Presences"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Description Text</Label>
+                <Textarea
+                  value={ourPresence.content}
+                  onChange={(e) => setOurPresence({ ...ourPresence, content: e.target.value })}
+                  placeholder="Enter introductory text..."
+                  rows={4}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle>Our Presence Locations</CardTitle>
               <CardDescription>
                 Manage list of locations
@@ -376,7 +424,7 @@ const AdminHomePage = () => {
                 </Button>
                 <Button type="button" onClick={handleLocationsSave} disabled={saving} className="w-full">
                   {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                  Save Presence List
+                  Save Presence Section
                 </Button>
               </div>
             </CardContent>

@@ -37,7 +37,6 @@ const menuItems = [
   { title: 'Watch Our Story', url: '/admin/watch-our-story', icon: Info },
   { title: 'About Us', url: '/admin/about-us', icon: Users },
   { title: 'Values, Vision & Mission', url: '/admin/values-vision-mission', icon: Info },
-  { title: 'Our Presence', url: '/admin/presence', icon: MapPin },
   { title: 'Social Media', url: '/admin/social-media', icon: Share2 },
   { title: 'Statistics', url: '/admin/statistics', icon: BarChart3 },
   { title: 'Projects', url: '/admin/projects', icon: Building2 },

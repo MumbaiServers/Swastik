@@ -2,11 +2,15 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MapPin, Loader2 } from "lucide-react";
 import { useScrollAnimation, useStaggerAnimation } from "@/hooks/useScrollAnimation";
-import { locationsApi } from "@/services/cmsApi";
+import { locationsApi, sectionsApi } from "@/services/cmsApi";
 
 const PresencesSection = () => {
   const navigate = useNavigate();
   const [locations, setLocations] = useState<any[]>([]);
+  const [sectionText, setSectionText] = useState({
+    title: 'Our Presences',
+    content: "This interactive map highlights Swastik Group's strategic development in Mumbai's eastern suburbs—specifically from Chembur to Mulund. Each marked location shows the company's footprint and offices across these vibrant, growing communities."
+  });
   const [loading, setLoading] = useState(true);
 
   const { ref: mapRef, isVisible: mapVisible } = useScrollAnimation();
@@ -14,18 +18,28 @@ const PresencesSection = () => {
   const { ref: listRef, isVisible: listVisible, getItemStyle } = useStaggerAnimation(locations.length || 4, { staggerDelay: 150 });
 
   useEffect(() => {
-    const fetchLocations = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await locationsApi.getAll();
-        setLocations(response.locations || []);
+        const [locRes, sectionRes] = await Promise.all([
+          locationsApi.getAll(),
+          sectionsApi.getByKey('our_presence').catch(() => ({ section: null }))
+        ]);
+
+        setLocations(locRes.locations || []);
+        if (sectionRes.section) {
+          setSectionText({
+            title: sectionRes.section.title || 'Our Presences',
+            content: sectionRes.section.content || ''
+          });
+        }
       } catch (error) {
-        console.error('Failed to fetch locations:', error);
+        console.error('Failed to fetch presence data:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchLocations();
+    fetchData();
   }, []);
 
   const handleLocationClick = (locationName: string) => {
@@ -69,7 +83,7 @@ const PresencesSection = () => {
                   transform: contentVisible ? 'translateX(0)' : 'translateX(30px)',
                 }}
               >
-                Our Presences
+                {sectionText.title}
               </h2>
               <div
                 className="h-1 bg-brand-blue rounded-full mb-6 transition-all duration-700 delay-200"
@@ -77,16 +91,13 @@ const PresencesSection = () => {
               />
 
               <p
-                className="text-lg text-brand-gray leading-relaxed mb-8 transition-all duration-700 delay-300"
+                className="text-lg text-brand-gray leading-relaxed mb-8 transition-all duration-700 delay-300 whitespace-pre-wrap"
                 style={{
                   opacity: contentVisible ? 1 : 0,
                   transform: contentVisible ? 'translateY(0)' : 'translateY(20px)',
                 }}
               >
-                This interactive map highlights Swastik Group's strategic development in
-                Mumbai's eastern suburbs—specifically from <strong>Chembur to Mulund</strong>.
-                Each marked location shows the company's footprint and offices
-                across these vibrant, growing communities.
+                {sectionText.content}
               </p>
             </div>
 

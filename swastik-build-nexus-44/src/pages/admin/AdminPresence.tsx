@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { MapPin, Plus, Trash2, Loader2, Save } from 'lucide-react';
-import { locationsApi } from '@/services/cmsApi';
+import { locationsApi, sectionsApi } from '@/services/cmsApi';
 
 interface Location {
   id?: number;
@@ -15,21 +16,31 @@ interface Location {
 
 const AdminPresence = () => {
   const [locations, setLocations] = useState<Location[]>([]);
+  const [ourPresence, setOurPresence] = useState({ title: 'Our Presences', content: '' });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetchLocations();
+    fetchData();
   }, []);
 
-  const fetchLocations = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await locationsApi.getAll();
-      setLocations(response.locations || []);
+      const [locRes, sectionRes] = await Promise.all([
+        locationsApi.getAll(),
+        sectionsApi.getByKey('our_presence').catch(() => ({ section: null }))
+      ]);
+      setLocations(locRes.locations || []);
+      if (sectionRes.section) {
+        setOurPresence({
+          title: sectionRes.section.title || 'Our Presences',
+          content: sectionRes.section.content || ''
+        });
+      }
     } catch (error) {
-      console.error('Failed to fetch locations:', error);
-      toast.error('Failed to load locations');
+      console.error('Failed to fetch presence data:', error);
+      toast.error('Failed to load page content');
     } finally {
       setLoading(false);
     }
@@ -52,13 +63,26 @@ const AdminPresence = () => {
   const handleSave = async () => {
     try {
       setSaving(true);
+
+      // Save section text
+      const sectionData = new FormData();
+      sectionData.append('sectionKey', 'our_presence');
+      sectionData.append('title', ourPresence.title);
+      sectionData.append('content', ourPresence.content);
+
+      try {
+        await sectionsApi.update('our_presence', sectionData);
+      } catch (error) {
+        await sectionsApi.create(sectionData);
+      }
+
       const validLocations = locations.filter(loc => loc.name && loc.name.trim() !== '');
       await locationsApi.update(validLocations);
-      toast.success('Project locations updated successfully');
-      await fetchLocations();
+      toast.success('Our Presence updated successfully');
+      await fetchData();
     } catch (error) {
       console.error('Save locations error:', error);
-      toast.error('Failed to save locations');
+      toast.error('Failed to save changes');
     } finally {
       setSaving(false);
     }
@@ -88,6 +112,34 @@ const AdminPresence = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Section Description</CardTitle>
+            <CardDescription>
+              Edit the title and introductory text for the Presence section
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Section Title</Label>
+              <Input
+                value={ourPresence.title}
+                onChange={(e) => setOurPresence({ ...ourPresence, title: e.target.value })}
+                placeholder="Our Presences"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Description Text</Label>
+              <Textarea
+                value={ourPresence.content}
+                onChange={(e) => setOurPresence({ ...ourPresence, content: e.target.value })}
+                placeholder="Enter introductory text..."
+                rows={4}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Location List</CardTitle>
@@ -161,7 +213,8 @@ const AdminPresence = () => {
           </CardHeader>
           <CardContent>
             <div className="bg-gray-50 rounded-lg p-6 max-w-xl">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Our Presences</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">{ourPresence.title}</h2>
+              <p className="text-gray-600 text-sm mb-6 whitespace-pre-wrap">{ourPresence.content}</p>
               <div className="space-y-3">
                 {locations.filter(l => l.name).map((location, index) => (
                   <div key={index} className="flex items-center space-x-3 bg-white p-3 rounded-lg shadow-sm">
