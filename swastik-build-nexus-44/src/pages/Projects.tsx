@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Eye, Loader2 } from 'lucide-react';
@@ -9,12 +9,25 @@ import SEO from '@/components/SEO';
 import FAQSection from '@/components/FAQSection';
 import { projectsApi, getImageUrl } from '@/services/cmsApi';
 
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel
+} from '@/components/ui/dropdown-menu';
+
 const Projects = () => {
   const [activeTab, setActiveTab] = useState('completed');
   const [allProjects, setAllProjects] = useState<any[]>([]);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const availableLocations = ["Chembur", "Ghatkopar", "Vikhroli", "Mulund", "Powai"];
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -22,6 +35,20 @@ const Projects = () => {
         setLoading(true);
         const data = await projectsApi.getAll();
         setAllProjects(data.projects || []);
+
+        // Initialize location filter from query param
+        const params = new URLSearchParams(location.search);
+        const locParam = params.get('location');
+        if (locParam) {
+          // Check if the location exists in our availableLocations list (case-insensitive)
+          const matchedLoc = availableLocations.find(l => l.toLowerCase() === locParam.toLowerCase());
+          if (matchedLoc) {
+            setSelectedLocations([matchedLoc]);
+          } else {
+            // If it's not in the predefined list, but relevant, we could still add it
+            setSelectedLocations([locParam]);
+          }
+        }
       } catch (err: any) {
         console.error("Failed to fetch projects:", err);
         setError(err.message || "Failed to load projects");
@@ -30,14 +57,30 @@ const Projects = () => {
       }
     };
     fetchProjects();
-  }, []);
+  }, [location.search]);
+
+  const toggleLocation = (location: string) => {
+    setSelectedLocations(prev =>
+      prev.includes(location)
+        ? prev.filter(l => l !== location)
+        : [...prev, location]
+    );
+  };
 
   const projects = useMemo(() => {
+    let filtered = allProjects;
+
+    if (selectedLocations.length > 0) {
+      filtered = filtered.filter(p =>
+        selectedLocations.some(loc => p.location.toLowerCase().includes(loc.toLowerCase()))
+      );
+    }
+
     return {
-      completed: allProjects.filter(p => p.status.toLowerCase() === 'completed'),
-      ongoing: allProjects.filter(p => p.status.toLowerCase() === 'ongoing' || p.status.toLowerCase() === 'planning')
+      completed: filtered.filter(p => p.status.toLowerCase() === 'completed'),
+      ongoing: filtered.filter(p => p.status.toLowerCase() === 'ongoing' || p.status.toLowerCase() === 'planning')
     };
-  }, [allProjects]);
+  }, [allProjects, selectedLocations]);
 
 
 
@@ -73,12 +116,49 @@ const Projects = () => {
       <section className="py-6 bg-[#1953B4]">
         <div className="container mx-auto px-4 overflow-x-auto projects-scroll">
           <div className="flex items-center justify-start lg:justify-center gap-6 md:gap-8 text-white min-w-max">
-            <button className="flex items-center gap-2 hover:text-white/80 transition-colors whitespace-nowrap">
-              <span className="text-sm md:text-base font-medium">Location</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 hover:text-white/80 transition-colors whitespace-nowrap outline-none">
+                  <span className="text-sm md:text-base font-medium">
+                    {selectedLocations.length > 0
+                      ? `Location (${selectedLocations.length})`
+                      : 'Location'}
+                  </span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56 bg-white">
+                <DropdownMenuLabel>Filter by Location</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {availableLocations.map((loc) => (
+                  <DropdownMenuCheckboxItem
+                    key={loc}
+                    checked={selectedLocations.includes(loc)}
+                    onCheckedChange={() => toggleLocation(loc)}
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    {loc}
+                  </DropdownMenuCheckboxItem>
+                ))}
+                {selectedLocations.length > 0 && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <div className="p-1">
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-center text-xs h-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                        onClick={() => setSelectedLocations([])}
+                      >
+                        Clear Selection
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <button className="flex items-center gap-2 hover:text-white/80 transition-colors whitespace-nowrap">
               <span className="text-sm md:text-base font-medium">Project Type</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,7 +171,7 @@ const Projects = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-            <button className="flex items-center justify-center hover:text-white/80 transition-colors">
+            <button className="flex items-center justify-center hover:text-white/80 transition-colors" onClick={() => setSelectedLocations([])}>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>

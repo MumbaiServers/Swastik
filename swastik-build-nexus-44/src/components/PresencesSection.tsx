@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MapPin, Loader2 } from "lucide-react";
 import { useScrollAnimation, useStaggerAnimation } from "@/hooks/useScrollAnimation";
 import { locationsApi } from "@/services/cmsApi";
 
 const PresencesSection = () => {
+  const navigate = useNavigate();
   const [locations, setLocations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,6 +27,10 @@ const PresencesSection = () => {
     };
     fetchLocations();
   }, []);
+
+  const handleLocationClick = (locationName: string) => {
+    navigate(`/projects?location=${encodeURIComponent(locationName)}`);
+  };
 
   return (
     <section id="presences" className="py-12 lg:py-16 bg-gradient-light section-divider">
@@ -97,6 +103,7 @@ const PresencesSection = () => {
                         key={location.id}
                         className="flex items-center space-x-4 p-4 bg-white rounded-xl shadow-card hover:shadow-brand transition-all duration-300 hover:-translate-y-1 cursor-pointer group"
                         style={getItemStyle(index)}
+                        onClick={() => handleLocationClick(location.name)}
                       >
                         <div className="flex-shrink-0">
                           <div className="w-12 h-12 bg-brand-blue rounded-full flex items-center justify-center shadow-brand group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
