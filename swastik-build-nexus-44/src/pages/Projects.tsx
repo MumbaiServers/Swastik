@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import FAQSection from '@/components/FAQSection';
+import ContactFormModal from '@/components/ContactFormModal';
 import { projectsApi, getImageUrl } from '@/services/cmsApi';
 
 import {
@@ -24,8 +25,17 @@ const Projects = () => {
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [hasSubmittedForm, setHasSubmittedForm] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const submitted = localStorage.getItem('contactFormSubmitted') === 'true';
+    if (submitted) {
+      setHasSubmittedForm(true);
+    }
+  }, []);
 
   const availableLocations = ["Chembur", "Ghatkopar", "Vikhroli", "Mulund", "Powai"];
 
@@ -257,7 +267,16 @@ const Projects = () => {
                   {project.price && (
                     <div className="flex justify-between items-center text-sm border-b border-gray-100 pb-2">
                       <span className="text-gray-500">Price</span>
-                      <span className="font-semibold text-brand-blue">{project.price}</span>
+                      <span
+                        className="font-semibold text-brand-blue cursor-pointer hover:underline"
+                        onClick={(e) => {
+                          if (hasSubmittedForm) return;
+                          e.stopPropagation();
+                          setIsContactModalOpen(true);
+                        }}
+                      >
+                        {hasSubmittedForm ? project.price : "Check Price"}
+                      </span>
                     </div>
                   )}
                   <p className="text-gray-600 text-sm line-clamp-2 mt-2">
@@ -322,7 +341,17 @@ const Projects = () => {
       </section >
 
       <Footer />
-    </div >
+
+      <ContactFormModal
+        isOpen={isContactModalOpen}
+        onClose={() => {
+          setIsContactModalOpen(false);
+          if (localStorage.getItem('contactFormSubmitted') === 'true') {
+            setHasSubmittedForm(true);
+          }
+        }}
+      />
+    </div>
   );
 };
 

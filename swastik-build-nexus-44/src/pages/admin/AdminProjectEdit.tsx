@@ -748,7 +748,7 @@ const AdminProjectEdit = () => {
                                             id="price"
                                             value={project.price}
                                             onChange={(e) => handleFieldChange('price', e.target.value)}
-                                            placeholder="e.g. Starting at ₹70 Lakhs*"
+                                            placeholder="e.g. 1 CR 70 lacs ++"
                                         />
                                     </div>
                                     <div>
@@ -1160,7 +1160,7 @@ const AdminProjectEdit = () => {
                                 <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-4 text-sm font-medium text-muted-foreground px-1">
                                     <span>Type (e.g. 1 BHK)</span>
                                     <span>Area (e.g. 418 Sq.Ft)</span>
-                                    <span>Price</span>
+                                    <span>Price (e.g. 1 CR 70 lacs ++)</span>
                                     <span className="w-9" />
                                 </div>
                                 {configurations.map((config, index) => (
@@ -1181,10 +1181,10 @@ const AdminProjectEdit = () => {
                                         <Input
                                             value={config.price}
                                             onChange={(e) => {
-                                                const val = e.target.value.replace(/\D/g, '');
+                                                const val = e.target.value;
                                                 updateConfiguration(index, 'price', val);
                                             }}
-                                            placeholder="e.g. 7000000"
+                                            placeholder="e.g. 1 CR 70 lacs ++"
                                         />
                                         <Button
                                             variant="ghost"

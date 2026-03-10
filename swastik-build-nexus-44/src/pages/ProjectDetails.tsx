@@ -14,6 +14,7 @@ import { Loader2, MapPin, ChevronUp, X, ArrowRight, Star } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import lifestyleInterior from "@/assets/lifestyle-interior.jpg";
+import ContactFormModal from "@/components/ContactFormModal";
 
 const scrollTo = (id: string) => {
   const el = document.getElementById(id);
@@ -31,6 +32,15 @@ const ProjectDetails = () => {
   const [stats, setStats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [hasSubmittedForm, setHasSubmittedForm] = useState(false);
+
+  useEffect(() => {
+    const submitted = localStorage.getItem('contactFormSubmitted') === 'true';
+    if (submitted) {
+      setHasSubmittedForm(true);
+    }
+  }, []);
 
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation();
 
@@ -505,7 +515,15 @@ const ProjectDetails = () => {
                     >
                       <div className="text-sm md:text-base text-gray-800">{config.type}</div>
                       <div className="text-sm md:text-base text-gray-800">{config.area}</div>
-                      <div className="text-sm md:text-base text-gray-800 underline underline-offset-2 cursor-pointer">{config.price}</div>
+                      <div
+                        className="text-sm md:text-base text-brand-blue font-semibold underline underline-offset-2 cursor-pointer hover:text-brand-navy transition-colors"
+                        onClick={() => {
+                          if (hasSubmittedForm) return;
+                          setIsContactModalOpen(true);
+                        }}
+                      >
+                        {hasSubmittedForm ? config.price : "Check Price"}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -722,6 +740,17 @@ const ProjectDetails = () => {
       <div id="contact" />
 
       <Footer />
+
+      <ContactFormModal
+        isOpen={isContactModalOpen}
+        onClose={() => {
+          setIsContactModalOpen(false);
+          // Check if it was submitted during this modal session
+          if (localStorage.getItem('contactFormSubmitted') === 'true') {
+            setHasSubmittedForm(true);
+          }
+        }}
+      />
     </div>
   );
 };
