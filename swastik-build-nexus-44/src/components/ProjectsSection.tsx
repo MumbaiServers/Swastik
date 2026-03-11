@@ -124,7 +124,7 @@ const ProjectsSection = () => {
                   onClick={() => handleViewDetails(project.slug)}
                 >
                   <div
-                    className="w-full h-full relative"
+                    className="w-full h-full relative bg-blue-50/50 flex items-center justify-center"
                     style={{
                       borderTopLeftRadius: '100px',
                       borderBottomRightRadius: '100px',
@@ -135,7 +135,7 @@ const ProjectsSection = () => {
                     <img
                       src={getImageUrl(project.image) || ""}
                       alt={project.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
                     />
                     {/* Hover overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

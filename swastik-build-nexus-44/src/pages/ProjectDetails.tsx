@@ -276,11 +276,11 @@ const ProjectDetails = () => {
           <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-[#EEF8FF]">
             <div className="container mx-auto px-4 py-10 md:py-12">
               <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                <div className="relative md:overflow-hidden overflow-visible shadow-brand">
+                <div className="relative overflow-hidden shadow-brand rounded-2xl">
                   <img
                     src={project.overviewImage ? getImageUrl(project.overviewImage) : lifestyleInterior}
                     alt="Project Overview"
-                    className="w-full h-72 md:h-96 object-cover mobile-full-bleed"
+                    className="w-full h-72 md:h-96 object-cover"
                     style={{
                       borderTopLeftRadius: '2rem',
                       borderTopRightRadius: '0',
@@ -341,12 +341,12 @@ const ProjectDetails = () => {
                   </ul>
                 </div>
                 <div className="relative">
-                  <div className="w-full h-72 md:h-80 md:overflow-hidden overflow-visible rounded-2xl border border-[#1953B4]/10 shadow-brand">
+                  <div className="w-full h-72 md:h-80 overflow-hidden rounded-2xl border border-[#1953B4]/10 shadow-brand bg-white flex items-center justify-center">
                     {project.connectivitiesImage ? (
                       <img
                         src={getImageUrl(project.connectivitiesImage) || ""}
                         alt="Project Location Map"
-                        className="w-full h-full object-cover mobile-full-bleed"
+                        className="w-full h-full object-contain"
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-[#DAEFFF] to-[#EEF8FF] flex items-center justify-center">

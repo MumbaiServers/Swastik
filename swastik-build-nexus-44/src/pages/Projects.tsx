@@ -234,11 +234,11 @@ const Projects = () => {
               key={project.id}
               className="group border-none shadow-brand overflow-hidden flex flex-col h-full hover:translate-y-[-8px] transition-all duration-300"
             >
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-64 overflow-hidden bg-blue-50/50 flex items-center justify-center">
                 <img
                   src={getImageUrl(project.image) || "/placeholder.svg"}
                   alt={project.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute top-4 left-4">
                   <span className="bg-[#1953B4] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
