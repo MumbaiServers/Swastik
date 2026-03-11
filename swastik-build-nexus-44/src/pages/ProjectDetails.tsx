@@ -535,7 +535,7 @@ const ProjectDetails = () => {
                           : 'text-gray-400 hover:text-gray-600'
                           }`}
                       >
-                        {wing} Wing
+                        {wing}
                       </button>
                     ))}
                   </div>

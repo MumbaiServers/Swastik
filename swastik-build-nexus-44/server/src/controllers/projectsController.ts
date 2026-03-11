@@ -276,6 +276,7 @@ export const updateProject = async (req: Request, res: Response) => {
 
         res.json({ project });
     } catch (error) {
+        console.error('Update project error:', error);
         res.status(500).json({ error: 'Failed to update project.' });
     }
 };
@@ -347,6 +348,7 @@ export const updateConfigurations = async (req: Request, res: Response) => {
 
         res.json({ count: created.count });
     } catch (error) {
+        console.error('Update configurations error:', error);
         res.status(500).json({ error: 'Failed to update configurations.' });
     }
 };
