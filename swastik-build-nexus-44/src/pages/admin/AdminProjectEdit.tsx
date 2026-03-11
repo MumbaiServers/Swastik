@@ -20,6 +20,7 @@ interface Configuration {
     type: string;
     area: string;
     price: string;
+    wingName?: string;
 }
 
 interface Amenity {
@@ -58,6 +59,8 @@ interface ProjectData {
     aboutDeveloperText: string;
     sortOrder: string;
     isActive: boolean;
+    towerType: string;
+    wingDetails: string;
 }
 
 // ─── Tab definitions ─────────────────────────────────────────
@@ -122,6 +125,8 @@ const AdminProjectEdit = () => {
         aboutDeveloperText: '',
         sortOrder: '0',
         isActive: true,
+        towerType: 'single',
+        wingDetails: '[]',
     });
 
     // Sub-resources
@@ -132,6 +137,17 @@ const AdminProjectEdit = () => {
     const [projectId, setProjectId] = useState<number | null>(isNew ? null : parseInt(id!));
 
     // ─── Fetch existing project ──────────────────────────────
+    const groupedConfigurations = React.useMemo(() => {
+        const groups: { [key: string]: { configs: (Configuration & { originalIndex: number })[], firstIndex: number } } = {};
+        configurations.forEach((c, idx) => {
+            const wing = c.wingName || 'Default';
+            if (!groups[wing]) {
+                groups[wing] = { configs: [], firstIndex: idx };
+            }
+            groups[wing].configs.push({ ...c, originalIndex: idx });
+        });
+        return groups;
+    }, [configurations]);
 
     const fetchProject = useCallback(async () => {
         if (isNew) return;
@@ -167,6 +183,8 @@ const AdminProjectEdit = () => {
                 aboutDeveloperText: found.aboutDeveloperText || '',
                 sortOrder: String(found.sortOrder || 0),
                 isActive: found.isActive !== false,
+                towerType: found.towerType || 'single',
+                wingDetails: found.wingDetails || '[]',
             });
 
             if (found.image) {
@@ -215,6 +233,7 @@ const AdminProjectEdit = () => {
                     type: c.type,
                     area: c.area,
                     price: c.price,
+                    wingName: c.wingName || '',
                 }))
             );
 
@@ -429,6 +448,8 @@ const AdminProjectEdit = () => {
             formData.append('aboutDeveloperText', project.aboutDeveloperText);
             formData.append('sortOrder', project.sortOrder);
             formData.append('isActive', String(project.isActive));
+            formData.append('towerType', project.towerType);
+            formData.append('wingDetails', project.wingDetails);
 
             if (imageFile) {
                 formData.append('image', imageFile);
@@ -547,9 +568,58 @@ const AdminProjectEdit = () => {
     };
 
     // ─── Configuration helpers ───────────────────────────────
+    const getNextWingName = (currentConfigs: Configuration[]) => {
+        const uniqueWings = Array.from(new Set(currentConfigs.map(c => c.wingName).filter(Boolean)));
+        const nextLetter = String.fromCharCode(65 + uniqueWings.length); // A, B, C...
+        return `${nextLetter} Wing`;
+    };
+
+    const addWing = () => {
+        const newWingName = getNextWingName(configurations);
+        setConfigurations((prev) => [...prev, { type: '', area: '', price: '', wingName: newWingName }]);
+    };
+
+    const addConfigurationToWing = (wingName: string) => {
+        setConfigurations((prev) => [...prev, { type: '', area: '', price: '', wingName: wingName }]);
+    };
+
+    const updateWingName = (oldName: string, newName: string) => {
+        if (!newName.trim()) return;
+        
+        setConfigurations((prev) => prev.map(c => {
+            const matches = (c.wingName === oldName) || (oldName === 'Default' && !c.wingName);
+            return matches ? { ...c, wingName: newName } : c;
+        }));
+        
+        // Also update wingDetails JSON
+        try {
+            const wingDetailsArr = JSON.parse(project.wingDetails || '[]');
+            const existingIndex = wingDetailsArr.findIndex((w: any) => w.name === oldName || (oldName === 'Default' && !w.name));
+            
+            let newWingDetails;
+            if (existingIndex > -1) {
+                newWingDetails = [...wingDetailsArr];
+                newWingDetails[existingIndex] = { ...newWingDetails[existingIndex], name: newName };
+            } else {
+                newWingDetails = [...wingDetailsArr, { name: newName, image: '' }];
+            }
+            handleFieldChange('wingDetails', JSON.stringify(newWingDetails));
+        } catch (e) {}
+    };
+
+    const removeWing = (wingName: string) => {
+        setConfigurations((prev) => prev.filter(c => c.wingName !== wingName));
+        
+        // Also remove from wingDetails
+        try {
+            const wingDetailsArr = JSON.parse(project.wingDetails || '[]');
+            const newWingDetails = wingDetailsArr.filter((w: any) => w.name !== wingName);
+            handleFieldChange('wingDetails', JSON.stringify(newWingDetails));
+        } catch (e) {}
+    };
 
     const addConfiguration = () => {
-        setConfigurations((prev) => [...prev, { type: '', area: '', price: '' }]);
+        setConfigurations((prev) => [...prev, { type: '', area: '', price: '', wingName: project.towerType === 'multiple' ? 'A Wing' : '' }]);
     };
 
     const updateConfiguration = (index: number, field: keyof Configuration, value: string) => {
@@ -792,6 +862,7 @@ const AdminProjectEdit = () => {
                                         placeholder="Detailed description for the project details page..."
                                     />
                                 </div>
+
                             </CardContent>
                         </Card>
 
@@ -1069,131 +1140,256 @@ const AdminProjectEdit = () => {
             {activeTab === 'configurations' && (
                 <Card>
                     <CardHeader>
-                        <div className="flex justify-between items-center">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
                                 <CardTitle>Floor Configurations</CardTitle>
                                 <CardDescription>
                                     Add the BHK types, carpet areas and pricing for this project
                                 </CardDescription>
                             </div>
-                            <Button onClick={addConfiguration}>
-                                <Plus className="mr-2 h-4 w-4" />
-                                Add Configuration
-                            </Button>
+                            <div className="flex items-center gap-3 bg-primary/10 p-2 rounded-lg border border-primary/20">
+                                <Label htmlFor="towerType-configs" className="text-xs font-bold text-primary uppercase">Project Type:</Label>
+                                <Select
+                                    value={project.towerType}
+                                    onValueChange={(v) => handleFieldChange('towerType', v)}
+                                >
+                                    <SelectTrigger id="towerType-configs" className="w-[160px] h-9 bg-white">
+                                        <SelectValue placeholder="Select type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="single">Single Tower</SelectItem>
+                                        <SelectItem value="multiple">Multiple Wings</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                {project.towerType === 'multiple' ? (
+                                    <Button size="sm" onClick={addWing}>
+                                        <Plus className="mr-2 h-4 w-4" />
+                                        Add Wing
+                                    </Button>
+                                ) : (
+                                    <Button size="sm" onClick={addConfiguration}>
+                                        <Plus className="mr-2 h-4 w-4" />
+                                        Add Configuration
+                                    </Button>
+                                )}
+                            </div>
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                        {/* Floor Plan Global Image */}
-                        <div className="bg-muted/30 p-4 rounded-lg border space-y-4">
-                            <div className="flex items-center gap-2 text-primary font-semibold">
-                                <Image className="h-4 w-4" />
-                                Floor Plan Image
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                                This image will be displayed on the left side of the configurations table.
-                            </p>
-                            <div className="flex flex-wrap gap-4">
-                                {existingFloorPlans.map((url, i) => (
-                                    <div key={`exist-${i}`} className="relative w-full max-w-sm rounded-lg overflow-hidden border bg-white p-2">
-                                        <img
-                                            src={getImageUrl(url) || ''}
-                                            alt="Floor Plan Preview"
-                                            className="w-full h-auto object-contain"
-                                        />
-                                        <Button
-                                            variant="destructive"
-                                            size="icon"
-                                            className="absolute top-2 right-2 h-7 w-7"
-                                            onClick={() => removeExistingFloorPlan(i)}
-                                        >
-                                            <X className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                ))}
-                                {floorPlanPreviews.map((src, i) => (
-                                    <div key={`new-${i}`} className="relative w-full max-w-sm rounded-lg overflow-hidden border bg-white p-2">
-                                        <img
-                                            src={src}
-                                            alt="Floor Plan Preview"
-                                            className="w-full h-auto object-contain"
-                                        />
-                                        <Button
-                                            variant="destructive"
-                                            size="icon"
-                                            className="absolute top-2 right-2 h-7 w-7"
-                                            onClick={() => removeNewFloorPlan(i)}
-                                        >
-                                            <X className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                ))}
-                            </div>
-                            <div>
-                                <Label htmlFor="floor-plan-upload" className="cursor-pointer">
-                                    <div className="border-2 border-dashed rounded-lg p-6 text-center hover:bg-muted/50 transition-colors">
-                                        <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                                        <p className="text-sm text-muted-foreground">
-                                            Click to upload floor plan image
-                                        </p>
-                                    </div>
-                                </Label>
-                                <input
-                                    id="floor-plan-upload"
-                                    type="file"
-                                    multiple
-                                    accept="image/png, image/jpeg, image/jpg, image/webp"
-                                    className="hidden"
-                                    onChange={handleFloorPlanChange}
-                                />
-                            </div>
-                        </div>
-
-                        {configurations.length === 0 ? (
-                            <div className="py-12 text-center text-muted-foreground border-2 border-dashed rounded-lg">
-                                <Settings2 className="h-10 w-10 mx-auto mb-3 opacity-50" />
-                                <p>No configurations added yet.</p>
-                                <p className="text-sm">Click "Add Configuration" to add BHK types and pricing.</p>
+                        {/* Status Message */}
+                        {project.towerType === 'multiple' ? (
+                            <div className="bg-blue-50 border border-blue-200 text-blue-800 p-3 rounded-md text-sm flex items-center gap-2">
+                                <Building2 className="h-4 w-4" />
+                                <strong>Multi-Wing Mode Active:</strong> Configurations are grouped by wing. Use "Add Wing" to create a new tower/block.
                             </div>
                         ) : (
-                            <div className="space-y-4">
-                                {/* Header */}
-                                <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-4 text-sm font-medium text-muted-foreground px-1">
-                                    <span>Type (e.g. 1 BHK)</span>
-                                    <span>Area (e.g. 418 Sq.Ft)</span>
-                                    <span>Price (e.g. 1 CR 70 lacs ++)</span>
-                                    <span className="w-9" />
+                            <div className="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-md text-sm flex items-center gap-2">
+                                <Settings2 className="h-4 w-4" />
+                                <strong>Single Tower Mode:</strong> All configurations are listed together. Switch to "Multiple Wings" if this project has separate towers.
+                            </div>
+                        )}
+
+                        {/* Floor Plan Global Image Section */}
+                        <div className="bg-muted/30 p-4 rounded-lg border space-y-4">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2 text-primary font-semibold text-base">
+                                        <Image className="h-5 w-5" />
+                                        Project Floor Plans
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">
+                                        Upload all floor plan images here. For multi-wing projects, assign these to wings below.
+                                    </p>
                                 </div>
-                                {configurations.map((config, index) => (
-                                    <div key={index} className="grid grid-cols-[1fr_1fr_1fr_auto] gap-4 items-center">
-                                        <Input
-                                            value={config.type}
-                                            onChange={(e) => {
-                                                const val = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
-                                                updateConfiguration(index, 'type', val);
-                                            }}
-                                            placeholder="1 BHK"
-                                        />
-                                        <Input
-                                            value={config.area}
-                                            onChange={(e) => updateConfiguration(index, 'area', e.target.value)}
-                                            placeholder="418 RCA Sq. Ft"
-                                        />
-                                        <Input
-                                            value={config.price}
-                                            onChange={(e) => {
-                                                const val = e.target.value;
-                                                updateConfiguration(index, 'price', val);
-                                            }}
-                                            placeholder="e.g. 1 CR 70 lacs ++"
-                                        />
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="text-destructive h-9 w-9"
-                                            onClick={() => removeConfiguration(index)}
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
+                                <div className="flex gap-2">
+                                    <Label htmlFor="floor-plan-upload" className="cursor-pointer">
+                                        <div className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md transition-colors flex items-center whitespace-nowrap text-sm font-medium">
+                                            <Upload className="h-4 w-4 mr-2" />
+                                            Upload Floor Plans
+                                        </div>
+                                    </Label>
+                                    <input
+                                        id="floor-plan-upload"
+                                        type="file"
+                                        multiple
+                                        accept="image/png, image/jpeg, image/jpg, image/webp"
+                                        className="hidden"
+                                        onChange={handleFloorPlanChange}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Previews */}
+                            {(existingFloorPlans.length > 0 || floorPlanPreviews.length > 0) && (
+                                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 pb-2 pt-2 border-t mt-2">
+                                    {existingFloorPlans.map((url, i) => (
+                                        <div key={`exist-${i}`} className="group relative aspect-square rounded-md overflow-hidden border bg-white shadow-sm ring-1 ring-black/5">
+                                            <img
+                                                src={getImageUrl(url) || ''}
+                                                alt={`Floor Plan ${i}`}
+                                                className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <Button
+                                                    variant="destructive"
+                                                    size="icon"
+                                                    className="h-8 w-8"
+                                                    onClick={() => removeExistingFloorPlan(i)}
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                            <div className="absolute bottom-1 left-1 bg-black/60 text-[10px] text-white px-1.5 py-0.5 rounded">
+                                                Image {i + 1}
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {floorPlanPreviews.map((src, i) => (
+                                        <div key={`new-${i}`} className="group relative aspect-square rounded-md overflow-hidden border bg-white shadow-sm ring-1 ring-black/5">
+                                            <img
+                                                src={src}
+                                                alt="New Preview"
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <Button
+                                                    variant="destructive"
+                                                    size="icon"
+                                                    className="h-8 w-8"
+                                                    onClick={() => removeNewFloorPlan(i)}
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                            <div className="absolute bottom-1 left-1 bg-primary/80 text-[10px] text-white px-1.5 py-0.5 rounded">
+                                                New {i + 1}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Configurations Display */}
+                        {configurations.length === 0 ? (
+                            <div className="py-20 text-center text-muted-foreground border-2 border-dashed rounded-xl bg-muted/10">
+                                <Settings2 className="h-12 w-12 mx-auto mb-4 opacity-20" />
+                                <CardTitle className="text-xl mb-1">No configurations yet</CardTitle>
+                                <p className="text-sm max-w-xs mx-auto mb-6">Start by adding a {project.towerType === 'multiple' ? 'wing' : 'configuration'} to define BHK types and pricing.</p>
+                                <Button onClick={project.towerType === 'multiple' ? addWing : addConfiguration}>
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    Add {project.towerType === 'multiple' ? 'First Wing' : 'Configuration'}
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="space-y-8">
+                                {Object.entries(groupedConfigurations).map(([wingName, group]) => (
+                                    <div key={`wing-group-${group.firstIndex}`} className="border rounded-xl bg-white shadow-sm overflow-hidden">
+                                        <div className="bg-muted/30 px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b">
+                                            <div className="flex items-center gap-4 flex-1">
+                                                {project.towerType === 'multiple' ? (
+                                                    <div className="flex items-center gap-2 max-w-sm flex-1">
+                                                        <Building2 className="h-5 w-5 text-primary shrink-0" />
+                                                        <Input
+                                                            value={wingName === 'Default' ? '' : wingName}
+                                                            onChange={(e) => updateWingName(wingName, e.target.value)}
+                                                            className="font-bold text-lg bg-transparent border-none focus-visible:ring-0 p-0 h-auto shadow-none"
+                                                            placeholder="Enter Wing Name (e.g. A Wing)"
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-2">
+                                                        <Building2 className="h-5 w-5 text-primary" />
+                                                        <span className="font-bold text-lg">Tower Configurations</span>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="flex items-center gap-2">
+                                                {project.towerType === 'multiple' && (
+                                                    <>
+                                                        <Select 
+                                                            value={(() => {
+                                                                try {
+                                                                    const details = JSON.parse(project.wingDetails || '[]');
+                                                                    return details.find((w: any) => w.name === wingName)?.image || '';
+                                                                } catch { return ''; }
+                                                            })()} 
+                                                            onValueChange={(val) => {
+                                                                try {
+                                                                    const details = JSON.parse(project.wingDetails || '[]');
+                                                                    const newDetails = [...details.filter((w: any) => w.name !== wingName), { name: wingName, image: val }];
+                                                                    handleFieldChange('wingDetails', JSON.stringify(newDetails));
+                                                                } catch {}
+                                                            }}
+                                                        >
+                                                            <SelectTrigger className="w-[180px] h-9">
+                                                                <SelectValue placeholder="Link Floor Plan" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {[...existingFloorPlans, ...floorPlanPreviews].map((url, i) => (
+                                                                    <SelectItem key={i} value={url}>
+                                                                        Floor Plan Image {i + 1}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                        <Button 
+                                                            variant="outline" 
+                                                            size="sm" 
+                                                            className="text-destructive border-destructive/20 hover:bg-destructive/10"
+                                                            onClick={() => removeWing(wingName)}
+                                                        >
+                                                            <Trash2 className="h-4 w-4 mr-2" />
+                                                            Remove Wing
+                                                        </Button>
+                                                    </>
+                                                )}
+                                                <Button size="sm" onClick={() => addConfigurationToWing(wingName)}>
+                                                    <Plus className="h-4 w-4 mr-2" />
+                                                    Add Type
+                                                </Button>
+                                            </div>
+                                        </div>
+
+                                        <div className="p-6 space-y-4">
+                                            <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-6 text-xs font-bold uppercase text-muted-foreground px-1 tracking-wider">
+                                                <span>Unit Type (BHK)</span>
+                                                <span>Carpet Area</span>
+                                                <span>All-inclusive Price</span>
+                                                <span className="w-9" />
+                                            </div>
+                                            {group.configs.map((config) => (
+                                                <div key={config.originalIndex} className="grid grid-cols-[1fr_1fr_1fr_auto] gap-6 items-center group/row animate-in fade-in slide-in-from-top-1 duration-200">
+                                                    <Input
+                                                        value={config.type}
+                                                        onChange={(e) => updateConfiguration(config.originalIndex, 'type', e.target.value)}
+                                                        placeholder="e.g. 1 BHK"
+                                                        className="h-11 shadow-none"
+                                                    />
+                                                    <Input
+                                                        value={config.area}
+                                                        onChange={(e) => updateConfiguration(config.originalIndex, 'area', e.target.value)}
+                                                        placeholder="e.g. 418 RCA Sq. Ft"
+                                                        className="h-11 shadow-none"
+                                                    />
+                                                    <Input
+                                                        value={config.price}
+                                                        onChange={(e) => updateConfiguration(config.originalIndex, 'price', e.target.value)}
+                                                        placeholder="e.g. 1.70 Cr++"
+                                                        className="h-11 shadow-none"
+                                                    />
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="text-muted-foreground hover:text-destructive h-11 w-11 transition-colors"
+                                                        onClick={() => removeConfiguration(config.originalIndex)}
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 ))}
                             </div>

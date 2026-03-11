@@ -109,6 +109,8 @@ model Project {
   aboutDeveloperText        String?                @db.Text
   aboutDeveloperImage       String?                @db.VarChar(500)
   overviewImage             String?                @db.VarChar(500)
+  towerType                 String                 @default("single") @db.VarChar(20)
+  wingDetails               String?                @db.LongText
   amenities                 ProjectAmenity[]
   configurations            ProjectConfiguration[]
   connectivities            ProjectConnectivity[]
@@ -125,6 +127,7 @@ model ProjectConfiguration {
   price     String  @db.VarChar(100)
   sortOrder Int     @default(0)
   image     String? @db.VarChar(500)
+  wingName  String? @db.VarChar(100)
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@index([projectId], map: "project_configurations_projectId_fkey")

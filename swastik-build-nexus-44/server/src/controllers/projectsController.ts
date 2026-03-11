@@ -68,7 +68,7 @@ export const createProject = async (req: Request, res: Response) => {
             description, fullDescription, configuration,
             status, tag, maharera, mahareraUrl, financeBy, disclaimer,
             sortOrder, googleMapsUrl, connectivitiesDescription,
-            aboutDeveloperText,
+            aboutDeveloperText, towerType, wingDetails,
         } = req.body;
 
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
@@ -106,6 +106,8 @@ export const createProject = async (req: Request, res: Response) => {
                 googleMapsUrl: googleMapsUrl || null,
                 connectivitiesDescription: connectivitiesDescription || null,
                 aboutDeveloperText: aboutDeveloperText || null,
+                towerType: towerType || 'single',
+                wingDetails: wingDetails || null,
                 sortOrder: parseInt(sortOrder) || 0,
             },
         });
@@ -233,7 +235,7 @@ export const updateProject = async (req: Request, res: Response) => {
             description, fullDescription, configuration,
             status, tag, maharera, mahareraUrl, financeBy, disclaimer,
             sortOrder, isActive, googleMapsUrl, connectivitiesDescription,
-            aboutDeveloperText,
+            aboutDeveloperText, towerType, wingDetails,
         } = req.body;
 
         const project = await prisma.project.update({
@@ -263,6 +265,8 @@ export const updateProject = async (req: Request, res: Response) => {
                 ...(connectivitiesImage !== undefined && { connectivitiesImage }),
                 ...(amenitiesImage !== undefined && { amenitiesImage }),
                 ...(floorPlanImage !== undefined && { floorPlanImage }),
+                ...(towerType !== undefined && { towerType }),
+                ...(wingDetails !== undefined && { wingDetails }),
                 ...(sortOrder !== undefined && { sortOrder: parseInt(sortOrder) }),
                 ...(isActive !== undefined && { isActive: isActive === 'true' || isActive === true }),
             },
@@ -336,6 +340,7 @@ export const updateConfigurations = async (req: Request, res: Response) => {
                 area: config.area,
                 price: config.price,
                 image: config.image || null,
+                wingName: config.wingName || null,
                 sortOrder: index,
             })),
         });

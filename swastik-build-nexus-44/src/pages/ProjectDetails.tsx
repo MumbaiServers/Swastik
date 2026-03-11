@@ -26,7 +26,7 @@ const scrollTo = (id: string) => {
 const ProjectDetails = () => {
   const { projectId: slug } = useParams();
   const [activeAmenityTab, setActiveAmenityTab] = useState("podium");
-  const [activeFloorPlanTab, setActiveFloorPlanTab] = useState("a-wing");
+  const [activeFloorPlanTab, setActiveFloorPlanTab] = useState("");
   const [currentFloorPlanIndex, setCurrentFloorPlanIndex] = useState(0);
   const [project, setProject] = useState<any>(null);
   const [stats, setStats] = useState<any[]>([]);
@@ -74,7 +74,22 @@ const ProjectDetails = () => {
   }, [project]);
 
   const floorPlanImages = useMemo(() => {
-    if (!project || !project.floorPlanImage) return [];
+    if (!project) return [];
+
+    // If it's multiple wings and a wing is selected, try to find the specific image for that wing
+    if (project.towerType === 'multiple' && activeFloorPlanTab) {
+      try {
+        const wingDetails = JSON.parse(project.wingDetails || '[]');
+        const wingInfo = wingDetails.find((w: any) => w.name === activeFloorPlanTab || (activeFloorPlanTab === 'Main' && (!w.name || w.name === 'Default')));
+        if (wingInfo && wingInfo.image) {
+          return [getImageUrl(wingInfo.image)];
+        }
+      } catch (e) {
+        console.error("Failed to parse wingDetails", e);
+      }
+    }
+
+    if (!project.floorPlanImage) return [];
     try {
       const parsed = JSON.parse(project.floorPlanImage);
       if (Array.isArray(parsed)) return parsed.map((p: string) => getImageUrl(p));
@@ -82,7 +97,7 @@ const ProjectDetails = () => {
       // Legacy single string
     }
     return [getImageUrl(project.floorPlanImage)];
-  }, [project]);
+  }, [project, activeFloorPlanTab]);
 
   const galleryImages = useMemo(() => {
     if (!project || !project.gallery || project.gallery.length === 0) return [];
@@ -96,6 +111,27 @@ const ProjectDetails = () => {
 
   const galleryRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
+
+  const wings = useMemo(() => {
+    if (!project || project.towerType !== 'multiple' || !project.configurations) return [];
+    const uniqueWings = Array.from(new Set(project.configurations.map((c: any) => c.wingName || 'Main'))) as string[];
+    return uniqueWings;
+  }, [project]);
+
+  useEffect(() => {
+    if (project?.towerType === 'multiple' && wings.length > 0) {
+      if (!activeFloorPlanTab || !wings.includes(activeFloorPlanTab)) {
+        setActiveFloorPlanTab(wings[0]);
+      }
+    }
+  }, [wings, project, activeFloorPlanTab]);
+
+  const filteredConfigurations = useMemo(() => {
+    if (!project || !project.configurations) return [];
+    if (project.towerType !== 'multiple') return project.configurations;
+    const targetWing = activeFloorPlanTab === 'Main' ? '' : activeFloorPlanTab;
+    return project.configurations.filter((c: any) => (c.wingName || 'Main') === activeFloorPlanTab);
+  }, [project, activeFloorPlanTab]);
 
   // Ensure page opens at the top when navigated here
   useEffect(() => {
@@ -488,27 +524,25 @@ const ProjectDetails = () => {
               </div>
 
               <div className="flex flex-col">
-                <div className="border-b border-gray-300 mb-6 flex gap-4 md:gap-8 justify-between md:justify-start">
-                  {[
-                    { id: 'a-wing', label: 'A Wing' },
-                    { id: 'b-wing', label: 'B Wing' },
-                    { id: 'c-wing', label: 'C wing' },
-                  ].map(tab => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveFloorPlanTab(tab.id as any)}
-                      className={`pb-3 -mb-px text-sm md:text-lg transition-colors flex-1 md:flex-none text-center ${activeFloorPlanTab === tab.id
-                        ? 'text-gray-900 border-b-[3px] border-gray-600 font-medium'
-                        : 'text-gray-400 hover:text-gray-600'
-                        }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
+                {project.towerType === 'multiple' && wings.length > 0 && (
+                  <div className="border-b border-gray-300 mb-6 flex gap-4 md:gap-8 justify-between md:justify-start overflow-x-auto">
+                    {wings.map(wing => (
+                      <button
+                        key={wing}
+                        onClick={() => setActiveFloorPlanTab(wing)}
+                        className={`pb-3 -mb-px text-sm md:text-lg transition-colors flex-1 md:flex-none text-center whitespace-nowrap ${activeFloorPlanTab === wing
+                          ? 'text-gray-900 border-b-[3px] border-gray-600 font-medium'
+                          : 'text-gray-400 hover:text-gray-600'
+                          }`}
+                      >
+                        {wing} Wing
+                      </button>
+                    ))}
+                  </div>
+                )}
 
                 <div className="space-y-4">
-                  {project.configurations.map((config: any, index: number) => (
+                  {filteredConfigurations.map((config: any, index: number) => (
                     <div
                       key={index}
                       className="flex justify-between items-center rounded-xl border border-gray-400 bg-white px-4 py-3 shadow-none hover:shadow-md transition"
