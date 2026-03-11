@@ -231,15 +231,15 @@ const ProjectDetails = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative h-[100svh] md:h-screen overflow-hidden">
+      <section className="relative overflow-hidden bg-black">
         <img
           src={getImageUrl(project.image) || ""}
           alt={project.name}
-          className="w-full h-full object-cover"
+          className="w-full h-auto block"
         />
 
         {/* Section Navigation Ribbon - Desktop Only */}
-        <div className="hidden md:block absolute left-0 right-0 bottom-0 z-20 w-full bg-[#1953B4]">
+        <div className="hidden md:block w-full bg-[#1953B4] relative z-20">
           <div className="container mx-auto px-3 md:px-6">
             <div className="flex gap-4 md:gap-8 items-center justify-center overflow-x-auto md:overflow-x-hidden py-3 md:py-4 text-white projects-scroll">
               <button onClick={() => scrollTo('overview')} className="whitespace-nowrap px-3 py-1.5 rounded-md hover:bg-white/10 text-sm md:text-base font-medium">Overview</button>
