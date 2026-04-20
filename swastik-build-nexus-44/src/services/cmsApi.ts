@@ -4,7 +4,7 @@
  */
 
 const API_BASE_URL = import.meta.env.VITE_CMS_API_URL || 'http://localhost:5001/api';
-
+console.log('CMS API Base URL:', API_BASE_URL);
 // ─── Helpers ─────────────────────────────────────────────
 
 const getAuthHeaders = (): HeadersInit => {
