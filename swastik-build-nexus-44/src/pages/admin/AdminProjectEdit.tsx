@@ -412,17 +412,7 @@ const AdminProjectEdit = () => {
             return;
         }
 
-        // MahaRERA Validation (if provided)
-        if (project.maharera.trim()) {
-            const mahareraRegex = /^P\d{11}$/i;
-            if (!mahareraRegex.test(project.maharera.trim())) {
-                toast.error('Invalid MahaRERA Number format. It should start with "P" followed by 11 digits (e.g. P51800045216)');
-                setActiveTab('basic');
-                const mahareraInput = document.getElementById('maharera');
-                if (mahareraInput) mahareraInput.focus();
-                return;
-            }
-        }
+        // MahaRERA Validation removed per user request
 
         try {
             setSaving(true);
@@ -881,9 +871,7 @@ const AdminProjectEdit = () => {
                                             onChange={(e) => handleFieldChange('maharera', e.target.value.toUpperCase())}
                                             placeholder="e.g. P51800045216"
                                         />
-                                        <p className="text-[10px] text-muted-foreground mt-1">
-                                            Format: P followed by 11 digits
-                                        </p>
+
                                     </div>
                                     <div>
                                         <Label htmlFor="mahareraUrl">MahaRERA Official Link</Label>
