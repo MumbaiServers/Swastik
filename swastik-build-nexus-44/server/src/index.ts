@@ -23,6 +23,7 @@ import featureCardRoutes from './routes/featureCards';
 import valuesVisionMissionRoutes from './routes/valuesVisionMission';
 import dashboardRoutes from './routes/dashboard';
 import loyaltyRoutes from './routes/loyalty';
+import customPagesRoutes from './routes/customPages';
 
 // Middleware
 import { errorHandler } from './middleware/errorHandler';
@@ -30,9 +31,14 @@ import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
 const prisma = new PrismaClient();
-const PORT = process.env.BACKEND_PORT || 5000;
+const PORT = process.env.PORT || process.env.BACKEND_PORT || 5001;
 
 // ─── Middleware ──────────────────────────────────────────
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
+
 const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || ['http://localhost:5173'];
 
 app.use(cors({
@@ -62,6 +68,7 @@ app.use('/api/feature-cards', featureCardRoutes);
 app.use('/api/values-vision-mission', valuesVisionMissionRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/loyalty', loyaltyRoutes);
+app.use('/api/custom-pages', customPagesRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {
@@ -77,7 +84,7 @@ const startServer = async () => {
         await prisma.$connect();
         console.log('✅ Database connected successfully');
 
-        app.listen(PORT, () => {
+        app.listen(Number(PORT), '0.0.0.0', () => {
             console.log(`🚀 Server running on http://localhost:${PORT}`);
             console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
         });

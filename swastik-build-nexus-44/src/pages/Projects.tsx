@@ -236,7 +236,7 @@ const Projects = () => {
             >
               <div className="relative h-64 overflow-hidden bg-blue-50/50 flex items-center justify-center">
                 <img
-                  src={getImageUrl(project.image) || "/placeholder.svg"}
+                  src={getImageUrl(project.cardImage || project.image) || "/placeholder.svg"}
                   alt={project.name}
                   className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
                 />

@@ -133,7 +133,7 @@ const ProjectsSection = () => {
                     }}
                   >
                     <img
-                      src={getImageUrl(project.image) || ""}
+                      src={getImageUrl(project.cardImage || project.image) || ""}
                       alt={project.name}
                       className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
                     />

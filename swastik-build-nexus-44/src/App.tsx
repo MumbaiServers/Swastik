@@ -12,6 +12,7 @@ import Projects from "./pages/Projects";
 import ProjectDetails from "./pages/ProjectDetails";
 import LoyaltyProgramme from "./pages/LoyaltyProgramme";
 import NotFound from "./pages/NotFound";
+import CustomPageContent from "./pages/CustomPageContent";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./pages/admin/AdminLayout";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -42,6 +43,7 @@ const App = () => (
               <Route path="/project/:projectId" element={<ProjectDetails />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin/*" element={<AdminLayout />} />
+              <Route path="/:slug" element={<CustomPageContent />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

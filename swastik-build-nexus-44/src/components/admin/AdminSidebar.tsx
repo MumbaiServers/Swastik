@@ -45,6 +45,7 @@ const menuItems = [
   { title: 'Footer', url: '/admin/footer', icon: FileText },
   { title: 'Leads', url: '/admin/leads', icon: Users },
   { title: 'Referrals', url: '/admin/loyalty', icon: Gift },
+  { title: 'Add Page', url: '/admin/pages', icon: FileText },
   { title: 'Settings', url: '/admin/settings', icon: Settings },
 ];
 

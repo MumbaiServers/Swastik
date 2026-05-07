@@ -5,11 +5,13 @@ import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import swastikLogo from "@/assets/Logo All png (12).png";
 import ContactFormModal from "./ContactFormModal";
+import { customPagesApi } from "@/services/cmsApi";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [customPages, setCustomPages] = useState<{name: string, href: string}[]>([]);
   const location = useLocation();
 
   useEffect(() => {
@@ -20,7 +22,25 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navigation = [
+  useEffect(() => {
+    const fetchCustomPages = async () => {
+      try {
+        const data = await customPagesApi.getAll();
+        const activePages = (data.pages || [])
+          .filter((p: any) => p.isActive)
+          .map((p: any) => ({
+            name: p.title,
+            href: `/${p.slug}`
+          }));
+        setCustomPages(activePages);
+      } catch (error) {
+        console.error("Failed to fetch custom pages for header:", error);
+      }
+    };
+    fetchCustomPages();
+  }, []);
+
+  const baseNavigation = [
     { name: "Home", href: "/" },
     { name: "About Us", href: "/about-us" },
     { name: "Projects", href: "/projects" },
@@ -28,6 +48,8 @@ const Header = () => {
     { name: "Blogs", href: "/blogs" },
     { name: "Careers", href: "/careers" },
   ];
+
+  const navigation = [...baseNavigation, ...customPages];
 
   return (
     <header
