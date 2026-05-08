@@ -104,6 +104,9 @@ const AdminProjectEdit = () => {
     const [amenitiesImageFile, setAmenitiesImageFile] = useState<File | null>(null);
     const [amenitiesImagePreview, setAmenitiesImagePreview] = useState<string | null>(null);
 
+    const [cardImageFile, setCardImageFile] = useState<File | null>(null);
+    const [cardImagePreview, setCardImagePreview] = useState<string | null>(null);
+
     // Project State
     const [project, setProject] = useState<ProjectData>({
         slug: '',
@@ -189,6 +192,10 @@ const AdminProjectEdit = () => {
 
             if (found.image) {
                 setImagePreview(getImageUrl(found.image) || null);
+            }
+
+            if (found.cardImage) {
+                setCardImagePreview(getImageUrl(found.cardImage) || null);
             }
 
             if (found.mahareraQr) {
@@ -387,6 +394,19 @@ const AdminProjectEdit = () => {
         e.target.value = '';
     };
 
+    const handleCardImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            if (!file.type.startsWith('image/')) {
+                toast.error('Please upload an image file (PNG, JPG, WEBP)');
+                return;
+            }
+            setCardImageFile(file);
+            setCardImagePreview(URL.createObjectURL(file));
+        }
+        e.target.value = '';
+    };
+
     // ─── Save Project ────────────────────────────────────────
 
     const handleSave = async () => {
@@ -412,17 +432,7 @@ const AdminProjectEdit = () => {
             return;
         }
 
-        // MahaRERA Validation (if provided)
-        if (project.maharera.trim()) {
-            const mahareraRegex = /^P\d{11}$/i;
-            if (!mahareraRegex.test(project.maharera.trim())) {
-                toast.error('Invalid MahaRERA Number format. It should start with "P" followed by 11 digits (e.g. P51800045216)');
-                setActiveTab('basic');
-                const mahareraInput = document.getElementById('maharera');
-                if (mahareraInput) mahareraInput.focus();
-                return;
-            }
-        }
+        // MahaRERA Validation removed per user request
 
         try {
             setSaving(true);
@@ -453,6 +463,10 @@ const AdminProjectEdit = () => {
 
             if (imageFile) {
                 formData.append('image', imageFile);
+            }
+
+            if (cardImageFile) {
+                formData.append('cardImage', cardImageFile);
             }
 
             if (qrFile) {
@@ -881,9 +895,7 @@ const AdminProjectEdit = () => {
                                             onChange={(e) => handleFieldChange('maharera', e.target.value.toUpperCase())}
                                             placeholder="e.g. P51800045216"
                                         />
-                                        <p className="text-[10px] text-muted-foreground mt-1">
-                                            Format: P followed by 11 digits
-                                        </p>
+
                                     </div>
                                     <div>
                                         <Label htmlFor="mahareraUrl">MahaRERA Official Link</Label>
@@ -1082,6 +1094,54 @@ const AdminProjectEdit = () => {
                                         accept="image/png, image/jpeg, image/jpg, image/webp"
                                         className="hidden"
                                         onChange={handleImageChange}
+                                    />
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Project Card Image</CardTitle>
+                                <CardDescription>Image for project cards (particular shape)</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                {cardImagePreview && (
+                                    <div className="relative rounded-lg overflow-hidden border">
+                                        <img
+                                            src={cardImagePreview}
+                                            alt="Card preview"
+                                            className="w-full h-48 object-cover"
+                                        />
+                                        <Button
+                                            variant="destructive"
+                                            size="icon"
+                                            className="absolute top-2 right-2 h-7 w-7"
+                                            onClick={() => {
+                                                setCardImageFile(null);
+                                                setCardImagePreview(null);
+                                            }}
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                )}
+                                <div>
+                                    <Label htmlFor="card-image-upload" className="cursor-pointer">
+                                        <div className="border-2 border-dashed rounded-lg p-6 text-center hover:bg-muted/50 transition-colors">
+                                            <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                                            <p className="text-sm text-muted-foreground">
+                                                Click to upload card image
+                                            </p>
+                                            <p className="text-xs text-muted-foreground mt-1">
+                                                JPG, PNG up to 5MB
+                                            </p>
+                                        </div>
+                                    </Label>
+                                    <input
+                                        id="card-image-upload"
+                                        type="file"
+                                        accept="image/png, image/jpeg, image/jpg, image/webp"
+                                        className="hidden"
+                                        onChange={handleCardImageChange}
                                     />
                                 </div>
                             </CardContent>

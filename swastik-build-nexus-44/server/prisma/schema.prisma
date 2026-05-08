@@ -25,13 +25,13 @@ model HeroBanner {
   heading         String   @db.VarChar(255)
   subtext         String   @db.Text
   backgroundImage String?  @db.VarChar(500)
-  image2560       String?  @db.VarChar(500)
-  image1920       String?  @db.VarChar(500)
-  image1536       String?  @db.VarChar(500)
-  imageMobile     String?  @db.VarChar(500)
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  image1536       String?  @db.VarChar(500)
+  image1920       String?  @db.VarChar(500)
+  image2560       String?  @db.VarChar(500)
+  imageMobile     String?  @db.VarChar(500)
 
   @@map("hero_banners")
 }
@@ -80,34 +80,35 @@ model FeatureCard {
 }
 
 model Project {
-  id              Int                    @id @default(autoincrement())
-  slug            String                 @unique @db.VarChar(255)
-  name            String                 @db.VarChar(255)
-  subtitle        String?                @db.VarChar(255)
-  location        String                 @db.VarChar(255)
-  price           String?                @db.VarChar(100)
-  image           String?                @db.VarChar(500)
-  description     String                 @db.Text
-  fullDescription String?                @db.LongText
-  configuration   String?                @db.VarChar(100)
-  status          String                 @default("ongoing") @db.VarChar(20)
-  tag             String?                @db.VarChar(100)
-  maharera        String?                @db.VarChar(100)
-  sortOrder       Int                    @default(0)
-  isActive        Boolean                @default(true)
-  createdAt       DateTime               @default(now())
-  updatedAt       DateTime               @updatedAt
-  googleMapsUrl   String?                @db.Text
-  disclaimer      String?                @db.Text
-  financeBy       String?                @db.VarChar(255)
-  mahareraQr      String?                @db.VarChar(500)
+  id                        Int                    @id @default(autoincrement())
+  slug                      String                 @unique @db.VarChar(255)
+  name                      String                 @db.VarChar(255)
+  subtitle                  String?                @db.VarChar(255)
+  location                  String                 @db.VarChar(255)
+  price                     String?                @db.VarChar(100)
+  image                     String?                @db.VarChar(500)
+  cardImage                 String?                @db.VarChar(500)
+  description               String                 @db.Text
+  fullDescription           String?                @db.LongText
+  configuration             String?                @db.VarChar(100)
+  status                    String                 @default("ongoing") @db.VarChar(20)
+  tag                       String?                @db.VarChar(100)
+  maharera                  String?                @db.VarChar(100)
+  sortOrder                 Int                    @default(0)
+  isActive                  Boolean                @default(true)
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @updatedAt
+  googleMapsUrl             String?                @db.Text
+  disclaimer                String?                @db.Text
+  financeBy                 String?                @db.VarChar(255)
+  mahareraQr                String?                @db.VarChar(500)
   mahareraUrl               String?                @db.VarChar(500)
   floorPlanImage            String?                @db.LongText
   connectivitiesDescription String?                @db.Text
-  connectivitiesImage       String?                @db.VarChar(500)
-  amenitiesImage            String?                @db.VarChar(500)
-  aboutDeveloperText        String?                @db.Text
   aboutDeveloperImage       String?                @db.VarChar(500)
+  aboutDeveloperText        String?                @db.Text
+  amenitiesImage            String?                @db.VarChar(500)
+  connectivitiesImage       String?                @db.VarChar(500)
   overviewImage             String?                @db.VarChar(500)
   towerType                 String                 @default("single") @db.VarChar(20)
   wingDetails               String?                @db.LongText
@@ -309,3 +310,14 @@ model ActivityLog {
   @@map("activity_logs")
 }
 
+model CustomPage {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique @db.VarChar(255)
+  title     String   @db.VarChar(255)
+  content   String   @db.LongText
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("custom_pages")
+}

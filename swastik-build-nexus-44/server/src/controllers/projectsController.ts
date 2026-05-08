@@ -73,6 +73,7 @@ export const createProject = async (req: Request, res: Response) => {
 
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
         const image = files['image'] ? getFileUrl(files['image'][0]) : null;
+        const cardImage = files['cardImage'] ? getFileUrl(files['cardImage'][0]) : null;
         const mahareraQr = files['mahareraQr'] ? getFileUrl(files['mahareraQr'][0]) : null;
         const floorPlanImage = files['floorPlanImage'] ? JSON.stringify(files['floorPlanImage'].map(f => getFileUrl(f))) : null;
         const aboutDeveloperImage = files['aboutDeveloperImage'] ? getFileUrl(files['aboutDeveloperImage'][0]) : null;
@@ -88,6 +89,7 @@ export const createProject = async (req: Request, res: Response) => {
                 location,
                 price: price || null,
                 image,
+                cardImage,
                 overviewImage,
                 connectivitiesImage,
                 amenitiesImage,
@@ -148,6 +150,12 @@ export const updateProject = async (req: Request, res: Response) => {
         if (files && files['image']) {
             if (existing.image) await deleteFile(existing.image);
             image = getFileUrl(files['image'][0]);
+        }
+
+        let cardImage = existing.cardImage;
+        if (files && files['cardImage']) {
+            if (existing.cardImage) await deleteFile(existing.cardImage);
+            cardImage = getFileUrl(files['cardImage'][0]);
         }
 
         if (files && files['mahareraQr']) {
@@ -247,6 +255,7 @@ export const updateProject = async (req: Request, res: Response) => {
                 ...(location !== undefined && { location }),
                 ...(price !== undefined && { price }),
                 ...(image !== undefined && { image }),
+                ...(cardImage !== undefined && { cardImage }),
                 ...(description !== undefined && { description }),
                 ...(fullDescription !== undefined && { fullDescription }),
                 ...(configuration !== undefined && { configuration }),
@@ -296,6 +305,7 @@ export const deleteProject = async (req: Request, res: Response) => {
         }
 
         if (existing.image) await deleteFile(existing.image);
+        if (existing.cardImage) await deleteFile(existing.cardImage);
         if (existing.mahareraQr) await deleteFile(existing.mahareraQr);
         if (existing.floorPlanImage) {
             try {

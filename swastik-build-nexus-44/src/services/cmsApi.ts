@@ -212,6 +212,16 @@ export const loyaltyApi = {
     delete: (id: number) => apiDelete(`/loyalty/${id}`),
 };
 
+// ─── Custom Pages API ─────────────────────────────────────
+
+export const customPagesApi = {
+    getAll: () => apiGet('/custom-pages'),
+    getBySlug: (slug: string) => apiGet(`/custom-pages/${slug}`),
+    create: (data: any) => apiPost('/custom-pages', data),
+    update: (id: number, data: any) => apiPut(`/custom-pages/${id}`, data),
+    delete: (id: number) => apiDelete(`/custom-pages/${id}`),
+};
+
 // ─── Helper to get full image URL ────────────────────────
 
 export const getImageUrl = (path: string | null | undefined): string | null => {

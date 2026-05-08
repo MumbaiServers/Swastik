@@ -1,11 +1,12 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
+
 import AdminDashboard from './AdminDashboard';
 import AdminHomeBanner from './AdminHomeBanner';
 import AdminHomePage from './AdminHomePage';
+import AdminWatchOurStory from './AdminWatchOurStory';
 import AdminAboutUs from './AdminAboutUs';
 import AdminValuesVisionMission from './AdminValuesVisionMission';
 import AdminPresence from './AdminPresence';
@@ -14,13 +15,13 @@ import AdminStatistics from './AdminStatistics';
 import AdminProjects from './AdminProjects';
 import AdminProjectEdit from './AdminProjectEdit';
 import AdminBlogs from './AdminBlogs';
-import AdminFAQs from './AdminFAQs';
-import AdminSettings from './AdminSettings';
-import AdminLeads from './AdminLeads';
-import AdminWatchOurStory from './AdminWatchOurStory';
-import AdminFooter from './AdminFooter';
 import AdminBlogEdit from './AdminBlogEdit';
+import AdminFAQs from './AdminFAQs';
+import AdminFooter from './AdminFooter';
+import AdminLeads from './AdminLeads';
 import AdminLoyalty from './AdminLoyalty';
+import AdminPages from './AdminPages';
+import AdminSettings from './AdminSettings';
 
 const AdminLayout = () => {
   return (
@@ -56,6 +57,7 @@ const AdminLayout = () => {
                 <Route path="/footer" element={<AdminFooter />} />
                 <Route path="/leads" element={<AdminLeads />} />
                 <Route path="/loyalty" element={<AdminLoyalty />} />
+                <Route path="/pages" element={<AdminPages />} />
                 <Route path="/settings" element={<AdminSettings />} />
               </Routes>
             </main>

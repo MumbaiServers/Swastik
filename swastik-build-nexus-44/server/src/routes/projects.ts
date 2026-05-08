@@ -14,6 +14,7 @@ router.get('/:slug', projectsController.getProjectBySlug);
 // POST /api/projects — Admin: create a project
 router.post('/', authenticate, upload.fields([
     { name: 'image', maxCount: 1 },
+    { name: 'cardImage', maxCount: 1 },
     { name: 'overviewImage', maxCount: 1 },
     { name: 'connectivitiesImage', maxCount: 1 },
     { name: 'amenitiesImage', maxCount: 1 },
@@ -25,6 +26,7 @@ router.post('/', authenticate, upload.fields([
 // PUT /api/projects/:id — Admin: update a project
 router.put('/:id', authenticate, upload.fields([
     { name: 'image', maxCount: 1 },
+    { name: 'cardImage', maxCount: 1 },
     { name: 'overviewImage', maxCount: 1 },
     { name: 'connectivitiesImage', maxCount: 1 },
     { name: 'amenitiesImage', maxCount: 1 },
