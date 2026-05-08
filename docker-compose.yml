@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+ 
+  backend:
+    build: ./swastik-build-nexus-44/server
+    container_name: swastik-backend
+    restart: always
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    env_file:
+      - .env
+    networks:
+      - swastik-website
+    volumes:
+      - uploads_data:/app/uploads
+
+  frontend:
+    build: 
+      context: ./swastik-build-nexus-44/
+      args:
+        VITE_CMS_API_URL: ${VITE_CMS_API_URL}
+    container_name: swastik-frontend
+    restart: always
+    ports:
+      - "${PORT}:80"
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    networks:
+      - swastik-website
+
+volumes:
+  uploads_data: 
+
+networks:
+  swastik-website:
