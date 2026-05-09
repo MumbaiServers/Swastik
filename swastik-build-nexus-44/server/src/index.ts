@@ -31,7 +31,7 @@ import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
 const prisma = new PrismaClient();
-const PORT = process.env.PORT || process.env.BACKEND_PORT || 5001;
+const PORT = process.env.BACKEND_PORT || 5001;
 
 // ─── Middleware ──────────────────────────────────────────
 app.use((req, res, next) => {
