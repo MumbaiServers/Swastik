@@ -87,7 +87,6 @@ model Project {
   location                  String                 @db.VarChar(255)
   price                     String?                @db.VarChar(100)
   image                     String?                @db.VarChar(500)
-  cardImage                 String?                @db.VarChar(500)
   description               String                 @db.Text
   fullDescription           String?                @db.LongText
   configuration             String?                @db.VarChar(100)
@@ -112,6 +111,7 @@ model Project {
   overviewImage             String?                @db.VarChar(500)
   towerType                 String                 @default("single") @db.VarChar(20)
   wingDetails               String?                @db.LongText
+  cardImage                 String?                @db.VarChar(500)
   amenities                 ProjectAmenity[]
   configurations            ProjectConfiguration[]
   connectivities            ProjectConnectivity[]

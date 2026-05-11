@@ -26,6 +26,7 @@ export const getProjects = async (req: Request, res: Response) => {
 
         res.json({ projects });
     } catch (error) {
+        console.error('Fetch projects error:', error);
         res.status(500).json({ error: 'Failed to fetch projects.' });
     }
 };
@@ -53,6 +54,7 @@ export const getProjectBySlug = async (req: Request, res: Response) => {
 
         res.json({ project });
     } catch (error) {
+        console.error('Fetch project error:', error);
         res.status(500).json({ error: 'Failed to fetch project.' });
     }
 };

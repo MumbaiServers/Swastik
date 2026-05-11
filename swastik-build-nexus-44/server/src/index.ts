@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import path from 'path';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from './config/database';
 
 // Routes
 import authRoutes from './routes/auth';
@@ -30,7 +30,7 @@ import { errorHandler } from './middleware/errorHandler';
 
 
 const app = express();
-const prisma = new PrismaClient();
+
 const PORT = process.env.BACKEND_PORT || 5001;
 
 // ─── Middleware ──────────────────────────────────────────
