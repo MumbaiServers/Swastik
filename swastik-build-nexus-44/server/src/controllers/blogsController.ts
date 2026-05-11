@@ -18,9 +18,12 @@ export const getBlogs = async (req: Request, res: Response) => {
         });
 
         res.json({ blogs });
-    } catch (error) {
+    } catch (error: any) {
         console.error('Fetch blogs error:', error);
-        res.status(500).json({ error: 'Failed to fetch blogs.' });
+        res.status(500).json({ 
+            error: 'Failed to fetch blogs.',
+            details: error.message 
+        });
     }
 };
 
@@ -34,9 +37,12 @@ export const getAllBlogs = async (_req: Request, res: Response) => {
             orderBy: { updatedAt: 'desc' },
         });
         res.json({ blogs });
-    } catch (error) {
+    } catch (error: any) {
         console.error('Fetch all blogs error:', error);
-        res.status(500).json({ error: 'Failed to fetch blogs.' });
+        res.status(500).json({ 
+            error: 'Failed to fetch blogs.',
+            details: error.message 
+        });
     }
 };
 
