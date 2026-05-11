@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -12,25 +12,38 @@ RUN apt-get update && apt-get install -y \
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install node modules
 RUN npm ci
 
-# Copy app
+# Copy source code
 COPY . .
 
-# Generate Prisma client
+# Generate Prisma Client (must be before build)
 RUN npx prisma generate
 
-# Build app
+# Build TypeScript
 RUN npm run build
 
-EXPOSE 5001
+# Production stage
+FROM node:20-alpine
 
-CMD sh -c "\
-echo 'Waiting for database...' && \
-until nc -z swastik-database.cbu46wyi4srg.ap-south-1.rds.amazonaws.com 3306; do \
-  sleep 2; \
-done && \
-echo 'Database connected' && \
-npx prisma migrate deploy && \
-npm start"
+WORKDIR /app
+
+# Install build dependencies and runtime dependencies
+RUN apk add --no-cache python3 make g++
+
+# Copy package files
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Install production dependencies only
+RUN npm ci --only=production
+
+# Copy built application from builder
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+
+# Expose port
+EXPOSE 8080
+
+# Run migrations and start app
+CMD ["sh", "-c", "npx prisma generate && npx prisma migrate deploy && npm start"]
