@@ -3,10 +3,10 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Install dependencies required for Prisma + DB wait
-RUN apt-get update && apt-get install -y \
-    openssl \
-    netcat-openbsd \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y \
+#     openssl \
+#     netcat-openbsd \
+#     && rm -rf /var/lib/apt/lists/*
 
 # Copy package files
 COPY package*.json ./
