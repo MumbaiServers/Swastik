@@ -64,6 +64,18 @@ async function main() {
             extraData: 'https://www.youtube.com/embed/WUq4bKwC-nM?si=sBQAjI_kCXg4-Qwb',
             sortOrder: 5,
         },
+        {
+            sectionKey: 'why_choose_us',
+            title: 'Why Choose Us',
+            content: 'We take pride in our commitment to quality, transparency, and timely delivery.',
+            sortOrder: 6,
+        },
+        {
+            sectionKey: 'our_presence',
+            title: 'Our Presence',
+            content: 'Explore our projects across prime locations in Mumbai.',
+            sortOrder: 7,
+        },
     ];
 
     for (const section of sections) {

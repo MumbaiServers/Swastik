@@ -81,8 +81,10 @@ app.use(errorHandler);
 // ─── Start Server ───────────────────────────────────────
 const startServer = async () => {
     try {
-        await prisma.$connect();
-        console.log('✅ Database connected successfully');
+        // Try to connect but don't crash the server if it fails on the first try
+        prisma.$connect()
+            .then(() => console.log('✅ Database connected successfully'))
+            .catch((err) => console.error('⚠️ Database connection delayed:', err.message));
 
         app.listen(Number(PORT), '0.0.0.0', () => {
             console.log(`🚀 Server running on http://localhost:${PORT}`);
@@ -90,6 +92,7 @@ const startServer = async () => {
         });
     } catch (error) {
         console.error('❌ Failed to start server:', error);
+        // We only exit if the app.listen fails
         process.exit(1);
     }
 };
