@@ -1,10 +1,6 @@
--- AlterTable
-ALTER TABLE `projects` ADD COLUMN `fullDescription` LONGTEXT NULL,
-    ADD COLUMN `tag` VARCHAR(100) NULL,
-    ADD COLUMN `maharera` VARCHAR(100) NULL,
-    ADD COLUMN `isActive` BOOLEAN NOT NULL DEFAULT true,
-    ADD COLUMN `googleMapsUrl` TEXT NULL,
-    ADD COLUMN `amenitiesImage` VARCHAR(500) NULL,
+-- AlterTable: Only add columns that are NOT already in the original migration
+-- (fullDescription, tag, maharera, isActive, googleMapsUrl already exist from 20260221060944)
+ALTER TABLE `projects` ADD COLUMN `amenitiesImage` VARCHAR(500) NULL,
     ADD COLUMN `connectivitiesImage` VARCHAR(500) NULL,
     ADD COLUMN `overviewImage` VARCHAR(500) NULL,
     ADD COLUMN `towerType` VARCHAR(20) NOT NULL DEFAULT 'single',
